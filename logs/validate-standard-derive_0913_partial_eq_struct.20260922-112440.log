@@ -1,0 +1,35 @@
+File: src/experiments/derive_0913_partial_eq_struct.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_partial_eq_struct/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:24:40
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_partial_eq_struct.rs:35:13
+   |
+35 |             equal == (*a == *b),
+   |             ^^^^^^^^^^^^^^^^^^^ failed this postcondition
+36 |     {
+37 |         *a == *b
+   |         -------- at the end of the function body
+
+note: diagnostics via expansion
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_partial_eq_struct.rs:35:13
+   |
+35 |             equal == (*a == *b),
+   |             ^^^^^      ^
+
+note: 
+
+equal == (old(a) == old(b))
+|   equal ==>
+|       old(a) == old(b) ✘
+|       |   old(a).x == old(b).x ✘
+|       |   old(a).y == old(b).y ✘
+|       +---
+|   old(a) == old(b) ==>
+|       equal ✘
++---
+
+verification results:: 0 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 0s

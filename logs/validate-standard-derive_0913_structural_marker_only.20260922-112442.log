@@ -1,0 +1,24 @@
+File: src/experiments/derive_0913_structural_marker_only.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_structural_marker_only/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:24:42
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_structural_marker_only.rs:37:13
+   |
+35 |     pub proof fn structural_gives_concrete_eq()
+   |     ------------------------------------------- at the end of the function body
+36 |         ensures
+37 |             obeys_concrete_eq::<PointS>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+obeys_concrete_eq() 
+    function is uninterpreted
+
+verification results:: 0 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 0s

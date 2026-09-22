@@ -1,0 +1,33 @@
+File: src/experiments/derive_0913_copy_generic_struct.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_copy_generic_struct/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:27:27
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_copy_generic_struct.rs:26:14
+   |
+26 |     #[derive(Clone, Copy)]
+   |              ^^^^^
+   |
+   = help: to suppress this warning, use `#[verifier::allow(autoderive_clone_without_spec)]` on the surrounding function, datatype, or module or `#![verifier::allow(autoderive_clone_without_spec)]` in the module or crate
+
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_copy_generic_struct.rs:33:13
+   |
+33 |             cloned == *b,
+   |             ^^^^^^^^^^^^ failed this postcondition
+34 |     {
+35 |         b.clone()
+   |         --------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+cloned == old(b)
+|   cloned.value == old(b).value 
++---
+
+verification results:: 1 verified, 1 errors
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 1s

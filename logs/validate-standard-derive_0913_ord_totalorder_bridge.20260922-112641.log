@@ -1,0 +1,6 @@
+File: src/experiments/derive_0913_ord_totalorder_bridge.rs (deps: deps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_ord_totalorder_bridge/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:26:41
+verification results:: 197 verified, 0 errors
+Elapsed: 1s

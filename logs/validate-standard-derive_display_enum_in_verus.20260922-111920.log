@@ -1,0 +1,16 @@
+File: src/experiments/derive_display_enum_in_verus.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_display_enum_in_verus/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:19:20
+error[E0432]: unresolved import `derive_more`
+ --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_display_enum_in_verus.rs:7:9
+  |
+7 |     use derive_more::Display;
+  |         ^^^^^^^^^^^ use of unresolved module or unlinked crate `derive_more`
+  |
+  = help: you might be missing a crate named `derive_more`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 0s

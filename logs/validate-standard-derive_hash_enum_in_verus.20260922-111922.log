@@ -1,0 +1,6 @@
+File: src/experiments/derive_hash_enum_in_verus.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_hash_enum_in_verus/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:19:22
+verification results:: 0 verified, 0 errors
+Elapsed: 0s

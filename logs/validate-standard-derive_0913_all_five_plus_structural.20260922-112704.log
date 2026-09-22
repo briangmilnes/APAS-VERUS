@@ -1,0 +1,6 @@
+File: src/experiments/derive_0913_all_five_plus_structural.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_all_five_plus_structural/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:27:04
+verification results:: 4 verified, 0 errors
+Elapsed: 0s

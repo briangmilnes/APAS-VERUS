@@ -1,0 +1,69 @@
+File: src/experiments/derive_0913_ord_obeys_cmp.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_ord_obeys_cmp/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:26:12
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_ord_obeys_cmp.rs:45:13
+   |
+45 |             ordered == spec_le(*a, *b),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+46 |     {
+47 |         *a <= *b
+   |         -------- at the end of the function body
+
+note: diagnostics via expansion
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_ord_obeys_cmp.rs:39:31
+   |
+39 |         a.major < b.major || (a.major == b.major && a.minor <= b.minor)
+   |                               ^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^
+...
+45 |             ordered == spec_le(*a, *b),
+   |             ^^^^^^^    ^^^^^^^^^^^^^^^
+
+note: 
+
+ordered == spec_le(old(a), old(b))
+|   ordered ==>
+|       spec_le(old(a), old(b)) ✘
+|       |   !(old(a).major < old(b).major) ==>
+|       |       old(a).major == old(b).major ✘
+|       |       old(a).minor <= old(b).minor ✘
+|       +---
+|   spec_le(old(a), old(b)) ==>
+|       ordered ✘
++---
+
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_ord_obeys_cmp.rs:53:13
+   |
+51 |     pub proof fn derived_ord_obeys_cmp()
+   |     ------------------------------------ at the end of the function body
+52 |         ensures
+53 |             obeys_cmp::<RankS>(),
+   |             ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+ --> laws_cmp.rs:48:8
+  |
+ --> laws_eq.rs:19:8
+
+note: 
+
+obeys_cmp()
+|   obeys_eq() ✘
+|   |   obeys_eq_spec() ✔
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is uninterpreted
+|   obeys_partial_cmp_spec_properties() ✘
+|       function is uninterpreted
++---
+
+verification results:: 0 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 1s

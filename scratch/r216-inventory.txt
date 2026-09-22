@@ -1,0 +1,38 @@
+r216 inventory, 2026-09-22, Verus 0.2026.09.13.671956e.
+Counted over src/, excluding src/experiments/, src/standards/, analyses/.
+"inside verus!" measured by parsing each file with veracity-paths-read, which
+sees only what is inside a verus! block; totals from grep.
+
+trait              total  inside  outside  with accept
+Clone                151     144        7           48
+PartialEq             79      63       16           48
+Eq                    73      68        5            0
+Debug                246       0      246            0
+Default               41      38        3            0
+Hash                   9       6        3            0
+PartialOrd             8       4        4            0
+Ord                    8       4        4            0
+Copy                   7       7        0            0
+PartialEqSpecImpl     73      73        0            0
+total                695     407      288           96
+
+fn clone(&self) bodies: 154, of which 116 carry an ensures.
+fn eq(&self, ..) bodies: 93, of which 72 carry an ensures.
+assume( inside a Clone or PartialEq body: 0.
+
+Debug bodies: 86 constant string, 130 debug_struct/list/tuple/map, 50 with a
+format placeholder.
+
+Accept-carrying Clone bodies by chapter:
+ 12 Chap50, 5 Chap40, 4 Chap39, 4 Chap37, 3 Chap52, 3 Chap47, 3 Chap43,
+  3 Chap23, 2 Chap45, 2 Chap38, 2 Chap18, 1 Chap65, 1 Chap44, 1 Chap42,
+  1 Chap41, 1 Chap17
+
+Accept-carrying PartialEq bodies by chapter:
+  8 Chap51, 8 Chap18, 6 Chap50, 5 Chap41, 4 Chap19, 3 Chap52, 3 Chap42,
+  3 Chap40, 3 Chap05, 2 Chap23, 1 Chap66, 1 Chap43, 1 Chap17
+
+PartialEqSpecImpl with no hand-written PartialEq that Verus sees:
+  Chap43/OrderedSetStPer.rs :: OrderedSetStPer<T>   (PartialEq in section 14)
+  Chap57/DijkstraStEphF64.rs :: PQEntry             (PartialEq derived)
+  Chap57/DijkstraStEphU64.rs :: PQEntry             (PartialEq derived)

@@ -1,0 +1,23 @@
+File: src/experiments/derive_0913_default_spec.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_default_spec/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:25:48
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_default_spec.rs:32:13
+   |
+32 |             c.n == 0,
+   |             ^^^^^^^^ failed this postcondition
+33 |     {
+34 |         CounterS::default()
+   |         ------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+c.n == 0 
+
+verification results:: 0 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 0s

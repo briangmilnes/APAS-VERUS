@@ -1,0 +1,17 @@
+File: src/experiments/derive_0913_structural_eq_vec_struct.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_structural_eq_vec_struct/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:24:41
+error[E0277]: the trait bound `std::vec::Vec<u64>: vstd::prelude::Structural` is not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_structural_eq_vec_struct.rs:29:18
+   |
+29 |         pub seq: Vec<u64>,
+   |                  ^^^^^^^^ the trait `vstd::prelude::Structural` is not implemented for `std::vec::Vec<u64>`
+   |
+note: required by a bound in `vstd::prelude::AssertParamIsStructural`
+  --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:841:0
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 0s

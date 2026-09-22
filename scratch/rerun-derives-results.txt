@@ -1,0 +1,29 @@
+derive_clone_enum_in_verus | verification results:: 1 verified, 0 errors  | logs/validate-standard-derive_clone_enum_in_verus.20260922-111914.log
+derive_clone_struct_in_verus | verification results:: 1 verified, 0 errors  | logs/validate-standard-derive_clone_struct_in_verus.20260922-111914.log
+derive_clone_struct_with_vec_in_verus | verification results:: 1 verified, 0 errors  | logs/validate-standard-derive_clone_struct_with_vec_in_verus.20260922-111915.log
+derive_copy_enum_in_verus | verification results:: 1 verified, 0 errors  | logs/validate-standard-derive_copy_enum_in_verus.20260922-111916.log
+derive_copy_struct_in_verus | verification results:: 1 verified, 0 errors  | logs/validate-standard-derive_copy_struct_in_verus.20260922-111916.log
+derive_debug_enum_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_debug_enum_in_verus.20260922-111917.log
+derive_debug_struct_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_debug_struct_in_verus.20260922-111917.log
+derive_debug_struct_with_vec_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_debug_struct_with_vec_in_verus.20260922-111918.log
+derive_default_enum_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_default_enum_in_verus.20260922-111918.log
+derive_default_struct_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_default_struct_in_verus.20260922-111919.log
+derive_default_struct_with_vec_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_default_struct_with_vec_in_verus.20260922-111919.log
+derive_display_enum_in_verus | error[E0432]: unresolved import `derive_more` error: aborting due to 1 previous error  | logs/validate-standard-derive_display_enum_in_verus.20260922-111920.log
+derive_display_struct_in_verus | error[E0432]: unresolved import `derive_more` error: aborting due to 1 previous error  | logs/validate-standard-derive_display_struct_in_verus.20260922-111920.log
+derive_eq_enum_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_eq_enum_in_verus.20260922-111920.log
+derive_eq_struct_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_eq_struct_in_verus.20260922-111921.log
+derive_eq_struct_with_vec_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_eq_struct_with_vec_in_verus.20260922-111921.log
+derive_hash_enum_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_hash_enum_in_verus.20260922-111922.log
+derive_hash_struct_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_hash_struct_in_verus.20260922-111922.log
+derive_hash_struct_with_vec_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_hash_struct_with_vec_in_verus.20260922-111923.log
+derive_ord_enum_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_ord_enum_in_verus.20260922-111923.log
+derive_ord_struct_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_ord_struct_in_verus.20260922-111924.log
+derive_ord_struct_with_vec_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_ord_struct_with_vec_in_verus.20260922-111924.log
+derive_partial_eq_enum_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_partial_eq_enum_in_verus.20260922-111924.log
+derive_partial_eq_struct_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_partial_eq_struct_in_verus.20260922-111925.log
+derive_partial_eq_struct_with_vec_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_partial_eq_struct_with_vec_in_verus.20260922-111926.log
+derive_partial_ord_enum_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_partial_ord_enum_in_verus.20260922-111926.log
+derive_partial_ord_struct_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_partial_ord_struct_in_verus.20260922-111927.log
+derive_partial_ord_struct_with_vec_in_verus | verification results:: 0 verified, 0 errors  | logs/validate-standard-derive_partial_ord_struct_with_vec_in_verus.20260922-111927.log
+DONE

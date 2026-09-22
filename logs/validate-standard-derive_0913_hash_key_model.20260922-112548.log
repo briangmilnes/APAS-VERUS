@@ -1,0 +1,24 @@
+File: src/experiments/derive_0913_hash_key_model.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_hash_key_model/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:25:48
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_hash_key_model.rs:41:13
+   |
+39 |     pub proof fn derived_hash_obeys_key_model()
+   |     ------------------------------------------- at the end of the function body
+40 |         ensures
+41 |             obeys_key_model::<KeyS>(),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+obeys_key_model() 
+    function is uninterpreted
+
+verification results:: 0 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 0s

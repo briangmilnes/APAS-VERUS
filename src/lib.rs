@@ -40,6 +40,16 @@ pub mod experiments {
 //    pub mod collect_deep_view;                            // SUCCEEDS: collect using DeepView trait
 //    pub mod deep_view_2_tuple;                            // SUCCEEDS: DeepView for 2-tuples
 //    pub mod deep_view_struct;                             // SUCCEEDS: DeepView on struct with Option<usize> field
+//    pub mod derive_0913_all_five_plus_structural;         // SUCCEEDS: r216, six derives give clone, eq and view facts
+//    pub mod derive_0913_clone_copy_enum;                  // SUCCEEDS: r216, derived Clone on a Copy enum ensures ret == self
+//    pub mod derive_0913_clone_copy_struct;                // SUCCEEDS: r216, derived Clone on a Copy struct ensures ret == self
+//    pub mod derive_0913_copy_struct;                      // SUCCEEDS: r216, Copy accepted in verus!, copy equals source
+//    pub mod derive_0913_debug_in_verus;                   // SUCCEEDS: r216, derived Debug lives inside verus!
+//    pub mod derive_0913_ord_totalorder_bridge;            // SUCCEEDS: r216, TotalOrder from OrdSpecImpl, no assuming defaults
+//    pub mod derive_0913_ord_with_ordspecimpl;             // SUCCEEDS: r216, hand OrdSpecImpl specifies a derived Ord, but is trusted
+//    pub mod derive_0913_structural_eq_enum;               // SUCCEEDS: r216, StructuralEq specifies == on a non-generic enum
+//    pub mod derive_0913_structural_eq_struct;             // SUCCEEDS: r216, StructuralEq specifies == and gives obeys_concrete_eq
+//    pub mod derive_0913_structural_eq_view_bridge;        // SUCCEEDS: r216, StructuralEq discharges the APAS view postcondition
 //    pub mod derive_clone_enum_in_verus;                   // SUCCEEDS: #[derive(Clone)] on enum verifies
 //    pub mod derive_clone_struct_in_verus;                 // SUCCEEDS: #[derive(Clone)] on struct verifies
 //    pub mod derive_clone_struct_with_vec_in_verus;        // SUCCEEDS: #[derive(Clone)] on struct with Vec verifies
@@ -146,6 +156,18 @@ pub mod experiments {
 //    pub mod assume_spec_test;                             // FAILS: Verus panic (traits.rs assertion)
 //    pub mod clone_plus;                                   // FAILS: postcondition not satisfied (feq_works)
 //    pub mod copy_vs_clone_wars;                           // FAILS: Copy doesn't eliminate Clone/PartialEq workaround assumes
+//    pub mod derive_0913_all_five_struct;                  // PARTIAL: r216, clone fact holds, equality fact needs StructuralEq
+//    pub mod derive_0913_clone_enum;                       // FAILS: r216, derived Clone on a non-Copy enum has no spec
+//    pub mod derive_0913_clone_generic_struct;             // FAILS: r216, derived Clone on a generic struct has no spec
+//    pub mod derive_0913_clone_vec_struct;                 // FAILS: r216, derived Clone on a Vec struct has no spec
+//    pub mod derive_0913_copy_generic_struct;              // FAILS: r216, Copy exemption does not reach a generic struct
+//    pub mod derive_0913_default_spec;                     // FAILS: r216, derived Default has no postcondition
+//    pub mod derive_0913_hash_key_model;                   // FAILS: r216, no derive gives obeys_key_model
+//    pub mod derive_0913_ord_obeys_cmp;                    // FAILS: r216, derived Ord gives neither <= nor obeys_cmp
+//    pub mod derive_0913_partial_eq_struct;                // FAILS: r216, derived PartialEq alone gives nothing
+//    pub mod derive_0913_structural_eq_generic_struct;     // FAILS: r216, E0107, StructuralEq macro drops generics
+//    pub mod derive_0913_structural_eq_vec_struct;         // FAILS: r216, E0277, Vec is not Structural
+//    pub mod derive_0913_structural_marker_only;           // FAILS: r216, Structural alone does not reach obeys_concrete_eq
 //    pub mod derive_display_enum_in_verus;                 // FAILS: derive_more can't link in Verus
 //    pub mod derive_display_struct_in_verus;               // FAILS: derive_more can't link in Verus
 //    pub mod executable_use_of_int;                        // FAILS: Verus disallows executable use of int

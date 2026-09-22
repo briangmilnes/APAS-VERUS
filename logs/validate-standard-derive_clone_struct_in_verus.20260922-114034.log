@@ -1,0 +1,16 @@
+File: src/experiments/derive_clone_struct_in_verus.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_clone_struct_in_verus/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:40:34
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_clone_struct_in_verus.rs:16:18
+   |
+16 |         #[derive(Clone)]
+   |                  ^^^^^
+   |
+   = help: to suppress this warning, use `#[verifier::allow(autoderive_clone_without_spec)]` on the surrounding function, datatype, or module or `#![verifier::allow(autoderive_clone_without_spec)]` in the module or crate
+
+verification results:: 1 verified, 0 errors
+warning: 1 warning emitted
+
+Elapsed: 1s

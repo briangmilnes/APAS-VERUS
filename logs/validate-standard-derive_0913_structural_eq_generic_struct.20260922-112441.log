@@ -1,0 +1,24 @@
+File: src/experiments/derive_0913_structural_eq_generic_struct.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_structural_eq_generic_struct/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:24:41
+error[E0107]: missing generics for struct `experiments::derive_0913_structural_eq_generic_struct::derive_0913_structural_eq_generic_struct::BoxS`
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_structural_eq_generic_struct.rs:29:16
+   |
+29 |     pub struct BoxS<T> {
+   |                ^^^^ expected 1 generic argument
+   |
+note: struct defined here, with 1 generic parameter: `T`
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_structural_eq_generic_struct.rs:29:16
+   |
+29 |     pub struct BoxS<T> {
+   |                ^^^^ -
+help: add missing generic argument
+   |
+29 |     pub struct BoxS<T><T> {
+   |                    +++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0107`.
+Elapsed: 1s

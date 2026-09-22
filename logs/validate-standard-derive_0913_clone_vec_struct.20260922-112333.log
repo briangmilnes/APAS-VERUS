@@ -1,0 +1,32 @@
+File: src/experiments/derive_0913_clone_vec_struct.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_clone_vec_struct/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 11:23:33
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_clone_vec_struct.rs:26:14
+   |
+26 |     #[derive(Clone)]
+   |              ^^^^^
+   |
+   = help: to suppress this warning, use `#[verifier::allow(autoderive_clone_without_spec)]` on the surrounding function, datatype, or module or `#![verifier::allow(autoderive_clone_without_spec)]` in the module or crate
+
+error: postcondition not satisfied
+  --> /home/milnes/projects/APAS-VERUS/src/experiments/derive_0913_clone_vec_struct.rs:43:13
+   |
+43 |             cloned@ == s@,
+   |             ^^^^^^^^^^^^^ failed this postcondition
+44 |     {
+45 |         s.clone()
+   |         --------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+cloned.view() =~= old(s).view() 
+    datatype is opaque here
+
+verification results:: 1 verified, 1 errors
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 0s
