@@ -40,7 +40,7 @@ file, or listed at the end.
 | 9 | 19 | 824 | 0 | 0 | 156 | 156 | 0 | 23 | 23 | 0 |
 | 10 | 21 | 1262 | 0 | 0 | 46 | 46 | 0 | 0 | 0 | 0 |
 | 11 | 23 | 679 | 0 | 0 | 92 | 92 | 0 | 17 | 17 | 0 |
-| 12 | 26 | 1098 | 0 | 0 | 59 | 59 | 0 | 0 | 0 | 0 |
+| 12 | 26 | 1099 | 0 | 0 | 59 | 59 | 0 | 0 | 0 | 0 |
 | 13 | 27 | 846 | 0 | 0 | 48 | 48 | 0 | 0 | 0 | 0 |
 | 14 | 28 | 883 | 0 | 0 | 68 | 68 | 0 | 0 | 0 | 0 |
 | 15 | 30 | 626 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -232,6 +232,14 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-051314.log`).
 - RTT: 8 targets, 59 tests pass (`logs/rtt.20260922-051335.log`).
 - PTT: none registered.
+- r217: 1099 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-130221.log`); RTT 59 pass
+  (`logs/rtt.20260922-130602.log`). The summary row now carries 1099. The
+  extra verified function is not in Chap26: `r213 Chap41` (`469798319`)
+  edited `src/Chap18/LinkedListStPer.rs` after the run above, and Chap18 is a
+  Chap26 isolate dependency. r217 replaced the four hand-written `Copy` and
+  four `Clone` impls on `Point` and `Edge` with `#[derive(Clone, Copy)]`
+  (`docs/DerivesApplied.md` §1).
 
 ### Chap27
 
@@ -665,6 +673,12 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-062519.log`).
 - RTT: 3 targets, 48 tests pass (`logs/rtt.20260922-062549.log`).
 - PTT: none registered.
+- r217: 2583 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-130403.log`); RTT 48 pass
+  (`logs/rtt.20260922-130607.log`). The counts are unchanged. r217 replaced
+  both `PQEntry` `Clone` impls with `#[derive(Clone, Copy)]` and
+  `DijkstraStEphU64.rs`'s hand-written `PartialEqSpecImpl` with
+  `#[derive(StructuralEq)]` (`docs/DerivesApplied.md` §1).
 
 ### Chap58
 

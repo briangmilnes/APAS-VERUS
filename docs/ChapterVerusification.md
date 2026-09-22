@@ -56,7 +56,7 @@ calls, removed chapter by chapter as each is migrated.
 | 9 | 19 | 02 | 0 | r213: 824 verified, 0 err, 0 warn; RTT 156, PTT 23 pass | `validate.20260922-051000.log` |
 | 10 | 21 | 18, 19 | 0 | r213: 1262 verified, 0 err, 0 warn; RTT 46 pass | `validate.20260922-051054.log` |
 | 11 | 23 | — | 0 | r213: 679 verified, 0 err, 0 warn; RTT 92, PTT 17 pass | `validate.20260922-051126.log` |
-| 12 | 26 | 02, 18 | 0 | r213: 1098 verified, 0 err, 0 warn; RTT 59 pass | `validate.20260922-051314.log` |
+| 12 | 26 | 02, 18 | 0 | r217: 1099 verified, 0 err, 0 warn; RTT 59 pass | `validate.20260922-130221.log` |
 | 13 | 27 | 02, 19 | 0 | r213: 846 verified, 0 err, 0 warn; RTT 48 pass | `validate.20260922-051353.log` |
 | 14 | 28 | 19 | 0 | r213: 883 verified, 0 err, 0 warn; RTT 68 pass | `validate.20260922-051419.log` |
 | 15 | 30 | — | 0 | r213: 626 verified, 0 err, 0 warn; no RTT | `validate.20260922-051446.log` |
@@ -80,7 +80,7 @@ calls, removed chapter by chapter as each is migrated.
 | 33 | 54 | 02, 18, 19 | 0 | r213: 1277 verified, 0 err, 0 warn; RTT 53 pass | `validate.20260922-062218.log` |
 | 34 | 55 | 19, 37, 41 | 0 | r213: 2290 verified, 0 err, 0 warn; RTT 58 pass | `validate.20260922-062417.log` |
 | 35 | 56 | 19 | 0 | r213: 948 verified, 0 err, 0 warn; RTT 54 pass | `validate.20260922-062449.log` |
-| 36 | 57 | 05, 06, 45, 56 | 0 | r213: 2583 verified, 0 err, 0 warn; RTT 48 pass | `validate.20260922-062519.log` |
+| 36 | 57 | 05, 06, 45, 56 | 0 | r217: 2583 verified, 0 err, 0 warn; RTT 48 pass | `validate.20260922-130403.log` |
 | 37 | 58 | 05, 06, 56 | 0 | r213: 1370 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-062822.log` |
 | 38 | 59 | 05, 06, 19, 56, 57, 58 | 0 | r213: 2632 verified, 0 err, 0 warn; RTT 41 pass | `validate.20260922-062907.log` |
 | 39 | 61 | 05, 06, 19 | 0 | r213: 1243 verified, 0 err, 0 warn; RTT 40 pass | `validate.20260922-062947.log` |

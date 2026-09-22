@@ -10,14 +10,11 @@
 //	Section 2. imports
 //	Section 3. broadcast use
 //	Section 4a. type definitions
-//	Section 9a. impls
 //	Section 4b. type definitions
 //	Section 6b. spec fns
 //	Section 7b. proof fns/broadcast groups
 //	Section 8b. traits
 //	Section 9b. impls
-//	Section 12a. derive impls in verus!
-//	Section 12b. derive impls in verus!
 //	Section 14. derive impls outside verus!
 //	Section 14a. derive impls outside verus!
 //	Section 14b. derive impls outside verus!
@@ -58,20 +55,17 @@ pub mod ETSPStEph {
 
 
     /// A point in the 2-d plane.
+    #[derive(Clone, Copy)]
     pub struct Point {
         pub x: f64,
         pub y: f64,
     }
 
-    //		Section 9a. impls
-
-
-    impl Copy for Point {}
-
     //		Section 4b. type definitions
 
 
     /// A directed edge between two points.
+    #[derive(Clone, Copy)]
     pub struct Edge {
         pub from: Point,
         pub to: Point,
@@ -300,8 +294,6 @@ pub mod ETSPStEph {
 
     //		Section 9b. impls
 
-
-    impl Copy for Edge {}
 
     /// Verified eTSP implementation. The base cases are fully proven. The recursive
     /// case delegates f64-dependent work (sort, swap search) to external_body helpers
@@ -577,24 +569,6 @@ pub mod ETSPStEph {
             (swap_indices.1 as int) < right_tour@.len(),
     {
         (0, 0)
-    }
-
-    //		Section 12a. derive impls in verus!
-
-
-    impl Clone for Point {
-        fn clone(&self) -> (cloned: Point)
-            ensures cloned == *self
-        { *self }
-    }
-
-    //		Section 12b. derive impls in verus!
-
-
-    impl Clone for Edge {
-        fn clone(&self) -> (cloned: Edge)
-            ensures cloned == *self
-        { *self }
     }
 
     } // verus!

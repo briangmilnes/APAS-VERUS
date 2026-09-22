@@ -1,0 +1,6 @@
+File: src/experiments/derive_0913_clone_copy_f64_struct.rs (deps: nodeps; ptt: no)
+Harness root: /home/milnes/projects/APAS-VERUS/scratch/harness-derive_0913_clone_copy_f64_struct/lib.rs
+  Version: 0.2026.09.13.671956e
+Starting verification at 13:03:15
+verification results:: 6 verified, 0 errors
+Elapsed: 0s

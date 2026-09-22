@@ -1,0 +1,149 @@
+r212 RTT for Chap26: cargo test --release on 8 targets: TestDivConReduceStPer TestMergeSortStPer TestDivConReduceMtPer TestMergeSortMtPer TestScanDCStPer TestScanDCMtPer TestETSPStEph TestETSPMtEph
+Starting RTT at 13:06:02
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.20s
+     Running tests/Chap26/TestDivConReduceMtPer.rs (target/release/deps/TestDivConReduceMtPer-d614b6e785329d46)
+
+running 8 tests
+test test_all_parallel_false ... ok
+test test_all_parallel_true ... ok
+test test_any_parallel_false ... ok
+test test_max_element_parallel ... ok
+test test_any_parallel_true ... ok
+test test_max_element_parallel_empty ... ok
+test test_product_parallel ... ok
+test test_sum_parallel ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap26/TestDivConReduceStPer.rs (target/release/deps/TestDivConReduceStPer-365212a5aae1b41d)
+
+running 8 tests
+test test_all_true ... ok
+test test_all_false ... ok
+test test_any_false ... ok
+test test_any_true ... ok
+test test_max_element ... ok
+test test_max_element_empty ... ok
+test test_product ... ok
+test test_sum ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap26/TestETSPMtEph.rs (target/release/deps/TestETSPMtEph-4caab6a88a9169cb)
+
+running 7 tests
+test test_etsp_parallel_larger ... ok
+test test_etsp_parallel_three_points ... ok
+test test_etsp_parallel_tour_length_reasonable ... ok
+test test_etsp_parallel_collinear_points ... ok
+test test_etsp_parallel_two_points ... ok
+test test_etsp_parallel_20_random_points ... ok
+test test_etsp_parallel_four_points_square ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap26/TestETSPStEph.rs (target/release/deps/TestETSPStEph-64672cf8c06d4caf)
+
+running 7 tests
+test test_etsp_collinear_points ... ok
+test test_etsp_20_random_points ... ok
+test test_etsp_four_points_square ... ok
+test test_etsp_tour_length_reasonable ... ok
+test test_etsp_two_points ... ok
+test test_etsp_larger ... ok
+test test_etsp_three_points ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap26/TestMergeSortMtPer.rs (target/release/deps/TestMergeSortMtPer-ca11125f01863b60)
+
+running 10 tests
+test test_merge_parallel_empty_left ... ok
+test test_merge_parallel_empty_right ... ok
+test test_merge_sort_parallel_empty ... ok
+test test_merge_sort_parallel_single ... ok
+test test_merge_sort_parallel_sorted ... ok
+test test_merge_sort_parallel_duplicates ... ok
+test test_merge_parallel ... ok
+test test_merge_sort_parallel_all_same ... ok
+test test_merge_sort_parallel_reverse ... ok
+test test_merge_sort_parallel_large ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap26/TestMergeSortStPer.rs (target/release/deps/TestMergeSortStPer-912f693444d13070)
+
+running 8 tests
+test test_merge_empty ... ok
+test test_merge_one_empty ... ok
+test test_merge_sort_reverse ... ok
+test test_merge_sort_duplicates ... ok
+test test_merge_sort_single ... ok
+test test_merge_sort_empty ... ok
+test test_merge_sort_sorted ... ok
+test test_merge_sorted ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap26/TestScanDCMtPer.rs (target/release/deps/TestScanDCMtPer-4b909040a0d0f467)
+
+running 5 tests
+test test_prefix_sums_dc_parallel_empty ... ok
+test test_prefix_sums_dc_parallel_singleton ... ok
+test test_prefix_sums_dc_parallel_consecutive ... ok
+test test_prefix_sums_dc_parallel_small ... ok
+test test_prefix_sums_dc_parallel_large ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap26/TestScanDCStPer.rs (target/release/deps/TestScanDCStPer-c8ca724ce1551dba)
+
+running 6 tests
+test test_prefix_sums_dc_empty ... ok
+test test_prefix_sums_dc_consecutive ... ok
+test test_prefix_sums_dc_singleton ... ok
+test test_prefix_sums_dc_tabulate ... ok
+test test_prefix_sums_dc_small ... ok
+test test_prefix_sums_dc_large ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

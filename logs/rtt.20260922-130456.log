@@ -1,0 +1,107 @@
+r217 Part A RTT: cargo test --release on TestETSPStEph TestETSPMtEph TestDijkstraStEphU64 TestDijkstraStEphF64
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 7.06s
+     Running tests/Chap57/TestDijkstraStEphF64.rs (target/release/deps/TestDijkstraStEphF64-d88fbc6f7841c200)
+
+running 14 tests
+test test_all_unreachable ... ok
+test test_diamond_graph_fractional ... ok
+test test_diamond_graph ... ok
+test test_fractional_weights ... ok
+test test_example_57_1 ... ok
+test test_example_57_3 ... ok
+test test_get_predecessor ... ok
+test test_is_reachable ... ok
+test test_larger_graph ... ok
+test test_multiple_paths_same_weight ... ok
+test test_path_extraction ... ok
+test test_unreachable_vertices ... ok
+test test_zero_weight_edges ... ok
+test test_single_vertex ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap57/TestDijkstraStEphU64.rs (target/release/deps/TestDijkstraStEphU64-b0746464002e3bf3)
+
+running 16 tests
+test test_all_unreachable ... ok
+test test_chain_10 ... ok
+test test_example_57_1 ... ok
+test test_diamond_graph ... ok
+test test_get_predecessor ... ok
+test test_example_57_3 ... ok
+test test_is_reachable ... ok
+test test_larger_graph ... ok
+test test_multiple_paths_same_weight ... ok
+test test_self_loop ... ok
+test test_path_extraction ... ok
+test test_single_vertex ... ok
+test test_star_graph ... ok
+test test_two_vertices_one_edge ... ok
+test test_unreachable_vertices ... ok
+test test_zero_weight_edges ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap26/TestETSPMtEph.rs (target/release/deps/TestETSPMtEph-4caab6a88a9169cb)
+
+running 7 tests
+test test_etsp_parallel_four_points_square ... ok
+test test_etsp_parallel_three_points ... ok
+test test_etsp_parallel_tour_length_reasonable ... ok
+test test_etsp_parallel_two_points ... ok
+test test_etsp_parallel_larger ... ok
+test test_etsp_parallel_collinear_points ... ok
+test test_etsp_parallel_20_random_points ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap26/TestETSPStEph.rs (target/release/deps/TestETSPStEph-64672cf8c06d4caf)
+
+running 7 tests
+test test_etsp_20_random_points ... ok
+test test_etsp_collinear_points ... ok
+test test_etsp_larger ... ok
+test test_etsp_four_points_square ... ok
+test test_etsp_three_points ... ok
+test test_etsp_tour_length_reasonable ... ok
+test test_etsp_two_points ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

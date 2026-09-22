@@ -17,8 +17,6 @@
 //	Section 7b. proof fns/broadcast groups
 //	Section 8b. traits
 //	Section 9b. impls
-//	Section 12a. derive impls in verus!
-//	Section 12b. derive impls in verus!
 //	Section 14a. derive impls outside verus!
 //	Section 14b. derive impls outside verus!
 
@@ -70,6 +68,7 @@ pub mod ETSPMtEph {
 
 
     /// A point in the 2-d plane.
+    #[derive(Clone, Copy)]
     pub struct Point {
         pub x: f64,
         pub y: f64,
@@ -77,8 +76,6 @@ pub mod ETSPMtEph {
 
     //		Section 9a. impls
 
-
-    impl Copy for Point {}
 
     impl ETSPPointTrait for Point {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
@@ -91,6 +88,7 @@ pub mod ETSPMtEph {
 
 
     /// A directed edge between two points.
+    #[derive(Clone, Copy)]
     pub struct Edge {
         pub from: Point,
         pub to: Point,
@@ -338,9 +336,6 @@ pub mod ETSPMtEph {
     }
 
     //		Section 9b. impls
-
-
-    impl Copy for Edge {}
 
 
     /// Parallel eTSP inner recursion. Structural logic verified; threading via join().
@@ -758,24 +753,6 @@ pub mod ETSPMtEph {
 
             if left_res.2 <= right_res.2 { left_res } else { right_res }
         }
-    }
-
-    //		Section 12a. derive impls in verus!
-
-
-    impl Clone for Point {
-        fn clone(&self) -> (cloned: Point)
-            ensures cloned == *self
-        { *self }
-    }
-
-    //		Section 12b. derive impls in verus!
-
-
-    impl Clone for Edge {
-        fn clone(&self) -> (cloned: Edge)
-            ensures cloned == *self
-        { *self }
     }
 
     use std::sync::Arc;

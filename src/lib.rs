@@ -42,6 +42,7 @@ pub mod experiments {
 //    pub mod deep_view_struct;                             // SUCCEEDS: DeepView on struct with Option<usize> field
 //    pub mod derive_0913_all_five_plus_structural;         // SUCCEEDS: r216, six derives give clone, eq and view facts
 //    pub mod derive_0913_clone_copy_enum;                  // SUCCEEDS: r216, derived Clone on a Copy enum ensures ret == self
+//    pub mod derive_0913_clone_copy_f64_struct;            // SUCCEEDS: r217, derived Clone ensures ret == self for f64 fields
 //    pub mod derive_0913_clone_copy_struct;                // SUCCEEDS: r216, derived Clone on a Copy struct ensures ret == self
 //    pub mod derive_0913_copy_struct;                      // SUCCEEDS: r216, Copy accepted in verus!, copy equals source
 //    pub mod derive_0913_debug_in_verus;                   // SUCCEEDS: r216, derived Debug lives inside verus!

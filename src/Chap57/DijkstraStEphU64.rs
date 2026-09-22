@@ -18,7 +18,6 @@
 //	Section 5. view impls
 //	Section 8. traits
 //	Section 9. impls
-//	Section 12. derive impls in verus!
 //	Section 14. derive impls outside verus!
 
 //		Section 1. module
@@ -46,10 +45,8 @@ pub mod DijkstraStEphU64 {
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
@@ -65,7 +62,7 @@ pub mod DijkstraStEphU64 {
 
     /// Priority queue entry: (distance, vertex)
     /// Ordered by distance (min-heap)
-    #[derive(Eq, PartialEq)]
+    #[derive(Clone, Copy, Eq, PartialEq, StructuralEq)]
     pub struct PQEntry {
         pub dist: i64,
         pub vertex: usize,
@@ -316,22 +313,6 @@ pub mod DijkstraStEphU64 {
         sssp
     }
 
-    //		Section 12. derive impls in verus!
-
-
-    impl Clone for PQEntry {
-        fn clone(&self) -> (cloned: PQEntry)
-            ensures cloned@ == self@
-        {
-            PQEntry { dist: self.dist, vertex: self.vertex }
-        }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl PartialEqSpecImpl for PQEntry {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
     } // verus!
 
     //		Section 14. derive impls outside verus!

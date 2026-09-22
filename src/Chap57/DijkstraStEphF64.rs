@@ -69,7 +69,7 @@ pub mod DijkstraStEphF64 {
 
     /// Priority queue entry: (distance, vertex)
     /// Ordered by distance (min-heap)
-    #[derive(Eq, PartialEq)]
+    #[derive(Clone, Copy, Eq, PartialEq)]
     pub struct PQEntry {
         pub dist: WrappedF64,
         pub vertex: usize,
@@ -332,14 +332,6 @@ pub mod DijkstraStEphF64 {
 
     //		Section 12. derive impls in verus!
 
-
-    impl Clone for PQEntry {
-        fn clone(&self) -> (cloned: PQEntry)
-            ensures cloned@ == self@
-        {
-            PQEntry { dist: self.dist, vertex: self.vertex }
-        }
-    }
 
     #[cfg(verus_keep_ghost)]
     impl PartialEqSpecImpl for PQEntry {
