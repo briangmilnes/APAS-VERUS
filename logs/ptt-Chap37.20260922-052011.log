@@ -1,0 +1,103 @@
+r212 PTT for Chap37 (isolate: Chap37 Chap18 Chap19 Chap23 Chap02); tests: ProveBSTSplayStEph ProveAVLTreeSeq ProveAVLTreeSeqStEph ProveAVLTreeSeqStPer ProveAVLTreeSeqMtPer ProveBSTSetAVLMtEph ProveBSTSetBBAlphaMtEph ProveBSTSetPlainMtEph ProveBSTSetRBMtEph ProveBSTSetSplayMtEph ProveBSTPlainMtEph ProveBSTRBMtEph
+Starting PTT at 05:20:11
+compile rc: 0
+   Compiling rust_verify_test v0.1.0 (/home/milnes/projects/APAS-VERUS/rust_verify_test)
+    Finished `release` profile [optimized] target(s) in 1.51s
+     Running tests/Chap37/ProveAVLTreeSeq.rs (target/release/build/rust_verify_test/8fac48b1b5361545/out/ProveAVLTreeSeq-8fac48b1b5361545)
+
+running 2 tests
+test avltreeseq_loop_borrow_iter ... ok
+test avltreeseq_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.67s
+
+     Running tests/Chap37/ProveAVLTreeSeqMtPer.rs (target/release/build/rust_verify_test/fc468c47f29cf4fe/out/ProveAVLTreeSeqMtPer-fc468c47f29cf4fe)
+
+running 2 tests
+test avltreeseqmtper_loop_borrow_iter ... ok
+test avltreeseqmtper_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+
+     Running tests/Chap37/ProveAVLTreeSeqStEph.rs (target/release/build/rust_verify_test/1ca856b65eff9e9b/out/ProveAVLTreeSeqStEph-1ca856b65eff9e9b)
+
+running 2 tests
+test avltreeseqsteph_loop_borrow_iter ... ok
+test avltreeseqsteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s
+
+     Running tests/Chap37/ProveAVLTreeSeqStPer.rs (target/release/build/rust_verify_test/ee8fd7958e8178a5/out/ProveAVLTreeSeqStPer-ee8fd7958e8178a5)
+
+running 2 tests
+test avltreeseqstper_loop_borrow_iter ... ok
+test avltreeseqstper_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.63s
+
+     Running tests/Chap37/ProveBSTPlainMtEph.rs (target/release/build/rust_verify_test/6267d7ad93c0e116/out/ProveBSTPlainMtEph-6267d7ad93c0e116)
+
+running 2 tests
+test bstplainmteph_loop_borrow_iter ... ok
+test bstplainmteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/Chap37/ProveBSTRBMtEph.rs (target/release/build/rust_verify_test/79f90a67ad655a0d/out/ProveBSTRBMtEph-79f90a67ad655a0d)
+
+running 2 tests
+test bstrbmteph_loop_borrow_iter ... ok
+test bstrbmteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.55s
+
+     Running tests/Chap37/ProveBSTSetAVLMtEph.rs (target/release/build/rust_verify_test/99a88c02c8fc630f/out/ProveBSTSetAVLMtEph-99a88c02c8fc630f)
+
+running 2 tests
+test bstsetavlmteph_loop_borrow_iter ... ok
+test bstsetavlmteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+
+     Running tests/Chap37/ProveBSTSetBBAlphaMtEph.rs (target/release/build/rust_verify_test/88bc5594850b3a0d/out/ProveBSTSetBBAlphaMtEph-88bc5594850b3a0d)
+
+running 2 tests
+test bstsetbbalphamteph_loop_borrow_iter ... ok
+test bstsetbbalphamteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/Chap37/ProveBSTSetPlainMtEph.rs (target/release/build/rust_verify_test/eefbe38162feb7ed/out/ProveBSTSetPlainMtEph-eefbe38162feb7ed)
+
+running 2 tests
+test bstsetplainmteph_loop_borrow_iter ... ok
+test bstsetplainmteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.68s
+
+     Running tests/Chap37/ProveBSTSetRBMtEph.rs (target/release/build/rust_verify_test/bed158ae74cedae7/out/ProveBSTSetRBMtEph-bed158ae74cedae7)
+
+running 2 tests
+test bstsetrbmteph_loop_borrow_iter ... ok
+test bstsetrbmteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+
+     Running tests/Chap37/ProveBSTSetSplayMtEph.rs (target/release/build/rust_verify_test/4d82334e00ec4f81/out/ProveBSTSetSplayMtEph-4d82334e00ec4f81)
+
+running 2 tests
+test bstsetsplaymteph_loop_borrow_iter ... ok
+test bstsetsplaymteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s
+
+     Running tests/Chap37/ProveBSTSplayStEph.rs (target/release/build/rust_verify_test/4810151a465ba847/out/ProveBSTSplayStEph-4810151a465ba847)
+
+running 2 tests
+test bstsplaysteph_loop_borrow_iter ... ok
+test bstsplaysteph_for_borrow_iter ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+
+cargo test rc: 0
+Elapsed: 16s

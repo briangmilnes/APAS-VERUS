@@ -62,7 +62,7 @@ calls, removed chapter by chapter as each is migrated.
 | 15 | 30 | — | 0 | r213: 626 verified, 0 err, 0 warn; no RTT | `validate.20260922-051446.log` |
 | 16 | 35 | 02, 18, 19 | 0 | r213: 1224 verified, 0 err, 0 warn; RTT 58 pass | `validate.20260922-051905.log` |
 | 17 | 36 | 19 | 0 | r213: 867 verified, 0 err, 0 warn; RTT 24 pass | `validate.20260922-051831.log` |
-| 18 | 37 | 02, 18, 19, 23 | 5 | old iterator model in 5 files; also blocked on 18, 19, 23 | full log |
+| 18 | 37 | 02, 18, 19, 23 | 5 | r213: 1862 verified, 0 err, 0 warn; RTT 544 pass | `validate.20260922-051953.log` |
 | 19 | 38 | 18 | 1 | old iterator model; blocked on 18 | full log |
 | 20 | 39 | 18 | 4 | old iterator model in 4 files; blocked on 18 | full log |
 | 21 | 40 | 18 | 3 | old iterator model in 3 files; blocked on 18 | full log |

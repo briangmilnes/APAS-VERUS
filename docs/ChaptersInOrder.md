@@ -39,6 +39,7 @@ file, or listed at the end.
 | 15 | 30 | 626 | 0 | 0 | none | none | r213 Chap30 |
 | 16 | 35 | 1224 | 0 | 0 | 58 pass | none | r213 Chap35 |
 | 17 | 36 | 867 | 0 | 0 | 24 pass | none | r213 Chap36 |
+| 18 | 37 | 1862 | 0 | 0 | 544 pass | 24 pass | r213 Chap37 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -257,3 +258,10 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   (`logs/validate.20260922-051831.log`).
 - RTT: 4 targets, 24 tests pass (`logs/rtt.20260922-051917.log`).
 - PTT: none registered.
+
+### Chap37
+
+- First run on 09.13: 1862 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-051953.log`). No edit.
+- RTT: 24 targets, 544 tests pass (`logs/rtt.20260922-052010.log`).
+- PTT: 12 files, 24 tests pass (`logs/ptt-Chap37.20260922-052011.log`). `AVLTreeSeq.rs` `insert_at_link` keeps the `#[verifier::rlimit(20)]` r212 added.
