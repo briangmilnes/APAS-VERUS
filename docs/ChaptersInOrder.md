@@ -52,6 +52,7 @@ file, or listed at the end.
 | 28 | 49 | 1283 | 0 | 0 | 136 pass | none | r213 Chap49 |
 | 29 | 50 | 766 | 0 | 0 | 167 pass | none | r213 Chap50 |
 | 30 | 51 | 1333 | 0 | 0 | 109 pass | none | r213 Chap51 |
+| 31 | 52 | 2943 | 0 | 0 | 148 pass | none | r213 Chap52 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -546,4 +547,31 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
 - Start and end: 1333 verified, 0 errors, 0 warnings, 0 trigger notes
   (`logs/validate.20260922-061753.log`). No edit.
 - RTT: 8 targets, 109 tests pass (`logs/rtt.20260922-061805.log`).
+- PTT: none registered.
+
+### Chap52
+
+- Start: did not compile (`logs/validate.20260922-061845.log`, after the
+  `finite()` edits): `Set::new` now returns `Option<Set>` in the four
+  `EdgeSetGraph*` `spec_out_neighbors` bodies and in the
+  `EdgeSetGraphMtPer::out_neighbors` spec and proof.
+- Edit class 4, finite-by-type API: out-neighbour sets are now
+  `edges@.filter(|p| p.0 == u).map_by(|p| p.1, |v| (u, v))`, the same set,
+  whose `lemma_map_by_contains` (already broadcast through
+  `group_set_lib_default`) gives membership without an existential. In
+  `EdgeSetGraphMtPer`, the `out_neighbors` ensures states the same
+  expression over `spec_edges()` and its proof compares against
+  `spec_out_neighbors(u@)`.
+- Edit class 1 and 2, `finite()` removal: the `when m.dom().finite()` clause
+  of `spec_sum_adj_sizes` and the finite conjuncts of
+  `lemma_sum_adj_remove`, `lemma_sum_adj_sizes_monotone`, an
+  `AdjTableGraphMtPer` loop invariant and `spec_adjtablegraphmtper_wf`
+  deleted; seven finite-only asserts deleted in `AdjTableGraphMtPer.rs`
+  (one `assert ... by` kept as its inner `dom() =~=` assert); the six calls
+  of Chap42's bypassed `lemma_entries_to_map_finite` and its import removed.
+  `iterator-upgrade` found no site.
+- Exec cost: none changed.
+- End: 2943 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-061938.log`).
+- RTT: 15 targets, 148 tests pass (`logs/rtt.20260922-062011.log`).
 - PTT: none registered.

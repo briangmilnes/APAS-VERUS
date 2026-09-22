@@ -144,7 +144,8 @@ pub mod EdgeSetGraphMtPer {
                 self.spec_edgesetgraphmtper_wf(),
                 self.spec_edges().len() < usize::MAX as nat,
             ensures
-                neighbors@ == Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))),
+                neighbors@ == self.spec_edges().filter(|p: (<V as View>::V, <V as View>::V)| p.0 == u@)
+                    .map_by(|p: (<V as View>::V, <V as View>::V)| p.1, |v: <V as View>::V| (u@, v)),
                 neighbors.spec_avltreesetmtper_wf();
         /// Work Theta(|E|), Span Theta(log |E|)
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
@@ -210,7 +211,8 @@ pub mod EdgeSetGraphMtPer {
         }
 
         open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
-            Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
+            self.edges@.filter(|p: (<V as View>::V, <V as View>::V)| p.0 == u)
+                .map_by(|p: (<V as View>::V, <V as View>::V)| p.1, |v: <V as View>::V| (u, v))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -302,12 +304,12 @@ pub mod EdgeSetGraphMtPer {
                 // Veracity: NEEDED assert (speed hint)
                 assert forall|v: <V as View>::V|
                     #[trigger] neighbors@.contains(v)
-                    implies Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).contains(v) by {
+                    implies self.spec_out_neighbors(u@).contains(v) by {
                     // Veracity: NEEDED assert (speed hint)
                     assert(self.edges@.contains((u@, v)));
                 }
                 // Veracity: NEEDED assert (speed hint)
-                assert(neighbors@ =~= Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))));
+                assert(neighbors@ =~= self.spec_out_neighbors(u@));
             }
 
             neighbors

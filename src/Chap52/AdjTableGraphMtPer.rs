@@ -214,7 +214,6 @@ broadcast use {
                 forall|u: <V as View>::V, w: <V as View>::V|
                     table@.dom().contains(u) && #[trigger] table@.index(u).contains(w)
                     ==> table@.dom().contains(w),
-                table@.dom().finite(),
                 spec_sum_adj_sizes(table@) <= usize::MAX as nat,
                 count as nat <= spec_sum_adj_sizes(table@),
             decreases n,
@@ -307,8 +306,6 @@ broadcast use {
             && spec_pair_key_determines_order::<V, AVLTreeSetMtPer<V>>()
             && vstd::laws_cmp::obeys_cmp::<V>()
             && view_ord_consistent::<V>()
-            // Adjacency domain is finite.
-            && self.spec_adj().dom().finite()
             // Graph closure: every neighbor is also a vertex.
             && forall|u: <V as View>::V, v: <V as View>::V|
                 self.spec_adj().dom().contains(u)
@@ -337,8 +334,6 @@ broadcast use {
                 // on an empty map since no u satisfies dom().contains(u).
                 // Veracity: NEEDED assert (speed hint)
                 assert(out.adj@ == Map::<<V as View>::V, Set<<V as View>::V>>::empty());
-                // Veracity: NEEDED assert (speed hint)
-                assert(out.spec_adj().dom().finite());
                 // Veracity: NEEDED assert
                 assert forall|u: <V as View>::V, v: <V as View>::V|
                     out.spec_adj().dom().contains(u)
@@ -602,10 +597,6 @@ broadcast use {
                     vstd::set_lib::lemma_len_subset(self.adj@[k], dom);
                     vstd::set_lib::lemma_len_subset(without_v@[k].remove(v_view), without_v@[k]);
                 };
-                assert(cleaned@.dom().finite()) by { assert(cleaned.spec_orderedtablemtper_wf()); };
-                assert(without_v@.dom().finite()) by { assert(without_v.spec_orderedtablemtper_wf()); };
-                // Veracity: NEEDED assert (speed hint)
-                assert(self.adj@.dom().finite());
                 lemma_sum_adj_sizes_monotone(cleaned@, without_v@);
 // Veracity: UNNEEDED assert                 assert(spec_sum_adj_sizes(cleaned@) <= spec_sum_adj_sizes(without_v@));
                 // without_v@ == self.adj@.remove(v@). Prove its sum <= self's sum.
@@ -805,12 +796,7 @@ broadcast use {
                 // After adding u@ (if not present):
                 if !u_in_orig {
                     // Veracity: NEEDED assert (speed hint)
-                    assert(adj_after_u.dom().finite()) by {
-                        // adj_after_u == result of insert_wf on self.adj, which is wf.
-                        // insert_wf ensures dom =~= self.adj@.dom().insert(u@).
-                        // Veracity: NEEDED assert (speed hint)
-                        assert(adj_after_u.dom() =~= self.adj@.dom().insert(u@));
-                    };
+                    assert(adj_after_u.dom() =~= self.adj@.dom().insert(u@));
                     // Veracity: NEEDED assert (speed hint)
                     assert(adj_after_u.dom().contains(u@));
                     lemma_sum_adj_remove(adj_after_u, u@);
@@ -825,10 +811,6 @@ broadcast use {
 // Veracity: UNNEEDED assert                     assert(adj_after_u.dom().finite());
                 }
                 // After adding v@ (if not present):
-                // Veracity: NEEDED assert (speed hint)
-                assert(new_adj@.dom().finite()) by {
-                    assert(new_adj.spec_orderedtablemtper_wf());
-                };
                 let ghost v_in_adj_after_u = adj_after_u.dom().contains(v@);
                 if !v_in_adj_after_u {
                     // Veracity: NEEDED assert (speed hint)

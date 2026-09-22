@@ -1,0 +1,304 @@
+r212 RTT for Chap52: cargo test --release on 15 targets: TestAdjMatrixGraphMtPer TestAdjMatrixGraphStEph TestAdjMatrixGraphStPer TestAdjSeqGraphMtPer TestAdjSeqGraphStEph TestAdjSeqGraphStPer TestAdjMatrixGraphMtEph TestAdjSeqGraphMtEph TestAdjTableGraphMtPer TestAdjTableGraphStEph TestAdjTableGraphStPer TestEdgeSetGraphMtEph TestEdgeSetGraphMtPer TestEdgeSetGraphStEph TestEdgeSetGraphStPer
+Starting RTT at 06:20:11
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap52/TestEdgeSetGraphMtPer.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap52/TestAdjTableGraphMtPer.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestEdgeSetGraphMtPer") generated 1 warning
+warning: `apas-verus` (test "TestAdjTableGraphMtPer") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 5.43s
+     Running tests/Chap52/TestAdjMatrixGraphMtEph.rs (target/release/deps/TestAdjMatrixGraphMtEph-3c5be4b43357e1f5)
+
+running 13 tests
+test test_complement_empty_graph ... ok
+test test_complement_idempotence ... ok
+test test_complement_single_vertex ... ok
+test test_has_edge_out_of_bounds ... ok
+test test_has_edge_empty_graph ... ok
+test test_complement_zero_vertices ... ok
+test test_new_empty_graph ... ok
+test test_multiple_vertices_all_operations ... ok
+test test_num_vertices ... ok
+test test_out_degree_empty_graph ... ok
+test test_out_neighbors_empty_graph ... ok
+test test_set_edge ... ok
+test test_set_edge_multiple ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjMatrixGraphMtPer.rs (target/release/deps/TestAdjMatrixGraphMtPer-13250093e9402872)
+
+running 17 tests
+test test_clone ... ok
+test test_complement_empty_graph ... ok
+test test_complement_single_vertex ... ok
+test test_complement_idempotence ... ok
+test test_complement_zero_vertices ... ok
+test test_has_edge_empty_graph ... ok
+test test_has_edge_out_of_bounds ... ok
+test test_multiple_vertices_all_operations ... ok
+test test_new_empty_graph ... ok
+test test_num_edges_sequential ... ok
+test test_num_vertices ... ok
+test test_out_degree_after_complement ... ok
+test test_out_degree_empty_graph ... ok
+test test_out_degree_out_of_bounds ... ok
+test test_out_neighbors_after_complement ... ok
+test test_out_neighbors_empty_graph ... ok
+test test_out_neighbors_out_of_bounds ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjMatrixGraphStEph.rs (target/release/deps/TestAdjMatrixGraphStEph-f8d63636b6ced9e5)
+
+running 12 tests
+test test_complement ... ok
+test test_complete_graph ... ok
+test test_from_matrix ... ok
+test test_empty_graph ... ok
+test test_has_edge ... ok
+test test_new ... ok
+test test_num_edges ... ok
+test test_num_edges_large ... ok
+test test_out_degree ... ok
+test test_out_neighbors ... ok
+test test_self_loop ... ok
+test test_set_edge ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjMatrixGraphStPer.rs (target/release/deps/TestAdjMatrixGraphStPer-155b5d579b8ae721)
+
+running 9 tests
+test test_complement ... ok
+test test_from_matrix ... ok
+test test_has_edge ... ok
+test test_num_edges ... ok
+test test_out_neighbors ... ok
+test test_out_degree ... ok
+test test_persistent_semantics ... ok
+test test_set_edge ... ok
+test test_new ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjSeqGraphMtEph.rs (target/release/deps/TestAdjSeqGraphMtEph-77b63f1b8f731088)
+
+running 12 tests
+test test_has_edge_empty_graph ... ok
+test test_has_edge_in_bounds_no_edges ... ok
+test test_has_edge_linear_search ... ok
+test test_multiple_vertices_all_operations ... ok
+test test_num_vertices ... ok
+test test_new_empty_graph ... ok
+test test_out_degree_empty_graph ... ok
+test test_out_neighbors_boundary ... ok
+test test_out_neighbors_empty_graph ... ok
+test test_set_edge ... ok
+test test_single_vertex ... ok
+test test_zero_vertices ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjSeqGraphMtPer.rs (target/release/deps/TestAdjSeqGraphMtPer-76dc1d5c18519a04)
+
+running 12 tests
+test test_clone ... ok
+test test_has_edge_empty_graph ... ok
+test test_has_edge_in_bounds_no_edges ... ok
+test test_has_edge_linear_search ... ok
+test test_multiple_vertices_all_operations ... ok
+test test_new_empty_graph ... ok
+test test_num_vertices ... ok
+test test_out_degree_empty_graph ... ok
+test test_out_neighbors_boundary ... ok
+test test_out_neighbors_empty_graph ... ok
+test test_single_vertex ... ok
+test test_zero_vertices ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjSeqGraphStEph.rs (target/release/deps/TestAdjSeqGraphStEph-b27e68345881c9a9)
+
+running 11 tests
+test test_empty_graph ... ok
+test test_from_seq ... ok
+test test_has_edge ... ok
+test test_new ... ok
+test test_num_edges ... ok
+test test_out_degree ... ok
+test test_out_neighbors ... ok
+test test_remove_edge ... ok
+test test_self_loop ... ok
+test test_set_edge ... ok
+test test_set_neighbors ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjSeqGraphStPer.rs (target/release/deps/TestAdjSeqGraphStPer-5a8fc327099a2534)
+
+running 9 tests
+test test_delete_edge ... ok
+test test_empty_graph ... ok
+test test_has_edge ... ok
+test test_new ... ok
+test test_insert_edge ... ok
+test test_out_degree ... ok
+test test_num_edges ... ok
+test test_out_neighbors ... ok
+test test_persistent_semantics ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjTableGraphMtPer.rs (target/release/deps/TestAdjTableGraphMtPer-800b899210cbeea9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjTableGraphStEph.rs (target/release/deps/TestAdjTableGraphStEph-f83392bbfd21741c)
+
+running 9 tests
+test test_delete_edge ... ok
+test test_delete_vertex ... ok
+test test_empty ... ok
+test test_insert_vertex ... ok
+test test_out_degree ... ok
+test test_insert_edge ... ok
+test test_out_neighbors ... ok
+test test_self_loop ... ok
+test test_vertices ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestAdjTableGraphStPer.rs (target/release/deps/TestAdjTableGraphStPer-1edc807e2f661c87)
+
+running 14 tests
+test test_complex_graph ... ok
+test test_delete_edge ... ok
+test test_delete_edge_nonexistent ... ok
+test test_empty ... ok
+test test_has_edge ... ok
+test test_delete_vertex ... ok
+test test_insert_edge ... ok
+test test_insert_edge_creates_vertices ... ok
+test test_insert_vertex ... ok
+test test_num_edges ... ok
+test test_num_vertices ... ok
+test test_out_degree ... ok
+test test_out_neighbors ... ok
+test test_vertices ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestEdgeSetGraphMtEph.rs (target/release/deps/TestEdgeSetGraphMtEph-b27f11f9c41b7906)
+
+running 16 tests
+test test_default ... ok
+test test_delete_edge ... ok
+test test_delete_vertex_removes_incident_edges ... ok
+test test_delete_nonexistent ... ok
+test test_empty_graph ... ok
+test test_edges_accessor ... ok
+test test_from_vertices_and_edges ... ok
+test test_idempotent_insert ... ok
+test test_insert_edge ... ok
+test test_insert_vertex ... ok
+test test_out_degree ... ok
+test test_insert_edge_adds_vertices ... ok
+test test_out_neighbors ... ok
+test test_vertices_accessor ... ok
+test test_shared_graph_concurrent_reads ... ok
+test test_concurrent_build_stress ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap52/TestEdgeSetGraphMtPer.rs (target/release/deps/TestEdgeSetGraphMtPer-9366a90d8b018cb1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestEdgeSetGraphStEph.rs (target/release/deps/TestEdgeSetGraphStEph-e25c4e680d86629a)
+
+running 7 tests
+test test_delete_edge ... ok
+test test_delete_vertex ... ok
+test test_insert_edge ... ok
+test test_empty_graph ... ok
+test test_insert_vertex ... ok
+test test_out_degree ... ok
+test test_out_neighbors ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap52/TestEdgeSetGraphStPer.rs (target/release/deps/TestEdgeSetGraphStPer-d3b00ef7384070b5)
+
+running 7 tests
+test test_delete_edge ... ok
+test test_empty_graph ... ok
+test test_delete_vertex ... ok
+test test_insert_vertex ... ok
+test test_insert_edge ... ok
+test test_out_degree ... ok
+test test_out_neighbors ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 5s

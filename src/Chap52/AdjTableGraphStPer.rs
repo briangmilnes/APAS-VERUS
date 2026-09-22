@@ -415,7 +415,6 @@ broadcast use {
                     }
                 // Veracity: NEEDED proof block
                 };
-                lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
                 // Veracity: NEEDED assert (speed hint)
                 assert(verts@ =~= self.spec_adj().dom());
             }
@@ -757,7 +756,6 @@ broadcast use {
                                 assert(self.spec_adj().index(u@).contains(w));
                             };
                         };
-                        lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
                         vstd::set_lib::lemma_len_subset(ns_ref@, dom);
                     }
                     // Veracity: NEEDED proof block

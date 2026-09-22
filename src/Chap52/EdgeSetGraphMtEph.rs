@@ -208,7 +208,8 @@ broadcast use {
         }
 
         open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
-            Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
+            self.edges@.filter(|p: (<V as View>::V, <V as View>::V)| p.0 == u)
+                .map_by(|p: (<V as View>::V, <V as View>::V)| p.1, |v: <V as View>::V| (u, v))
         }
 
         /// - Alg Analysis: Code review (Claude Sonnet 4.6): Work O(1), Span O(1)

@@ -685,7 +685,6 @@ broadcast use {
 // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                                 assert(self.spec_adj().index(u@).contains(w));
 // Veracity: UNNEEDED assert // Veracity: UNNEEDED assert                             };
 // Veracity: UNNEEDED assert                         };
-                        lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
                         vstd::set_lib::lemma_len_subset(ns@, dom);
                     }
                     ns.insert(vc);

@@ -23,7 +23,7 @@ pub mod AdjTableGraphSpecsAndLemmas {
     #[cfg(verus_keep_ghost)]
     use crate::Chap42::TableSpecsAndLemmas::TableSpecsAndLemmas::{
         spec_entries_to_map, spec_keys_no_dups,
-        lemma_entries_to_map_finite, lemma_entries_to_map_no_key,
+        lemma_entries_to_map_no_key,
         lemma_entries_to_map_get, lemma_entries_to_map_contains_key,
     };
 
@@ -64,7 +64,6 @@ broadcast use {
     /// Sum of neighbor-set sizes over map domain (recursive over dom).
     pub open spec fn spec_sum_adj_sizes<VV>(m: Map<VV, Set<VV>>) -> nat
         decreases m.dom().len()
-        when m.dom().finite()
     {
         if m.dom().is_empty() {
             0
@@ -282,7 +281,7 @@ broadcast use {
 
     /// Extract any key from the recursive sum: decompose at k regardless of choose() order.
     pub proof fn lemma_sum_adj_remove<VV>(m: Map<VV, Set<VV>>, k: VV)
-        requires m.dom().finite(), m.dom().contains(k)
+        requires m.dom().contains(k)
         ensures spec_sum_adj_sizes(m) == m[k].len() + spec_sum_adj_sizes(m.remove(k))
         decreases m.dom().len()
     {
@@ -302,7 +301,6 @@ broadcast use {
     /// (same domain), then the sum of sizes is no larger.
     pub proof fn lemma_sum_adj_sizes_monotone<VV>(m1: Map<VV, Set<VV>>, m2: Map<VV, Set<VV>>)
         requires
-            m1.dom().finite(),
             m1.dom() =~= m2.dom(),
             forall|k: VV| #[trigger] m1.dom().contains(k) ==> m1[k].len() <= m2[k].len(),
         ensures
@@ -339,7 +337,6 @@ broadcast use {
                 spec_entries_to_map(entries.subrange(0, n)))
         decreases n
     {
-        lemma_entries_to_map_finite::<VV, Set<VV>>(entries.subrange(0, n));
         if n == 0 {
             // Veracity: NEEDED assert (speed hint)
             assert(entries.subrange(0, 0) =~= Seq::<(VV, Set<VV>)>::empty());
@@ -384,11 +381,9 @@ broadcast use {
             assert(sub_n.drop_last() =~= sub_prev);
             // Veracity: NEEDED assert (speed hint)
             assert(sub_n.last() == (key, val));
-            lemma_entries_to_map_finite::<VV, Set<VV>>(sub_n);
             lemma_entries_to_map_contains_key::<VV, Set<VV>>(sub_n, n - 1);
             lemma_sum_adj_remove(full_map, key);
             lemma_entries_to_map_get::<VV, Set<VV>>(sub_n, n - 1);
-            lemma_entries_to_map_finite::<VV, Set<VV>>(sub_prev);
             // Veracity: NEEDED assert (speed hint)
             assert(full_map =~= prefix_map.insert(key, val));
             // Veracity: NEEDED assert (speed hint)

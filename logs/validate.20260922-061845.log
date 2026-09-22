@@ -1,0 +1,142 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0308]: mismatched types
+   --> src/Chap52/EdgeSetGraphStEph.rs:204:13
+    |
+203 |         open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
+    |                                                                      ------------------- expected `vstd::set::Set<<V as vstd::string::View>::V>` because of return type
+204 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Set<<V as View>::V>`, found `Option<Set<<V as View>::V>>`
+    |
+    = note: expected struct `vstd::set::Set<_>`
+                 found enum `std::option::Option<vstd::set::Set<_>>`
+help: consider using `Option::expect` to unwrap the `std::option::Option<vstd::set::Set<<V as vstd::string::View>::V>>` value, panicking if the value is an `Option::None`
+    |
+204 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v))).expect("REASON")
+    |                                                                       +++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap52/EdgeSetGraphStPer.rs:206:13
+    |
+205 |         open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
+    |                                                                      ------------------- expected `vstd::set::Set<<V as vstd::string::View>::V>` because of return type
+206 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Set<<V as View>::V>`, found `Option<Set<<V as View>::V>>`
+    |
+    = note: expected struct `vstd::set::Set<_>`
+                 found enum `std::option::Option<vstd::set::Set<_>>`
+help: consider using `Option::expect` to unwrap the `std::option::Option<vstd::set::Set<<V as vstd::string::View>::V>>` value, panicking if the value is an `Option::None`
+    |
+206 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v))).expect("REASON")
+    |                                                                       +++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap52/EdgeSetGraphMtEph.rs:211:13
+    |
+210 |         open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
+    |                                                                      ------------------- expected `vstd::set::Set<<V as vstd::string::View>::V>` because of return type
+211 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Set<<V as View>::V>`, found `Option<Set<<V as View>::V>>`
+    |
+    = note: expected struct `vstd::set::Set<_>`
+                 found enum `std::option::Option<vstd::set::Set<_>>`
+help: consider using `Option::expect` to unwrap the `std::option::Option<vstd::set::Set<<V as vstd::string::View>::V>>` value, panicking if the value is an `Option::None`
+    |
+211 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v))).expect("REASON")
+    |                                                                       +++++++++++++++++
+
+error[E0277]: the trait bound `Set<<V as View>::V>: SpecEq<Option<Set<<V as View>::V>>>` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:147:17
+    |
+147 |                 neighbors@ == Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))),
+    |                 ^^^^^^^^^^---------------------------------------------------------------------
+    |                 |
+    |                 unsatisfied trait bound
+    |                 required by a bound introduced by this call
+    |
+    = help: the trait `vstd::prelude::SpecEq<std::option::Option<vstd::set::Set<<V as vstd::string::View>::V>>>` is not implemented for `vstd::set::Set<<V as vstd::string::View>::V>`
+    = help: the following other types implement trait `vstd::prelude::SpecEq<Rhs>`:
+              `&A` implements `vstd::prelude::SpecEq<A>`
+              `&char` implements `vstd::prelude::SpecEq<i128>`
+              `&char` implements `vstd::prelude::SpecEq<i16>`
+              `&char` implements `vstd::prelude::SpecEq<i32>`
+              `&char` implements `vstd::prelude::SpecEq<i64>`
+              `&char` implements `vstd::prelude::SpecEq<i8>`
+              `&char` implements `vstd::prelude::SpecEq<isize>`
+              `&char` implements `vstd::prelude::SpecEq<u128>`
+            and 1048 others
+note: required by a bound in `vstd::prelude::spec_eq`
+   --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:1249:0
+    = note: the full name for the type has been written to 'lib.long-type-18320120771670349722.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0308]: mismatched types
+   --> src/Chap52/EdgeSetGraphMtPer.rs:213:13
+    |
+212 |         open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
+    |                                                                      ------------------- expected `vstd::set::Set<<V as vstd::string::View>::V>` because of return type
+213 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Set<<V as View>::V>`, found `Option<Set<<V as View>::V>>`
+    |
+    = note: expected struct `vstd::set::Set<_>`
+                 found enum `std::option::Option<vstd::set::Set<_>>`
+help: consider using `Option::expect` to unwrap the `std::option::Option<vstd::set::Set<<V as vstd::string::View>::V>>` value, panicking if the value is an `Option::None`
+    |
+213 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v))).expect("REASON")
+    |                                                                       +++++++++++++++++
+
+error[E0599]: no method named `contains` found for enum `std::option::Option<T>` in the current scope
+   --> src/Chap52/EdgeSetGraphMtPer.rs:305:95
+    |
+305 |                     implies Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).contains(v) by {
+    |                                                                                               ^^^^^^^^ method not found in `std::option::Option<vstd::set::Set<<V as vstd::string::View>::V>>`
+    |
+note: the method `contains` exists on the type `vstd::set::Set<<V as vstd::string::View>::V>`
+   --> set.rs:147:4
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `contains`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+help: consider using `Option::expect` to unwrap the `vstd::set::Set<<V as vstd::string::View>::V>` value, panicking if the value is an `Option::None`
+    |
+305 |                     implies Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).expect("REASON").contains(v) by {
+    |                                                                                              +++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap52/EdgeSetGraphMtPer.rs:310:39
+    |
+310 |                 assert(neighbors@ =~= Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))));
+    |                        ---------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                        |              |
+    |                        |              expected `Set<<V as View>::V>`, found `Option<Set<<V as View>::V>>`
+    |                        arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<_>`
+                 found enum `std::option::Option<vstd::set::Set<_>>`
+note: function defined here
+   --> /home/runner/work/verus/verus/source/builtin/src/lib.rs:267:7
+help: consider using `Option::expect` to unwrap the `std::option::Option<vstd::set::Set<<V as vstd::string::View>::V>>` value, panicking if the value is an `Option::None`
+    |
+310 |                 assert(neighbors@ =~= Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))).expect("REASON"));
+    |                                                                                                        +++++++++++++++++
+
+error: aborting due to 7 previous errors
+
+Some errors have detailed explanations: E0277, E0308, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 621MB, peak z3 RSS: 0MB, min free: 25822MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s
