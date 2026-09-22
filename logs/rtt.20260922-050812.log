@@ -1,0 +1,110 @@
+r212 RTT for Chap12: cargo test --release on 3 targets: test_exercise12_1 test_exercise12_2 test_exercise12_5
+Starting RTT at 05:08:12
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1340:17
+     |
+1340 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 4 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.18s
+     Running tests/Chap12/test_exercise12_1.rs (target/release/deps/test_exercise12_1-bcc870a48b40dbfc)
+
+running 14 tests
+test spin_lock_with_lock_executes_body ... ok
+test test_lock_unlock_sequential ... ok
+test test_default_trait ... ok
+test spin_lock_excludes_parallel_threads ... ok
+test test_with_lock_vec_mutation ... ok
+test test_with_lock_nested_computation ... ok
+test test_with_lock_string_return ... ok
+test test_with_lock_returns_value ... ok
+test test_parallel_increment_one ... ok
+test parallel_increment_counts_all_iterations ... ok
+test test_parallel_increment_zero ... ok
+test test_spin_lock_multiple_threads_stress ... ok
+test spin_lock_is_non_reentrant ... ok
+test test_parallel_increment_large ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap12/test_exercise12_2.rs (target/release/deps/test_exercise12_2-fe1958442839b888)
+
+running 9 tests
+test fetch_add_cas_large_delta ... ok
+test fetch_add_cas_returns_previous_value ... ok
+test fetch_add_cas_zero_delta ... ok
+test fetch_add_cas_returns_monotonically_increasing ... ok
+test fetch_add_cas_wrapping ... ok
+test trait_impl_works ... ok
+test fetch_add_cas_sequential_accumulation ... ok
+test fetch_add_cas_multiple_threads_stress ... ok
+test fetch_add_cas_is_thread_safe ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap12/test_exercise12_5.rs (target/release/deps/test_exercise12_5-0e6507e7e4c98422)
+
+running 17 tests
+test pop_on_empty_returns_none ... ok
+test push_pop_lifo_single_thread ... ok
+test test_default_trait ... ok
+test test_drain ... ok
+test test_drain_preserves_all_elements ... ok
+test test_drain_empty_stack ... ok
+test test_drain_twice ... ok
+test test_interleaved_push_pop ... ok
+test test_concurrent_push_pop_interleaved ... ok
+test test_is_empty_after_operations ... ok
+test test_multiple_push_pop_cycles ... ok
+test test_pop_on_empty_multiple_times ... ok
+test multi_thread_pop_consumes_all_elements ... ok
+test test_push_many_pop_all ... ok
+test test_string_values ... ok
+test multi_thread_push_collects_all_items ... ok
+test test_push_large_count ... ok
+
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

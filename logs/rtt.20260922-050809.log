@@ -1,0 +1,104 @@
+r212 RTT for Chap11: cargo test --release on 2 targets: TestParaPairs TestFibonacciMt
+Starting RTT at 05:08:09
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:793:15
+    |
+793 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: variable does not need to be mutable
+    --> src/Chap18/ArraySeqMtEph.rs:1340:17
+     |
+1340 |             let mut left: Vec<(usize, T)> = Vec::new();
+     |                 ----^^^^
+     |                 |
+     |                 help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 4 warnings (run `cargo fix --lib -p apas-verus` to apply 1 suggestion)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.14s
+     Running tests/Chap11/TestFibonacciMt.rs (target/release/deps/TestFibonacciMt-39e90812d7d14764)
+
+running 27 tests
+test test_fib_base_cases ... ok
+test test_fib_adjacent_coprime ... ok
+test test_fib_boundary_values ... ok
+test test_fib_cassini_identity ... ok
+test test_fib_difference_identity ... ok
+test test_fib_consecutive_sum_property ... ok
+test test_fib_divisibility_property ... ok
+test test_fib_even_indices_divisible_by_fib2 ... ok
+test test_fib_iterative_large_values ... ok
+test test_fib_gcd_property ... ok
+test test_fib_known_values ... ok
+test test_fib_large ... ok
+test test_fib_last_digit_pisano_period ... ok
+test test_fib_medium ... ok
+test test_fib_monotonically_increasing ... ok
+test test_fib_parity_pattern ... ok
+test test_fib_ratio_approaches_golden ... ok
+test test_fib_recursive_base_case_zero ... ok
+test test_fib_recursive_base_cases ... ok
+test test_fib_recursive_small ... ok
+test test_fib_recursive_medium ... ok
+test test_fib_small ... ok
+test test_fib_squares_sum ... ok
+test test_fib_sum_of_first_n ... ok
+test test_fib_recursive_agrees_with_iterative ... ok
+test test_fib_recursive_boundary ... ok
+test test_fib_recursive_agrees_larger ... ok
+
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/Chap11/TestParaPairs.rs (target/release/deps/TestParaPairs-343c72bd67d6e9ea)
+
+running 13 tests
+test test_para_pair_max_values ... ok
+test test_para_pair_bool_results ... ok
+test test_para_pair_different_types ... ok
+test test_para_pair_heavy_compute ... ok
+test test_para_pair_simple ... ok
+test test_para_pair_vec_results ... ok
+test test_para_pair_nested ... ok
+test test_para_pair_closure_captures ... ok
+test test_set_parallelism ... ok
+test test_para_pair_compute ... ok
+test test_para_pair_option_results ... ok
+test test_para_pair_strings ... ok
+test test_para_pair_zero_values ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s

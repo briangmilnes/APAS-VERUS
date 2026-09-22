@@ -70,3 +70,10 @@ and do not compile; see the chapter section.
 - PTT: the 20 files in `rust_verify_test/tests/Chap06/` are not registered
   in `rust_verify_test/Cargo.toml`, so the harness cannot run them; they are
   on the pre-09.13 iterator model. Not run.
+
+### Chap11
+
+- First run on 09.13: 651 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-050801.log`). No edit.
+- RTT: 2 targets, 40 tests pass (`logs/rtt.20260922-050809.log`).
+- PTT: none registered.
