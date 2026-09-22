@@ -1,0 +1,107 @@
+r212 RTT for Chap59: cargo test --release on 4 targets: TestJohnsonMtEphF64 TestJohnsonMtEphI64 TestJohnsonStEphF64 TestJohnsonStEphI64
+Starting RTT at 06:29:39
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.16s
+     Running tests/Chap59/TestJohnsonMtEphF64.rs (target/release/deps/TestJohnsonMtEphF64-2ab09a07ca877e61)
+
+running 8 tests
+test test_mt_single_vertex ... ok
+test test_mt_two_vertices ... ok
+test test_mt_simple_graph ... ok
+test test_mt_cycle ... ok
+test test_mt_negative_weights ... ok
+test test_mt_disconnected ... ok
+test test_mt_diamond ... ok
+test test_mt_zero_weights ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap59/TestJohnsonMtEphI64.rs (target/release/deps/TestJohnsonMtEphI64-dccf1d39b745cc14)
+
+running 12 tests
+test test_empty_graph ... ok
+test test_negative_cycle ... ok
+test test_chain_graph ... ok
+test test_bidirectional_edges ... ok
+test test_self_distance_zero ... ok
+test test_single_vertex ... ok
+test test_mt_diamond ... ok
+test test_mt_st_agree ... ok
+test test_example_59_1 ... ok
+test test_disconnected_graph ... ok
+test test_negative_weights ... ok
+test test_simple_graph ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap59/TestJohnsonStEphF64.rs (target/release/deps/TestJohnsonStEphF64-b1fb176b9966c089)
+
+running 6 tests
+test test_diamond ... ok
+test test_disconnected_graph ... ok
+test test_negative_weights ... ok
+test test_simple_graph ... ok
+test test_two_vertices ... ok
+test test_single_vertex ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap59/TestJohnsonStEphI64.rs (target/release/deps/TestJohnsonStEphI64-41abf13505d6bcef)
+
+running 15 tests
+test test_bidirectional_negative_weights ... ok
+test test_chain_graph ... ok
+test test_cycle_no_negative ... ok
+test test_complete_graph_4 ... ok
+test test_disconnected_graph ... ok
+test test_diamond ... ok
+test test_example_59_1 ... ok
+test test_negative_cycle ... ok
+test test_negative_weights ... ok
+test test_path_extraction ... ok
+test test_self_distance_zero ... ok
+test test_simple_graph ... ok
+test test_single_vertex ... ok
+test test_star_out_graph ... ok
+test test_two_vertices_one_edge ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s
