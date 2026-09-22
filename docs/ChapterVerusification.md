@@ -78,7 +78,7 @@ calls, removed chapter by chapter as each is migrated.
 | 31 | 52 | 18, 19, 37, 38, 41, 43 | 0 | r213: 2943 verified, 0 err, 0 warn; RTT 148 pass | `validate.20260922-061938.log` |
 | 32 | 53 | 37, 38, 41 | 0 | r213: 2246 verified, 0 err, 0 warn; RTT 46 pass | `validate.20260922-062132.log` |
 | 33 | 54 | 02, 18, 19 | 0 | r213: 1277 verified, 0 err, 0 warn; RTT 53 pass | `validate.20260922-062218.log` |
-| 34 | 55 | 19, 37, 41 | 0 | blocked on 19, 37, 41 | full log |
+| 34 | 55 | 19, 37, 41 | 0 | r213: 2290 verified, 0 err, 0 warn; RTT 58 pass | `validate.20260922-062417.log` |
 | 35 | 56 | 19 | 0 | blocked on 19 | full log |
 | 36 | 57 | 05, 06, 45, 56 | 24 | old-model loops in 2 Dijkstra files | full log |
 | 37 | 58 | 05, 06, 56 | 16 | old-model loops in 2 BellmanFord files | full log |

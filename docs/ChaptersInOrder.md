@@ -55,6 +55,7 @@ file, or listed at the end.
 | 31 | 52 | 2943 | 0 | 0 | 148 pass | none | r213 Chap52 |
 | 32 | 53 | 2246 | 0 | 0 | 46 pass | none | r213 Chap53 |
 | 33 | 54 | 1277 | 0 | 0 | 53 pass | 8 pass | r213 Chap54 |
+| 34 | 55 | 2290 | 0 | 0 | 58 pass | none | r213 Chap55 |
 
 Notes: (1) the failing proof-time tests are on the pre-09.13 iterator model
 and do not compile; see the chapter section.
@@ -611,3 +612,10 @@ Chap02 631 (`051146`), Chap03 622 (`051149`), Chap05 760 (`051151`), Chap06
   orig.as_ref()`, `count == it.index()`), keeping each test's claim that
   the count equals `tree.order.spec_len()`. 2 files, 8 tests pass
   (`logs/ptt-Chap54.20260922-062353.log`).
+
+### Chap55
+
+- Start and end: 2290 verified, 0 errors, 0 warnings, 0 trigger notes
+  (`logs/validate.20260922-062417.log`). No edit.
+- RTT: 8 targets, 58 tests pass (`logs/rtt.20260922-062441.log`).
+- PTT: none registered.

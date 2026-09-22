@@ -1,0 +1,148 @@
+r212 RTT for Chap55: cargo test --release on 8 targets: TestCycleDetectStEph TestCycleDetectStPer TestDFSStEph TestDFSStPer TestSCCStEph TestSCCStPer TestTopoSortStEph TestTopoSortStPer
+Starting RTT at 06:24:41
+warning: unexpected `cfg` condition name: `never`
+   --> src/Chap43/OrderedTableStEph.rs:750:15
+    |
+750 |         #[cfg(never)] fn union_bypassed_r158() { let ghost old_tree = self.tree.inner@;
+    |               ^^^^^
+    |
+    = help: expected names are: `docsrs`, `feature`, `test`, `verus_keep_ghost`, and `verus_keep_ghost_body` and 32 more
+    = help: consider using a Cargo feature instead
+    = help: or consider adding in `Cargo.toml` the `check-cfg` lint config for the lint:
+             [lints.rust]
+             unexpected_cfgs = { level = "warn", check-cfg = ['cfg(never)'] }
+    = help: or consider adding `println!("cargo::rustc-check-cfg=cfg(never)");` to the top of the `build.rs`
+    = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+    = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:105:10
+    |
+105 |     impl !Sync for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: negative impls are experimental
+   --> src/vstdplus/threads_plus.rs:108:10
+    |
+108 |     impl !Send for IsThreadPlus {}
+    |          ^
+    |
+    = note: see issue #68318 <https://github.com/rust-lang/rust/issues/68318> for more information
+    = warning: unstable syntax can change at any point in the future, causing a hard error!
+    = note: for more information, see issue #154045 <https://github.com/rust-lang/rust/issues/154045>
+
+warning: `apas-verus` (lib) generated 3 warnings
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+    Finished `release` profile [optimized] target(s) in 0.21s
+     Running tests/Chap55/TestCycleDetectStEph.rs (target/release/deps/TestCycleDetectStEph-b4a3ec5178b1aa6d)
+
+running 7 tests
+test test_cycle_in_dag_structure ... ok
+test test_dag_no_cycle ... ok
+test test_no_cycle_linear ... ok
+test test_no_cycle_empty_graph ... ok
+test test_self_loop ... ok
+test test_simple_cycle ... ok
+test test_no_cycle_single_node ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap55/TestCycleDetectStPer.rs (target/release/deps/TestCycleDetectStPer-e2468e74a411c3e0)
+
+running 7 tests
+test test_cycle_in_dag_structure ... ok
+test test_dag_no_cycle ... ok
+test test_no_cycle_empty_graph ... ok
+test test_no_cycle_single_node ... ok
+test test_no_cycle_linear ... ok
+test test_self_loop ... ok
+test test_simple_cycle ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap55/TestDFSStEph.rs (target/release/deps/TestDFSStEph-80f134237e8f945e)
+
+running 5 tests
+test test_cycle ... ok
+test test_dag ... ok
+test test_disconnected ... ok
+test test_line_graph ... ok
+test test_single_vertex ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap55/TestDFSStPer.rs (target/release/deps/TestDFSStPer-df96d3af82665a8e)
+
+running 5 tests
+test test_cycle ... ok
+test test_dag ... ok
+test test_disconnected ... ok
+test test_line_graph ... ok
+test test_single_vertex ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap55/TestSCCStEph.rs (target/release/deps/TestSCCStEph-65ebe692cb9a6f15)
+
+running 7 tests
+test test_linear_dag ... ok
+test test_complex_graph ... ok
+test test_self_loop ... ok
+test test_two_nodes_no_edges ... ok
+test test_single_node ... ok
+test test_simple_cycle ... ok
+test test_two_separate_sccs ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap55/TestSCCStPer.rs (target/release/deps/TestSCCStPer-b1d8a80b4cf297dd)
+
+running 7 tests
+test test_complex_graph ... ok
+test test_self_loop ... ok
+test test_single_node ... ok
+test test_linear_dag ... ok
+test test_simple_cycle ... ok
+test test_two_nodes_no_edges ... ok
+test test_two_separate_sccs ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap55/TestTopoSortStEph.rs (target/release/deps/TestTopoSortStEph-dac6ab78c718b2aa)
+
+running 10 tests
+test test_cycle_returns_none ... ok
+test test_dag_with_branches ... ok
+test test_disconnected_components ... ok
+test test_empty_graph ... ok
+test test_linear_dag ... ok
+test test_self_loop_returns_none ... ok
+test test_single_node ... ok
+test test_topo_sort_disconnected ... ok
+test test_topo_sort_empty ... ok
+test test_topo_sort_simple ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/Chap55/TestTopoSortStPer.rs (target/release/deps/TestTopoSortStPer-e965662b234f7461)
+
+running 10 tests
+test test_cycle_returns_none ... ok
+test test_dag_with_branches ... ok
+test test_disconnected_components ... ok
+test test_empty_graph ... ok
+test test_self_loop_returns_none ... ok
+test test_linear_dag ... ok
+test test_single_node ... ok
+test test_topo_sort_disconnected ... ok
+test test_topo_sort_empty ... ok
+test test_topo_sort_simple ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+cargo test rc: 0
+Elapsed: 0s
