@@ -1,0 +1,5 @@
+A iso-mod/Chap26__ScanDCMtPer__ScanDCMtPer.smt2: blocks=215 declare-sort=14 declare-fun=196 declare-const=1193 assert=542 forall=381 push=8 check-sat=8
+B full-mod/Chap26__ScanDCMtPer__ScanDCMtPer.smt2: blocks=215 declare-sort=14 declare-fun=196 declare-const=1193 assert=542 forall=381 push=8 check-sat=8
+blocks only in A: 0
+blocks only in B: 0
+header-order diff lines (diff of first-line sequences): 32

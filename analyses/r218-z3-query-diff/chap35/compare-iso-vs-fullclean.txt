@@ -1,0 +1,5 @@
+A iso-mod/Chap35__OrderStatSelectMtEph__OrderStatSelectMtEph.smt2: blocks=601 declare-sort=9 declare-fun=320 declare-const=795 assert=1070 forall=871 push=10 check-sat=10
+B variants/full-clean.smt2: blocks=601 declare-sort=9 declare-fun=320 declare-const=795 assert=1070 forall=871 push=10 check-sat=10
+blocks only in A: 0
+blocks only in B: 0
+header-order diff lines (diff of first-line sequences): 124

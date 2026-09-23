@@ -1,0 +1,13 @@
+config	kept_queries	target_result	target_rlimit
+iso	9	unknown	878207
+iso	8 9	unknown	793035
+iso	1 2 3 4 5 6 7 8 9	unsat	612369
+iso	3 4 5 6 7 8 9	unknown	854887
+iso	1 2 9	unknown	741341
+iso	6 7 8 9	unknown	843609
+full-clean	9	unknown	899378
+full-clean	8 9	unknown	850560
+full-clean	1 2 3 4 5 6 7 8 9	unknown	916388
+full-clean	3 4 5 6 7 8 9	unknown	841193
+full-clean	1 2 9	unknown	741500
+full-clean	6 7 8 9	unknown	775074

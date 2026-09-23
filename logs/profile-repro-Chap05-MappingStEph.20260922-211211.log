@@ -1,0 +1,8 @@
+note: verifying module Chap05::MappingStEph::MappingStEph
+
+note: Analyzing prover log for module Chap05::MappingStEph::MappingStEph ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap05::MappingStEph::MappingStEph
+
+verification results:: 22 verified, 0 errors (partial verification with `--verify-*`)

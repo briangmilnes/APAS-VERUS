@@ -1,0 +1,19 @@
+A chap35/iso-mod/Chap35__OrderStatSelectMtEph__OrderStatSelectMtEph.smt2: blocks=601 declare-sort=9 declare-fun=320 declare-const=795 assert=1070 forall=871 push=10 check-sat=10
+B chap35/full-mod/Chap35__OrderStatSelectMtEph__OrderStatSelectMtEph.smt2: blocks=613 declare-sort=9 declare-fun=323 declare-const=1121 assert=1104 forall=876 push=13 check-sat=14
+blocks only in A: 1
+  A-only: (push) (get-info :all-statistics) (declare-const T&. Dcr) (declare-const T& Type) (declare-const found! core!option.Option.) (declare-const a! lib!Chap19.ArrayS
+blocks only in B: 13
+  B-only: (pop) 
+  B-only: (pop) 
+  B-only: (pop) 
+  B-only: (push) (get-info :all-statistics) (declare-const T&. Dcr) (declare-const T& Type) (declare-const found! core!option.Option.) (declare-const a! lib!Chap19.ArrayS
+  B-only: (push) (get-info :all-statistics) (declare-const T&. Dcr) (declare-const T& Type) (declare-const found! core!option.Option.) (declare-const a! lib!Chap19.ArrayS
+  B-only: (push) (get-info :all-statistics) (declare-const T&. Dcr) (declare-const T& Type) (declare-const found! core!option.Option.) (declare-const a! lib!Chap19.ArrayS
+  B-only: (push) (get-info :all-statistics) (declare-const T&. Dcr) (declare-const T& Type) (declare-const found! core!option.Option.) (declare-const a! lib!Chap19.ArrayS
+  B-only: ;; Function-Expand-Errors lib::Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph::select_inner
+  B-only: ;; Function-Expand-Errors lib::Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph::select_inner
+  B-only: ;; Function-Recommends lib::Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph::select_inner
+  B-only: ;; src/Chap35/OrderStatSelectMtEph.rs:493:5: 495:27 (#N)
+  B-only: ;; src/Chap35/OrderStatSelectMtEph.rs:493:5: 495:27 (#N)
+  B-only: ;; src/Chap35/OrderStatSelectMtEph.rs:493:5: 495:27 (#N)
+header-order diff lines (diff of first-line sequences): 136

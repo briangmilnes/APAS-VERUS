@@ -1,0 +1,60 @@
+(:added-eqs           158
+ :binary-propagations 33
+ :max-memory          18.52
+ :memory              18.52
+ :mk-bool-var         684
+ :mk-clause-binary    104
+ :num-allocs          145106
+ :propagations        33
+ :rlimit-count        88628)
+(:added-eqs           158
+ :binary-propagations 33
+ :max-memory          18.71
+ :memory              18.71
+ :mk-bool-var         684
+ :mk-clause-binary    104
+ :num-allocs          179734
+ :propagations        33
+ :rlimit-count        91226)
+(:version "4.16.0")
+unknown
+(:added-eqs                   662173
+ :arith-assert-diseq          5035
+ :arith-assert-lower          63068
+ :arith-assert-upper          37427
+ :arith-assume-eqs            19
+ :arith-bound-prop            3457
+ :arith-conflicts             229
+ :arith-eq-adapter            32018
+ :arith-fixed-eqs             13569
+ :arith-num-rows              57873
+ :arith-offset-eqs            5526
+ :arith-pivots                21125
+ :arith-row-summations        103629
+ :arith-tableau-max-columns   104778
+ :arith-tableau-max-rows      57873
+ :binary-propagations         171
+ :conflicts                   453
+ :datatype-accessor-ax        203
+ :datatype-constructor-ax     198
+ :decisions                   9083
+ :del-clause                  35058
+ :final-checks                19
+ :interface-eqs               19
+ :max-generation              100
+ :max-memory                  1426.50
+ :max-missed-qa-cost          101.00
+ :memory                      1426.50
+ :min-missed-qa-cost          101.00
+ :minimized-lits              1040
+ :missed-quant-instantiations 8963
+ :mk-bool-var                 782548
+ :mk-clause                   260420
+ :mk-clause-binary            104
+ :num-allocs                  20610507699.00
+ :num-checks                  1
+ :propagations                97193
+ :quant-instantiations        486126
+ :restarts                    4
+ :rlimit-count                30091226
+ :time                        29.31)

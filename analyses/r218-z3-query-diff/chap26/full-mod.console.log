@@ -1,0 +1,532 @@
+Mode: full
+note: verifying module Chap26::ScanDCMtPer::ScanDCMtPer
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ScanDCMtPer.rs:119:5
+    |
+119 |     fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+{
+  "func-details": {
+    "vstd::seq_lib::impl&%0::add_empty_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_scan_post": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_add_index1": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::fold_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%6::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::prefix_sums_dc_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::singleton": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_add_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerRedefinableTrait::singleton": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_ext_equal": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_append_take_skip": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_take_nothing": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::monoid::monoid::spec_right_identity": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_index_same": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::impl&%0::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_sum_fn": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::function::axiom_fn_mut_call_ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::push": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%48::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%2::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_arrayseqmtper_wf": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::impl&%2::skip": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::length": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_skip_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_subrange_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ScanDCMtPer::ScanDCMtPer::ScanDCMtTrait::prefix_sums_dc_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%0::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::VecAdditionalSpecFns::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::impl&%0::ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::impl&%0::requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%8::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_skip_nothing": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_subrange_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%18::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::drop_last": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_take_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%4::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_new_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::View::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::relations::associative": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::nth": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ScanDCMtPer::ScanDCMtPer::lemma_fold_left_monoid": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::spec_vec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::length": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_has_resolved": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::monoid::monoid::spec_left_identity": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_decreases_to_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::FnWithRequiresEnsures::ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_two_subranges_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::add_empty_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::impl&%2::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::FnWithRequiresEnsures::requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::spec_arrayseqmtper_wf": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_new_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::push_distributes_over_add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_index_different": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_take_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_add_index2": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::function::axiom_fn_mut_call_requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_subrange_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::subrange": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%43::push": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_skip_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::last": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::map": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::num::impl&%11::wrapping_add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::nth": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%0::with_capacity": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::impl&%2::spec_add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::spec_iterate": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::lemma_fold_left_split": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::impl&%2::take": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_ext_equal_deep": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::monoid::monoid::spec_monoid": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%30::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_empty_equality": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerRedefinableTrait::empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::vec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_skip_build_commut": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_skip_index2": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%16::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_scan_at": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_wrapping_add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::wrapping::usize_specs::wrapping_add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    }
+  },
+  "verification-results": {
+    "encountered-error": true,
+    "encountered-vir-error": false,
+    "verified": 7,
+    "errors": 1,
+    "is-verifying-entire-crate": false
+  },
+  "times-ms": {
+    "verus-build": {
+      "profile": "release",
+      "version": "0.2026.09.13.671956e"
+    },
+    "num-threads": 1,
+    "total": 34340,
+    "estimated-cpu-time": 34340,
+    "rust": {
+      "total": 8443,
+      "init-and-types": 8147,
+      "trait-conflicts": 296,
+      "compile": 0
+    },
+    "verification": {
+      "total": 21829,
+      "vir": {
+        "total": 16421,
+        "hir": 3036,
+        "import": 99,
+        "rust-to-vir": 2726
+      }
+    },
+    "total-verify": 1173,
+    "total-verify-module-times": [
+      {
+        "module": "Chap26::ScanDCMtPer::ScanDCMtPer",
+        "time": 1173
+      }
+    ],
+    "air": {
+      "total": 103,
+      "module-times": [
+        {
+          "module": "Chap26::ScanDCMtPer::ScanDCMtPer",
+          "time": 103
+        }
+      ]
+    },
+    "smt": {
+      "total": 780,
+      "smt-init": 1,
+      "rlimit-init": 4734,
+      "smt-init-module-times": [
+        {
+          "module": "Chap26::ScanDCMtPer::ScanDCMtPer",
+          "time": 1,
+          "time-micros": 1902,
+          "rlimit": 4734
+        }
+      ],
+      "smt-run": 779,
+      "rlimit-run": 30165417,
+      "smt-run-module-times": [
+        {
+          "module": "Chap26::ScanDCMtPer::ScanDCMtPer",
+          "time": 779,
+          "time-micros": 779492,
+          "rlimit": 30165417,
+          "function-breakdown": [
+            {
+              "function": "lib::Chap26::ScanDCMtPer::ScanDCMtPer::lemma_fold_left_monoid",
+              "mode:": "proof",
+              "time": 5,
+              "time-micros": 5333,
+              "rlimit": 12679,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner",
+              "mode:": "exec",
+              "time": 769,
+              "time-micros": 769972,
+              "rlimit": 30146410,
+              "success": false
+            },
+            {
+              "function": "lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::prefix_sums_dc_parallel",
+              "mode:": "exec",
+              "time": 4,
+              "time-micros": 4185,
+              "rlimit": 6328,
+              "success": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verus": {
+    "profile": "release",
+    "version": "0.2026.09.13.671956e",
+    "platform": {
+      "os": "linux",
+      "arch": "x86_64"
+    },
+    "toolchain": "1.98.1-x86_64-unknown-linux-gnu (overridden by environment variable RUSTUP_TOOLCHAIN)",
+    "commit": "671956ec527d3b7164779f767bdbfe769bedce6c"
+  }
+}
+Elapsed: 35s
+Sampled Memory Usage: peak rust_verify RSS: 3966MB, peak z3 RSS: 0MB, min free: 23079MB
+Sampled CPU Usage: rust_verify: 32s, z3 children: 0s

@@ -1,0 +1,215 @@
+1: 
+2: ;; Prelude
+3: ;; AIR prelude
+4: ;; MODULE 'module Chap26::ScanDCMtPer::ScanDCMtPer'
+5: ;; Fuel
+6: ;; Trait-Decls
+7: ;; Associated-Type-Decls
+8: ;; Datatypes
+9: ;; Trait-Bounds
+10: ;; Associated-Type-Impls
+11: ;; Function-Decl vstd::seq::Seq::len
+12: ;; Function-Decl vstd::seq::Seq::index
+13: ;; Function-Decl vstd::seq::impl&%2::spec_index
+14: ;; Function-Decl vstd::seq::Seq::subrange
+15: ;; Function-Decl vstd::seq::Seq::empty
+16: ;; Function-Decl vstd::seq::Seq::new
+17: ;; Function-Decl vstd::seq::Seq::push
+18: ;; Function-Decl vstd::seq::Seq::add
+19: ;; Function-Decl vstd::seq_lib::impl&%0::drop_last
+20: ;; Function-Decl vstd::seq::Seq::last
+21: ;; Function-Decl vstd::seq::impl&%2::spec_add
+22: ;; Function-Decl vstd::seq_lib::impl&%0::fold_left
+23: ;; Function-Decl vstd::view::View::view
+24: ;; Function-Decl vstd::std_specs::vec::spec_vec_len
+25: ;; Function-Decl vstd::std_specs::vec::VecAdditionalSpecFns::spec_index
+26: ;; Function-Decl vstd::seq::impl&%2::skip
+27: ;; Function-Decl vstd::seq::impl&%2::take
+28: ;; Function-Decl vstd::seq_lib::impl&%0::map
+29: ;; Function-Decl vstd::pervasive::FnWithRequiresEnsures::requires
+30: ;; Function-Decl vstd::pervasive::FnWithRequiresEnsures::ensures
+31: ;; Function-Decl lib::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::spec_iterate
+32: ;; Function-Decl vstd::relations::associative
+33: ;; Function-Decl lib::vstdplus::monoid::monoid::spec_left_identity
+34: ;; Function-Decl lib::vstdplus::monoid::monoid::spec_right_identity
+35: ;; Function-Decl lib::vstdplus::monoid::monoid::spec_monoid
+36: ;; Function-Decl lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_arrayseqmtper_wf
+37: ;; Function-Decl lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_len
+38: ;; Function-Decl lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_index
+39: ;; Function-Decl vstd::wrapping::usize_specs::wrapping_add
+40: ;; Function-Decl lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_scan_at
+41: ;; Function-Decl lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_scan_post
+42: ;; Function-Decl lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_wrapping_add
+43: ;; Function-Decl lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_sum_fn
+44: ;; Function-Axioms vstd::seq::Seq::len
+45: ;; Function-Specs vstd::seq::Seq::index
+46: ;; Function-Axioms vstd::seq::Seq::index
+47: ;; Function-Specs vstd::seq::impl&%2::spec_index
+48: ;; Function-Axioms vstd::seq::impl&%2::spec_index
+49: ;; Broadcast vstd::seq::lemma_seq_index_decreases
+50: ;; Function-Specs vstd::seq::Seq::subrange
+51: ;; Function-Axioms vstd::seq::Seq::subrange
+52: ;; Broadcast vstd::seq::lemma_seq_subrange_decreases
+53: ;; Function-Axioms vstd::seq::Seq::empty
+54: ;; Broadcast vstd::seq::lemma_seq_empty
+55: ;; Function-Axioms vstd::seq::Seq::new
+56: ;; Broadcast vstd::seq::lemma_seq_new_len
+57: ;; Broadcast vstd::seq::lemma_seq_new_index
+58: ;; Function-Axioms vstd::seq::Seq::push
+59: ;; Broadcast vstd::seq::lemma_seq_push_len
+60: ;; Broadcast vstd::seq::lemma_seq_push_index_same
+61: ;; Broadcast vstd::seq::lemma_seq_push_index_different
+62: ;; Broadcast vstd::seq::lemma_seq_ext_equal
+63: ;; Broadcast vstd::seq::lemma_seq_ext_equal_deep
+64: ;; Broadcast vstd::seq::lemma_seq_subrange_len
+65: ;; Broadcast vstd::seq::lemma_seq_subrange_index
+66: ;; Broadcast vstd::seq::lemma_seq_two_subranges_index
+67: ;; Function-Axioms vstd::seq::Seq::add
+68: ;; Broadcast vstd::seq::lemma_seq_add_len
+69: ;; Broadcast vstd::seq::lemma_seq_add_index1
+70: ;; Broadcast vstd::seq::lemma_seq_add_index2
+71: ;; Function-Specs vstd::seq_lib::impl&%0::drop_last
+72: ;; Function-Axioms vstd::seq_lib::impl&%0::drop_last
+73: ;; Function-Specs vstd::seq::Seq::last
+74: ;; Function-Axioms vstd::seq::Seq::last
+75: ;; Function-Axioms vstd::seq::impl&%2::spec_add
+76: ;; Broadcast vstd::seq_lib::impl&%0::add_empty_left
+77: ;; Broadcast vstd::seq_lib::impl&%0::add_empty_right
+78: ;; Broadcast vstd::seq_lib::impl&%0::push_distributes_over_add
+79: ;; Function-Axioms vstd::seq_lib::impl&%0::fold_left
+80: ;; Function-Specs vstd::seq_lib::impl&%0::lemma_fold_left_split
+81: ;; Broadcast vstd::seq_lib::impl&%0::lemma_fold_left_split
+82: ;; Trait-Impl-Axiom
+83: ;; Broadcast vstd::function::axiom_fn_mut_call_requires
+84: ;; Broadcast vstd::function::axiom_fn_mut_call_ensures
+85: ;; Function-Axioms vstd::view::View::view
+86: ;; Function-Axioms vstd::view::impl&%18::view
+87: ;; Trait-Impl-Axiom
+88: ;; Function-Axioms vstd::view::impl&%30::view
+89: ;; Trait-Impl-Axiom
+90: ;; Function-Axioms vstd::view::impl&%48::view
+91: ;; Trait-Impl-Axiom
+92: ;; Function-Axioms vstd::view::impl&%0::view
+93: ;; Trait-Impl-Axiom
+94: ;; Function-Axioms vstd::std_specs::vec::spec_vec_len
+95: ;; Trait-Impl-Axiom
+96: ;; Broadcast vstd::std_specs::vec::axiom_spec_len
+97: ;; Trait-Impl-Axiom
+98: ;; Function-Specs vstd::std_specs::vec::VecAdditionalSpecFns::spec_index
+99: ;; Function-Axioms vstd::std_specs::vec::VecAdditionalSpecFns::spec_index
+100: ;; Function-Axioms vstd::std_specs::vec::impl&%0::spec_index
+101: ;; Trait-Impl-Axiom
+102: ;; Broadcast vstd::std_specs::vec::axiom_vec_index_decreases
+103: ;; Broadcast vstd::std_specs::vec::axiom_vec_has_resolved
+104: ;; Broadcast vstd::std_specs::vec::axiom_vec_decreases_to_view
+105: ;; Trait-Impl-Axiom
+106: ;; Trait-Impl-Axiom
+107: ;; Function-Axioms vstd::seq::impl&%2::skip
+108: ;; Function-Axioms vstd::seq::impl&%2::take
+109: ;; Broadcast vstd::seq_lib::lemma_seq_empty_equality
+110: ;; Broadcast vstd::seq_lib::lemma_seq_take_len
+111: ;; Broadcast vstd::seq_lib::lemma_seq_take_index
+112: ;; Broadcast vstd::seq_lib::lemma_seq_skip_len
+113: ;; Broadcast vstd::seq_lib::lemma_seq_skip_index
+114: ;; Broadcast vstd::seq_lib::lemma_seq_skip_index2
+115: ;; Broadcast vstd::seq_lib::lemma_seq_append_take_skip
+116: ;; Broadcast vstd::seq_lib::lemma_seq_skip_build_commut
+117: ;; Broadcast vstd::seq_lib::lemma_seq_skip_nothing
+118: ;; Broadcast vstd::seq_lib::lemma_seq_take_nothing
+119: ;; Function-Axioms vstd::seq_lib::impl&%0::map
+120: ;; Function-Specs alloc::vec::impl&%43::push
+121: ;; Trait-Impl-Axiom
+122: ;; Function-Axioms vstd::pervasive::FnWithRequiresEnsures::requires
+123: ;; Function-Axioms vstd::pervasive::FnWithRequiresEnsures::ensures
+124: ;; Function-Axioms vstd::pervasive::impl&%0::requires
+125: ;; Function-Axioms vstd::pervasive::impl&%0::ensures
+126: ;; Trait-Impl-Axiom
+127: ;; Function-Axioms lib::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::spec_iterate
+128: ;; Function-Axioms vstd::relations::associative
+129: ;; Function-Axioms lib::vstdplus::monoid::monoid::spec_left_identity
+130: ;; Function-Axioms lib::vstdplus::monoid::monoid::spec_right_identity
+131: ;; Function-Axioms lib::vstdplus::monoid::monoid::spec_monoid
+132: ;; Function-Specs vstd::std_specs::vec::vec_index
+133: ;; Function-Specs alloc::vec::impl&%0::with_capacity
+134: ;; Function-Axioms lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_arrayseqmtper_wf
+135: ;; Function-Axioms lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_len
+136: ;; Function-Specs lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_index
+137: ;; Function-Axioms lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::spec_index
+138: ;; Function-Specs lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::length
+139: ;; Function-Specs lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerBaseTrait::nth
+140: ;; Function-Specs lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerRedefinableTrait::empty
+141: ;; Function-Specs lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerRedefinableTrait::singleton
+142: ;; Function-Axioms lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::spec_len
+143: ;; Function-Axioms lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::spec_index
+144: ;; Function-Axioms lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::spec_arrayseqmtper_wf
+145: ;; Trait-Impl-Axiom
+146: ;; Function-Specs lib::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join
+147: ;; Function-Axioms vstd::view::impl&%6::view
+148: ;; Trait-Impl-Axiom
+149: ;; Function-Axioms vstd::wrapping::usize_specs::wrapping_add
+150: ;; Function-Specs core::num::impl&%11::wrapping_add
+151: ;; Function-Specs lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_scan_at
+152: ;; Function-Axioms lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_scan_at
+153: ;; Function-Axioms lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_scan_post
+154: ;; Function-Axioms lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_wrapping_add
+155: ;; Function-Axioms lib::Chap26::ScanDCMtPer::ScanDCMtPer::spec_sum_fn
+156: ;; Function-Specs lib::Chap26::ScanDCMtPer::ScanDCMtPer::ScanDCMtTrait::prefix_sums_dc_parallel
+157: ;; Function-Axioms lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::view
+158: ;; Trait-Impl-Axiom
+159: ;; Function-Axioms vstd::view::impl&%2::view
+160: ;; Function-Axioms vstd::view::impl&%4::view
+161: ;; Function-Axioms vstd::view::impl&%16::view
+162: ;; Trait-Impl-Axiom
+163: ;; Trait-Impl-Axiom
+164: ;; Trait-Impl-Axiom
+165: ;; Trait-Impl-Axiom
+166: ;; Trait-Impl-Axiom
+167: ;; Trait-Impl-Axiom
+168: ;; Trait-Impl-Axiom
+169: ;; Trait-Impl-Axiom
+170: ;; Trait-Impl-Axiom
+171: ;; Trait-Impl-Axiom
+172: ;; Trait-Impl-Axiom
+173: ;; Trait-Impl-Axiom
+174: ;; Trait-Impl-Axiom
+175: ;; Trait-Impl-Axiom
+176: ;; Trait-Impl-Axiom
+177: ;; Function-Specs lib::Chap26::ScanDCMtPer::ScanDCMtPer::lemma_fold_left_monoid
+178: ;; Function-Def lib::Chap26::ScanDCMtPer::ScanDCMtPer::lemma_fold_left_monoid
+179: ;; src/Chap26/ScanDCMtPer.rs:82:11: 82:107 (#N)
+180: (push)
+181: (pop)
+182: ;; Function-Specs lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner
+183: ;; Function-Def lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner
+184: ;; src/Chap26/ScanDCMtPer.rs:165:9: 165:22 (#N)
+185: (push)
+186: (pop)
+187: ;; Function-Def lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner
+188: ;; src/Chap26/ScanDCMtPer.rs:181:9: 181:28 (#N)
+189: (push)
+190: (pop)
+191: ;; Function-Def lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner
+192: ;; src/Chap26/ScanDCMtPer.rs:239:13: 239:25 (#N)
+193: (push)
+194: (pop)
+195: ;; Function-Def lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner
+196: ;; src/Chap26/ScanDCMtPer.rs:262:13: 262:25 (#N)
+197: (push)
+198: (pop)
+199: ;; Function-Def lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner
+200: ;; src/Chap26/ScanDCMtPer.rs:285:9: 285:24 (#N)
+201: (push)
+202: (pop)
+203: ;; Function-Def lib::Chap26::ScanDCMtPer::ScanDCMtPer::prefix_sums_dc_inner
+204: ;; src/Chap26/ScanDCMtPer.rs:119:5: 119:96 (#N)
+205: (push)
+206: (pop)
+207: ;; Function-Def lib::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::prefix_sums_dc_parallel
+208: ;; src/Chap26/ScanDCMtPer.rs:360:9: 360:103 (#N)
+209: (push)
+210: (pop)
+211: ;; Trait-Impl-Axiom
+212: ;; Trait-Impl-Axiom
+213: ;; Trait-Impl-Axiom
+214: ;; Trait-Impl-Axiom
+215: ;; Trait-Impl-Axiom

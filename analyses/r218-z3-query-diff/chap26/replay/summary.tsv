@@ -1,0 +1,11 @@
+variant	target_result	target_rlimit
+iso-mod.raw	unsat	4888736
+full-mod.raw	unknown	30000000
+A-full-order-iso-names	unknown	30000000
+B-iso-order-full-names	unsat	4888736
+C-iso-content-full-order	unknown	30000000
+D-full-content-iso-order	unsat	4888736
+E-hybrid-k71-pass-expected	unsat	4888736
+F-hybrid-k72-fail-expected	unknown	30000000
+G-iso-target-query-only	unknown	30000000
+H-full-target-query-only	unknown	30000000
