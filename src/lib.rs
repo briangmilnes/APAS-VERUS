@@ -271,7 +271,6 @@ pub mod standards {
 pub mod vstdplus {
     pub mod accept;
     pub mod pervasives_plus;
-    pub mod threads_plus;
 //    pub mod VecQueue;                                     // r208: 0 users; vstd std_specs/vecdeque.rs specifies VecDeque
     pub mod seq_set;
 //    pub mod seq_set_pre_0913;                             // r208: pre-0.2026.09.13 version, kept as record; seq_set.rs is its finite-Set replacement

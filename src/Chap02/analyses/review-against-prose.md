@@ -147,10 +147,6 @@ FibonacciHFScheduler:
 | 2 | `test_fib_par` | `fib_par` (n=0..20) |
 | 3 | `test_fib_par_larger` | `fib_par` (n=25,30) |
 
-### test_threads_plus.rs (7 tests)
-
-Tests `spawn_plus` and `JoinHandlePlus` from vstdplus, not Chap02 directly. Provides coverage of the underlying threading primitive.
-
 ### Coverage Summary
 
 | # | Chap | File | Function | RTT Coverage |
@@ -226,7 +222,7 @@ Everything is inside verus!. Ordering is correct: specs before proofs before exe
 | # | Chap | File | Item | Expected | Actual | Status |
 |---|------|------|------|----------|--------|--------|
 | 1 | 02 | HFSchedulerMtEph.rs | PoolState struct | out (Mutex/Condvar) | out | correct |
-| 2 | 02 | HFSchedulerMtEph.rs | TaskState enum | out (JoinHandlePlus) | out | correct |
+| 2 | 02 | HFSchedulerMtEph.rs | TaskState enum | out (vstd::thread::JoinHandle) | out | correct |
 | 3 | 02 | HFSchedulerMtEph.rs | init_pool/try_acquire/acquire/release | out (Mutex ops) | out | correct |
 | 4 | 02 | HFSchedulerMtEph.rs | ExTaskState spec | in | in | correct |
 | 5 | 02 | HFSchedulerMtEph.rs | set_parallelism..wait | in | in | correct |
@@ -243,7 +239,7 @@ No placement errors.
 | Spec functions | 1 (`spec_fib`) |
 | Proof functions | 5 |
 | Proof holes | 0 (10 accept holes on thread infrastructure) |
-| RTT tests | 19 (9 scheduler + 3 fibonacci + 7 threads_plus) |
+| RTT tests | 12 (9 scheduler + 3 fibonacci) |
 | PTT tests | 0 (not needed) |
 | Uncovered exec fns | 1 (`set_parallelism`) |
 | Spec weaknesses | 0 |

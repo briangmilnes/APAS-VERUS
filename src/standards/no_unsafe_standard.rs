@@ -45,7 +45,6 @@
 //! - `src/Chap41/AVLTreeSetMtEph.rs` — wraps ParamBST
 //! - `src/Chap41/AVLTreeSetMtPer.rs` — wraps ParamBST
 //! - `src/Chap43/OrderedTableMtEph.rs` — wraps ParamBST
-//! - `src/vstdplus/threads_plus.rs` — ThreadShareablePlus
 //!
 //! These exist because ParamBST uses internal node-level locking (per-node RwLock
 //! with raw pointer traversal) that doesn't auto-derive Send+Sync. The fix is to

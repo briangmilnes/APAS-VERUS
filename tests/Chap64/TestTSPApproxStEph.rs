@@ -1,4 +1,3 @@
-#![cfg(feature = "all_chapters")]
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! Chapter 64: TSP 2-Approximation Tests (Sequential)

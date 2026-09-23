@@ -22,7 +22,7 @@ pub mod HFSchedulerMtEph {
     //		Section 2. imports
 
     use vstd::prelude::*;
-    use crate::vstdplus::threads_plus::threads_plus::*;
+    use vstd::thread::{JoinHandle, spawn as spawn_thread};
     use crate::Concurrency::*;
     use std::sync::{Mutex, Condvar, LazyLock, RwLock};
 
@@ -35,7 +35,7 @@ pub mod HFSchedulerMtEph {
 
     /// - State of a spawned task: either running in a thread or already completed (help-first).
     pub enum TaskState<T> { // accept hole
-        Spawned   { handle: JoinHandlePlus<T> },
+        Spawned   { handle: JoinHandle<T> },
         Completed { result: Option<T> },
     }
 
@@ -155,7 +155,7 @@ pub mod HFSchedulerMtEph {
             fa.ensures((), joined_pair.0),
             fb.ensures((), joined_pair.1),
     {
-        let handle: JoinHandlePlus<B> = spawn_plus(fb);
+        let handle: JoinHandle<B> = spawn_thread(fb);
         let a = fa();
         let b = match handle.join() {
             Ok(val) => val,
@@ -182,7 +182,7 @@ pub mod HFSchedulerMtEph {
             forall|ret: T| #[trigger] task.predicate(ret) ==> f.ensures((), ret),
     {
         if try_acquire() {
-            let thread_handle: JoinHandlePlus<T> = spawn_plus(f);
+            let thread_handle: JoinHandle<T> = spawn_thread(f);
             TaskState::Spawned { handle: thread_handle }
         } else {
             let joined_pair = f();

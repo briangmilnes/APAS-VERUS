@@ -1,7 +1,6 @@
-#![cfg(feature = "all_chapters")]
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
-use apas_verus::Chap19::ArraySeqStPer::ArraySeqStPer::*;
+use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::*;
 use apas_verus::Chap37::BSTAVLMtEph::BSTAVLMtEph::*;
 use apas_verus::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::*;
 use apas_verus::Chap37::BSTPlainMtEph::BSTPlainMtEph::*;
@@ -11,11 +10,15 @@ use apas_verus::Chap39::BSTTreapStEph::BSTTreapStEph::*;
 use apas_verus::Types::Types::*;
 use apas_verus::Types::*;
 
+type BSTree<T> = BSTPlainMtEph<T>;
+type BSTreeAVL<T> = BSTAVLMtEph<T>;
+type BSTreeBBAlpha<T> = BSTBBAlphaMtEph<T>;
+
 #[test]
 fn mt_plain_basic_ops() {
-    let bst = BSTree::new();
+    let mut bst = BSTree::new();
     for value in [4, 2, 6, 1, 3, 5, 7] {
-        bst.insert(value);
+        bst.insert(value).unwrap();
     }
     assert_eq!(bst.size(), 7);
     assert_eq!(bst.find(&3), Some(3));
@@ -26,9 +29,9 @@ fn mt_plain_basic_ops() {
 
 #[test]
 fn mt_avl_basic_ops() {
-    let bst = BSTreeAVL::new();
+    let mut bst = BSTreeAVL::new();
     for value in [10, 5, 15, 2, 7, 12, 20] {
-        bst.insert(value);
+        bst.insert(value).unwrap();
     }
     assert_eq!(bst.size(), 7);
     assert_eq!(bst.find(&7), Some(7));
@@ -37,9 +40,9 @@ fn mt_avl_basic_ops() {
 
 #[test]
 fn mt_rb_basic_ops() {
-    let bst = BSTreeRB::new();
+    let mut bst = BSTreeRB::new();
     for value in 0..16 {
-        bst.insert(value);
+        bst.insert(value).unwrap();
     }
     assert_eq!(bst.size(), 16);
     assert_eq!(bst.find(&8), Some(8));
@@ -47,9 +50,9 @@ fn mt_rb_basic_ops() {
 
 #[test]
 fn mt_bbalpha_basic_ops() {
-    let bst = BSTreeBBAlpha::new();
+    let mut bst = BSTreeBBAlpha::new();
     for value in 0..32 {
-        bst.insert(value);
+        bst.insert(value).unwrap();
     }
     assert_eq!(bst.size(), 32);
     assert_eq!(bst.find(&12), Some(12));
@@ -58,9 +61,9 @@ fn mt_bbalpha_basic_ops() {
 
 #[test]
 fn mt_splay_basic_ops() {
-    let bst = BSTreeSplay::new();
+    let mut bst = BSTreeSplay::new();
     for value in [4, 2, 6, 1, 3, 5, 7] {
-        bst.insert(value);
+        bst.insert(value).unwrap();
     }
     assert_eq!(bst.size(), 7);
     assert_eq!(bst.find(&5), Some(5));
@@ -69,7 +72,7 @@ fn mt_splay_basic_ops() {
 // Individual variant comprehensive testing for BST*MtEph variants
 #[test]
 fn mt_plain_comprehensive_operations() {
-    let bst = BSTree::<i32>::new();
+    let mut bst = BSTree::<i32>::new();
 
     // Test empty state
     assert_eq!(bst.size(), 0);
@@ -83,7 +86,7 @@ fn mt_plain_comprehensive_operations() {
     // Test insertions
     let values = [50, 25, 75, 12, 37, 62, 87, 6, 18, 31, 43];
     for &val in &values {
-        bst.insert(val);
+        bst.insert(val).unwrap();
     }
 
     assert_eq!(bst.size(), values.len());
@@ -117,11 +120,11 @@ fn mt_plain_comprehensive_operations() {
 
 #[test]
 fn mt_avl_comprehensive_operations() {
-    let bst = BSTreeAVL::<i32>::new();
+    let mut bst = BSTreeAVL::<i32>::new();
 
     // Test balanced insertion (worst case for unbalanced trees)
     for i in 1..=20 {
-        bst.insert(i);
+        bst.insert(i).unwrap();
     }
 
     assert_eq!(bst.size(), 20);
@@ -154,12 +157,12 @@ fn mt_avl_comprehensive_operations() {
 
 #[test]
 fn mt_rb_comprehensive_operations() {
-    let bst = BSTreeRB::<i32>::new();
+    let mut bst = BSTreeRB::<i32>::new();
 
     // Test with alternating insertions
     let values = [100, 50, 150, 25, 75, 125, 175, 12, 37, 62, 87, 112, 137, 162, 187];
     for &val in &values {
-        bst.insert(val);
+        bst.insert(val).unwrap();
     }
 
     assert_eq!(bst.size(), values.len());
@@ -194,11 +197,11 @@ fn mt_rb_comprehensive_operations() {
 
 #[test]
 fn mt_bbalpha_comprehensive_operations() {
-    let bst = BSTreeBBAlpha::<i32>::new();
+    let mut bst = BSTreeBBAlpha::<i32>::new();
 
     // Test worst-case insertion pattern for unbalanced trees
     for i in (1..=30).rev() {
-        bst.insert(i);
+        bst.insert(i).unwrap();
     }
 
     assert_eq!(bst.size(), 30);
@@ -228,12 +231,12 @@ fn mt_bbalpha_comprehensive_operations() {
 
 #[test]
 fn mt_splay_comprehensive_operations() {
-    let bst = BSTreeSplay::<i32>::new();
+    let mut bst = BSTreeSplay::<i32>::new();
 
     // Test with access pattern that benefits from splaying
     let values = [50, 25, 75, 12, 37, 62, 87];
     for &val in &values {
-        bst.insert(val);
+        bst.insert(val).unwrap();
     }
 
     assert_eq!(bst.size(), values.len());
@@ -302,8 +305,8 @@ fn mt_all_variants_single_element() {
     // Test that all variants handle single element correctly
     macro_rules! test_single_variant {
         ($variant:ty) => {
-            let bst = <$variant>::new();
-            bst.insert(42);
+            let mut bst = <$variant>::new();
+            bst.insert(42).unwrap();
 
             assert_eq!(bst.size(), 1);
             assert_eq!(bst.is_empty(), false);
@@ -334,14 +337,14 @@ fn mt_all_variants_duplicate_handling() {
     // Test that all variants handle duplicates correctly
     macro_rules! test_duplicate_variant {
         ($variant:ty) => {
-            let bst = <$variant>::new();
+            let mut bst = <$variant>::new();
 
             // Insert duplicates
-            bst.insert(10);
-            bst.insert(5);
-            bst.insert(15);
-            bst.insert(10); // Duplicate
-            bst.insert(5); // Duplicate
+            bst.insert(10).unwrap();
+            bst.insert(5).unwrap();
+            bst.insert(15).unwrap();
+            bst.insert(10).unwrap(); // Duplicate
+            bst.insert(5).unwrap(); // Duplicate
 
             // Size should reflect actual unique elements (behavior may vary by implementation)
             assert!(bst.size() >= 3); // At least the unique elements
@@ -364,322 +367,87 @@ fn mt_all_variants_duplicate_handling() {
     test_duplicate_variant!(BSTreeSplay<i32>);
 }
 
-// Parallel operation verification tests for BST*MtEph variants
+// Concurrent readers. Insert takes &mut self, so one owner builds the tree;
+// the tree is then shared through Arc and queried by several threads at once.
+// Every reader must observe exactly the contents the owner inserted.
+macro_rules! concurrent_readers {
+    ($variant:ty, $values:expr, $readers:expr) => {{
+        use std::sync::{Arc, Barrier};
+        use std::thread;
+
+        let values: Vec<i32> = $values;
+        let mut bst = <$variant>::new();
+        for &v in &values {
+            bst.insert(v).unwrap();
+        }
+        let mut expected = values.clone();
+        expected.sort();
+        expected.dedup();
+        let expected_height = bst.height();
+
+        let bst = Arc::new(bst);
+        let barrier = Arc::new(Barrier::new($readers));
+        let handles: Vec<_> = (0..$readers)
+            .map(|_| {
+                let bst = Arc::clone(&bst);
+                let barrier = Arc::clone(&barrier);
+                let values = values.clone();
+                thread::spawn(move || {
+                    barrier.wait();
+                    let found = values.iter().filter(|&&v| bst.contains(&v)).count();
+                    let absent_found = bst.contains(&-1);
+                    let in_order = bst.in_order();
+                    let seq: Vec<i32> = (0..in_order.length()).map(|i| *in_order.nth(i)).collect();
+                    (bst.size(), bst.height(), bst.minimum(), bst.maximum(), found, absent_found, seq)
+                })
+            })
+            .collect();
+
+        for h in handles {
+            let (size, height, min, max, found, absent_found, seq) = h.join().unwrap();
+            assert_eq!(size, expected.len());
+            assert_eq!(height, expected_height);
+            assert_eq!(min, expected.first().copied());
+            assert_eq!(max, expected.last().copied());
+            assert_eq!(found, values.len());
+            assert!(!absent_found);
+            assert_eq!(seq, expected);
+        }
+    }};
+}
+
 #[test]
 fn mt_concurrent_plain_bst_operations() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
-
-    let bst = Arc::new(BSTree::<i32>::new());
-    let barrier = Arc::new(Barrier::new(4));
-    let mut handles = vec![];
-
-    // Thread 1: Insert values 1-25
-    let bst1 = Arc::clone(&bst);
-    let barrier1 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier1.wait();
-        for i in 1..=25 {
-            bst1.insert(i);
-        }
-        bst1.size()
-    }));
-
-    // Thread 2: Insert values 26-50
-    let bst2 = Arc::clone(&bst);
-    let barrier2 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier2.wait();
-        for i in 26..=50 {
-            bst2.insert(i);
-        }
-        bst2.size()
-    }));
-
-    // Thread 3: Search for values
-    let bst3 = Arc::clone(&bst);
-    let barrier3 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier3.wait();
-        let mut found_count = 0;
-        for i in 1..=50 {
-            if bst3.contains(&i) {
-                found_count += 1;
-            }
-        }
-        found_count
-    }));
-
-    // Thread 4: Check height
-    let bst4 = Arc::clone(&bst);
-    let barrier4 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier4.wait();
-        bst4.height()
-    }));
-
-    let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
-
-    // Verify results - exact counts may vary due to concurrent insertions
-    // but we should have reasonable results
-    assert!(results[0] >= 25); // Thread 1 size
-    assert!(results[1] >= 25); // Thread 2 size
-    // Thread 3 found count can vary
-    // Height can be 0 for empty tree or vary based on timing in concurrent operations
-    // Just verify it's a valid height value (non-negative, which is always true for usize)
+    concurrent_readers!(BSTree<i32>, (1..=50).collect(), 4);
 }
 
 #[test]
 fn mt_concurrent_avl_bst_operations() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
-
-    let bst = Arc::new(BSTreeAVL::<i32>::new());
-    let num_threads = 6;
-    let barrier = Arc::new(Barrier::new(num_threads));
-    let mut handles = vec![];
-
-    for thread_id in 0..num_threads {
-        let bst_clone = Arc::clone(&bst);
-        let barrier_clone = Arc::clone(&barrier);
-
-        handles.push(thread::spawn(move || {
-            barrier_clone.wait();
-
-            // Each thread inserts different ranges
-            let start = thread_id * 10;
-            let end = start + 10;
-
-            for i in start..end {
-                bst_clone.insert(i as i32);
-            }
-
-            // Test operations
-            let size = bst_clone.size();
-            let height = bst_clone.height();
-            let min = bst_clone.minimum();
-            let max = bst_clone.maximum();
-
-            (thread_id, size, height, min, max)
-        }));
-    }
-
-    let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
-
-    // Verify each thread's results
-    for (thread_id, size, height, min, max) in results {
-        assert!(size >= 10); // At least the thread's own insertions
-        assert!(height > 0); // Tree has some height
-        // Min/max depend on insertion order across threads
-        println!("Thread {thread_id}: size={size}, height={height}, min={min:?}, max={max:?}");
-    }
+    concurrent_readers!(BSTreeAVL<i32>, (0..60).collect(), 6);
 }
 
 #[test]
 fn mt_concurrent_rb_bst_stress() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
-
-    let bst = Arc::new(BSTreeRB::<i32>::new());
-    let num_threads = 8;
-    let barrier = Arc::new(Barrier::new(num_threads));
-    let mut handles = vec![];
-
-    for thread_id in 0..num_threads {
-        let bst_clone = Arc::clone(&bst);
-        let barrier_clone = Arc::clone(&barrier);
-
-        handles.push(thread::spawn(move || {
-            barrier_clone.wait();
-
-            // Stress test with many insertions
-            for i in 0..100 {
-                let value = (thread_id * 100 + i) as i32;
-                bst_clone.insert(value);
-            }
-
-            let final_size = bst_clone.size();
-            let height = bst_clone.height();
-            let in_order = bst_clone.in_order();
-            let is_sorted = (1..in_order.length()).all(|i| *in_order.nth(i - 1) <= *in_order.nth(i));
-
-            (thread_id, final_size, height, is_sorted)
-        }));
-    }
-
-    let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
-
-    // Verify results
-    for (thread_id, final_size, height, is_sorted) in results {
-        assert!(final_size >= 100); // At least the thread's own insertions
-        assert!(height > 0);
-        assert!(is_sorted, "Thread {thread_id} produced unsorted result");
-    }
+    concurrent_readers!(BSTreeRB<i32>, (0..800).collect(), 8);
 }
 
 #[test]
 fn mt_concurrent_bbalpha_operations() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
-
-    let bst = Arc::new(BSTreeBBAlpha::<i32>::new());
-    let barrier = Arc::new(Barrier::new(3));
-    let mut handles = vec![];
-
-    // Thread 1: Sequential insertions
-    let bst1 = Arc::clone(&bst);
-    let barrier1 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier1.wait();
-        for i in 1..=50 {
-            bst1.insert(i);
-        }
-        (bst1.size(), bst1.height())
-    }));
-
-    // Thread 2: Reverse sequential insertions
-    let bst2 = Arc::clone(&bst);
-    let barrier2 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier2.wait();
-        for i in (51..=100).rev() {
-            bst2.insert(i);
-        }
-        (bst2.size(), bst2.height())
-    }));
-
-    // Thread 3: Random-like insertions
-    let bst3 = Arc::clone(&bst);
-    let barrier3 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier3.wait();
-        let values = [125, 112, 137, 106, 118, 131, 143];
-        for &val in &values {
-            bst3.insert(val);
-        }
-        (bst3.size(), bst3.height())
-    }));
-
-    let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
-
-    // All threads should contribute to the tree
-    for (i, (size, height)) in results.iter().enumerate() {
-        assert!(*size >= 7); // At least some insertions
-        assert!(*height > 0);
-        println!("Thread {i}: size={size}, height={height}");
-    }
+    let values: Vec<i32> = (1..=50).chain((51..=100).rev()).chain([125, 112, 137, 106, 118, 131, 143]).collect();
+    concurrent_readers!(BSTreeBBAlpha<i32>, values, 3);
 }
-
 
 #[test]
 fn mt_concurrent_splay_access_patterns() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
-
-    let bst = Arc::new(BSTreeSplay::<i32>::new());
-    let barrier = Arc::new(Barrier::new(2));
-    let mut handles = vec![];
-
-    // Thread 1: Insert and frequent access
-    let bst1 = Arc::clone(&bst);
-    let barrier1 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier1.wait();
-
-        // Insert values
-        for i in 1..=20 {
-            bst1.insert(i);
-        }
-
-        // Frequently access certain values (should splay them)
-        let frequent_values = [5, 10, 15];
-        for _ in 0..10 {
-            for &val in &frequent_values {
-                assert!(bst1.contains(&val));
-            }
-        }
-
-        bst1.size()
-    }));
-
-    // Thread 2: Insert different range
-    let bst2 = Arc::clone(&bst);
-    let barrier2 = Arc::clone(&barrier);
-    handles.push(thread::spawn(move || {
-        barrier2.wait();
-
-        for i in [100, 50, 150, 25, 75, 125, 175] {
-            bst2.insert(i);
-        }
-
-        bst2.size()
-    }));
-
-    let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
-
-    // Both threads should contribute
-    assert!(results[0] >= 20); // Thread 1: at least 20 elements
-    assert!(results[1] >= 7); // Thread 2: at least 7 elements
+    let values: Vec<i32> = (1..=20).chain([100, 50, 150, 25, 75, 125, 175]).collect();
+    concurrent_readers!(BSTreeSplay<i32>, values, 2);
 }
 
 #[test]
 fn mt_all_variants_concurrent_stress() {
-    use std::sync::{Arc, Barrier};
-    use std::thread;
-
-    macro_rules! test_concurrent_variant {
-        ($variant:ty) => {
-            let bst = Arc::new(<$variant>::new());
-            let barrier = Arc::new(Barrier::new(3));
-            let mut handles = vec![];
-
-            for thread_id in 0..3 {
-                let bst_clone = Arc::clone(&bst);
-                let barrier_clone = Arc::clone(&barrier);
-
-                handles.push(thread::spawn(move || {
-                    barrier_clone.wait();
-
-                    // Each thread inserts different ranges
-                    let start = thread_id * 10 + 1;
-                    let end = start + 10;
-
-                    for i in start..end {
-                        bst_clone.insert(i);
-                    }
-
-                    // Test that all operations work
-                    let size = bst_clone.size();
-                    let height = bst_clone.height();
-                    let min = bst_clone.minimum();
-                    let max = bst_clone.maximum();
-
-                    (size, height, min, max)
-                }));
-            }
-
-            let results: Vec<_> = handles.into_iter().map(|h| h.join().unwrap()).collect();
-
-            // Each thread should contribute to the tree
-            for (thread_id, (size, height, min, max)) in results.iter().enumerate() {
-                assert!(*size >= 10); // At least some insertions
-                assert!(*height > 0);
-                println!(
-                    "Variant {} Thread {}: size={}, height={}, min={:?}, max={:?}",
-                    stringify!($variant),
-                    thread_id,
-                    size,
-                    height,
-                    min,
-                    max
-                );
-            }
-        };
-    }
-
-    test_concurrent_variant!(BSTree<i32>);
-    test_concurrent_variant!(BSTreeAVL<i32>);
-    test_concurrent_variant!(BSTreeRB<i32>);
-    test_concurrent_variant!(BSTreeBBAlpha<i32>);
-    test_concurrent_variant!(BSTreeSplay<i32>);
+    concurrent_readers!(BSTree<i32>, (1..=30).collect(), 3);
+    concurrent_readers!(BSTreeAVL<i32>, (1..=30).collect(), 3);
+    concurrent_readers!(BSTreeRB<i32>, (1..=30).collect(), 3);
+    concurrent_readers!(BSTreeBBAlpha<i32>, (1..=30).collect(), 3);
+    concurrent_readers!(BSTreeSplay<i32>, (1..=30).collect(), 3);
 }

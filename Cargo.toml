@@ -199,10 +199,6 @@ name = "TestFibonacciMt"
 path = "tests/Chap11/TestFibonacciMt.rs"
 
 [[test]]
-name = "test_threads_plus"
-path = "tests/Chap02/test_threads_plus.rs"
-
-[[test]]
 name = "test_fibonacci_scheduler"
 path = "tests/Chap02/test_fibonacci_scheduler.rs"
 

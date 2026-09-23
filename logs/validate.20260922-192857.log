@@ -1,0 +1,117 @@
+Mode: full
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ScanDCMtPer.rs:119:5
+    |
+119 |     fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtPer.rs:551:17
+    |
+551 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtEph.rs:553:17
+    |
+553 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2115:39
+     |
+2064 |             forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+     |             ----------------------------------------------------------------------------- failed precondition
+...
+2115 |                     let merged_left = join_with_priority_st(left, key, priority, rl);
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2064:83
+     |
+2064 |             forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+     |                                                                                   ^^^^^^^
+
+note: 
+
+obeys_cmp() ✔
+view_ord_consistent() ✔
+left.view().disjoint(rl.view()) ✔
+!(left.view().to_iset().contains(key.view())) ✔
+!(rl.view().to_iset().contains(key.view())) ✔
+clip(nat, left.view().len() + rl.view().len()) < UnsignedMax(usize::BITS) ✔
+forall |t|
+    left.view().to_iset().contains(t.view()) ==>
+        t.cmp_spec(key) == Less ✔
+forall |t|
+    rl.view().to_iset().contains(t.view()) ==>
+        t.cmp_spec(key) == Greater ✘
+        |   !(t.cmp_spec(key) is Less) ✘
+        |   !(t.cmp_spec(key) is Equal) ✔
+        +---
+spec_param_wf_link(left.root) ✔
+spec_param_wf_link(rl.root) ✔
+left.spec_bsttreapsteph_wf() ✔
+rl.spec_bsttreapsteph_wf() ✔
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPMtEph.rs:223:11
+    |
+223 |       proof fn lemma_combined_cycle(
+    |  ___________^
+224 | |         combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
+225 | |         ln_i: int, rn_i: int, best_li: int, best_ri: int,
+226 | |         el_from: Point, el_to: Point, er_from: Point, er_to: Point,
+227 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPMtEph.rs:344:5
+    |
+344 |     fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindArrayStEph.rs:163:11
+    |
+163 |       proof fn lemma_find_after_link(
+    |  ___________^
+164 | |         po: Seq<int>, ro: Seq<int>, pn: Seq<int>, rn: Seq<int>,
+165 | |         n: nat, ra: int, rb: int, z: int,
+166 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindArrayStEph.rs:326:11
+    |
+326 |     proof fn lemma_link_preserves_wf(po: Seq<int>, ro: Seq<int>, n: nat, ra: int, rb: int, rn: Seq<int>)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5608 verified, 8 errors
+error: aborting due to 8 previous errors
+
+Elapsed: 89s
+Sampled Memory Usage: peak rust_verify RSS: 9648MB, peak z3 RSS: 676MB, min free: 16712MB
+Sampled CPU Usage: rust_verify: 213s, z3 children: 157s

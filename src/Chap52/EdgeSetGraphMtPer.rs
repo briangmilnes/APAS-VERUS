@@ -17,6 +17,7 @@
 //	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
+//	Section 12. derive impls in verus!
 //	Section 14. derive impls outside verus!
 
 //		Section 1. module
@@ -443,6 +444,18 @@ pub mod EdgeSetGraphMtPer {
             EdgeSetGraphMtPer {
                 vertices: new_vertices,
                 edges: new_edges,
+            }
+        }
+    }
+
+    //		Section 12. derive impls in verus!
+
+
+    impl<V: StTInMtT + Ord + TotalOrder + ClonePreservesView + 'static> Default for EdgeSetGraphMtPer<V> {
+        fn default() -> Self {
+            EdgeSetGraphMtPer {
+                vertices: AVLTreeSetMtPer::default(),
+                edges: AVLTreeSetMtPer::default(),
             }
         }
     }
