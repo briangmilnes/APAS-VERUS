@@ -1,0 +1,97 @@
+Mode: isolate
+Isolate: including Chap35 Chap18 Chap19 Chap02
+note: verifying module Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph, function lib::Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph::select_inner (selected functions)
+
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtEph.rs:554:17
+    |
+554 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+note: Analyzing prover log for module Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph, function lib::Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph::select_inner ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph, function lib::Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph::select_inner
+
+note: Profile statistics for module Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph, function lib::Chap35::OrderStatSelectMtEph::OrderStatSelectMtEph::select_inner
+
+note: Observed 782 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 21146 (Instantiated 97 times - 12% of the total, cost 218) top 1 of 34 user-level quantifiers.
+      
+ --> seq_lib.rs:3228:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 8924 (Instantiated 92 times - 11% of the total, cost 97) top 2 of 34 user-level quantifiers.
+      
+ --> seq_lib.rs:3505:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 6728 (Instantiated 58 times - 7% of the total, cost 116) top 3 of 34 user-level quantifiers.
+      
+ --> seq.rs:1739:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 6222 (Instantiated 61 times - 7% of the total, cost 102) top 4 of 34 user-level quantifiers.
+      
+ --> multiset.rs:324:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 5782 (Instantiated 59 times - 7% of the total, cost 98) top 5 of 34 user-level quantifiers.
+      
+ --> seq.rs:1758:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 4900 (Instantiated 70 times - 8% of the total, cost 70) top 6 of 34 user-level quantifiers.
+      
+ --> multiset.rs:363:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3416 (Instantiated 28 times - 3% of the total, cost 122) top 7 of 34 user-level quantifiers.
+      
+ --> multiset.rs:304:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1624 (Instantiated 29 times - 3% of the total, cost 56) top 8 of 34 user-level quantifiers.
+      
+ --> seq_lib.rs:3488:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1462 (Instantiated 34 times - 4% of the total, cost 43) top 9 of 34 user-level quantifiers.
+      
+ --> seq_lib.rs:3210:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1258 (Instantiated 17 times - 2% of the total, cost 74) top 10 of 34 user-level quantifiers.
+      
+ --> multiset.rs:348:0
+  |
+  = note: Triggers selected for this quantifier
+
+verification results:: 0 verified, 1 errors (partial verification with `--verify-*`)
+error: aborting due to 1 previous error
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 791MB, peak z3 RSS: 40MB, min free: 26106MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 0s

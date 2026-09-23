@@ -1,0 +1,75 @@
+Mode: isolate
+Isolate: including Chap18 Chap26 Chap02
+note: verifying module Chap26::ETSPMtEph::ETSPMtEph (selected functions)
+
+note: Analyzing prover log for module Chap26::ETSPMtEph::ETSPMtEph ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap26::ETSPMtEph::ETSPMtEph
+
+
+thread '<unnamed>' (1083912) panicked at rust_verify/src/verifier.rs:716:36:
+Failed to find quantifier user_no_function_1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+note: Profile statistics for module Chap26::ETSPMtEph::ETSPMtEph
+
+note: Observed 44,551 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 37871824012 (Instantiated 6,532 times - 14% of the total, cost 5797891) top 1 of 29 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:158:35
+    |
+158 |           forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+    |  _________-                         ^^^^^^^
+159 | |             spec_point_eq(tour[i].to, spec_next_edge_from(tour, i))
+    | |___________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 543498879 (Instantiated 17,853 times - 40% of the total, cost 30443) top 2 of 29 user-level quantifiers.
+      
+ --> seq.rs:1412:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 339148881 (Instantiated 17,481 times - 39% of the total, cost 19401) top 3 of 29 user-level quantifiers.
+      
+ --> seq.rs:1393:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 5589368 (Instantiated 1,642 times - 3% of the total, cost 3404) top 4 of 29 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:117:35
+    |
+117 |         exists|j: int| #![trigger s[j]] 0 <= j < s.len() && spec_point_eq(p, s[j])
+    |         --------------------------^^^^-------------------------------------------- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 748512 (Instantiated 226 times - 0% of the total, cost 3312) top 5 of 29 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:128:35
+    |
+128 |           forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+    |  _________-                         ^^^^^^^
+129 | |             spec_point_in_seq(tour[i].to, points)
+    | |_________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 41407 (Instantiated 47 times - 0% of the total, cost 881) top 6 of 29 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:122:35
+    |
+122 |           forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+    |  _________-                         ^^^^^^^
+123 | |             spec_point_in_seq(tour[i].from, points)
+    | |___________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 24743 (Instantiated 109 times - 0% of the total, cost 227) top 7 of 29 user-level quantifiers.
+      
+ --> seq_lib.rs:3505:0
+  |
+  = note: Triggers selected for this quantifier
+
+
+thread '<unnamed>' (1083912) panicked at rust_verify/src/verifier.rs:2198:29:
+worker thread panicked
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1237MB, peak z3 RSS: 82MB, min free: 25654MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

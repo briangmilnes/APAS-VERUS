@@ -174,6 +174,27 @@ pub mod ETSPMtEph {
         reveal(spec_next_edge_from);
     }
 
+    /// Elimination for spec_edges_form_cycle at one index. Callers that hide the
+    /// definition use this to get exactly the instance they need.
+    pub proof fn lemma_cycle_at(tour: Seq<Edge>, i: int)
+        requires
+            spec_edges_form_cycle(tour),
+            0 <= i < tour.len(),
+        ensures
+            spec_point_eq(tour[i].to, spec_next_edge_from(tour, i)),
+    {
+    }
+
+    /// Introduction for spec_edges_form_cycle.
+    pub proof fn lemma_cycle_intro(tour: Seq<Edge>)
+        requires
+            forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+                spec_point_eq(tour[i].to, spec_next_edge_from(tour, i)),
+        ensures
+            spec_edges_form_cycle(tour),
+    {
+    }
+
     /// If point p is in sub, and every element of sub is in sup, then p is in sup.
     pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)
         requires
@@ -217,9 +238,43 @@ pub mod ETSPMtEph {
         vstd::arithmetic::div_mod::lemma_mod_multiples_vanish(a / n, a % n + 1, n);
     }
 
+    /// The two-edge tour a -> b -> a forms a cycle.
+    proof fn lemma_two_edge_cycle(tour: Seq<Edge>, a: Point, b: Point)
+        requires
+            tour.len() == 2,
+            tour[0] == (Edge { from: a, to: b }),
+            tour[1] == (Edge { from: b, to: a }),
+        ensures
+            spec_edges_form_cycle(tour),
+    {
+        assert forall|i: int| #![trigger tour[i]] 0 <= i < 2 implies
+            spec_point_eq(tour[i].to, spec_next_edge_from(tour, i))
+        by {
+            lemma_next_edge_from_eq(tour, i);
+            if i == 0 {} else { assert(i == 1); }
+        }
+    }
+
+    /// The three-edge tour a -> b -> c -> a forms a cycle.
+    proof fn lemma_three_edge_cycle(tour: Seq<Edge>, a: Point, b: Point, c: Point)
+        requires
+            tour.len() == 3,
+            tour[0] == (Edge { from: a, to: b }),
+            tour[1] == (Edge { from: b, to: c }),
+            tour[2] == (Edge { from: c, to: a }),
+        ensures
+            spec_edges_form_cycle(tour),
+    {
+        assert forall|i: int| #![trigger tour[i]] 0 <= i < 3 implies
+            spec_point_eq(tour[i].to, spec_next_edge_from(tour, i))
+        by {
+            lemma_next_edge_from_eq(tour, i);
+            if i == 0 {} else if i == 1 {} else { assert(i == 2); }
+        }
+    }
+
     /// The combined tour forms a cycle, given sub-tour cycle properties
     /// and the identity of each combined element.
-    #[verifier::rlimit(40)]
     proof fn lemma_combined_cycle(
         combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
         ln_i: int, rn_i: int, best_li: int, best_ri: int,
@@ -246,6 +301,9 @@ pub mod ETSPMtEph {
         ensures
             spec_edges_form_cycle(combined),
     {
+        // Each case below names the one sub-tour index it needs (lemma_cycle_at).
+        // Unfolded, the lt and rt cycle quantifiers fire on every index term.
+        hide(spec_edges_form_cycle);
         let n = ln_i + rn_i;
 
         assert forall|i: int| #![trigger combined[i]] 0 <= i < n implies
@@ -267,6 +325,7 @@ pub mod ETSPMtEph {
                 let k = i;
                 let li = (best_li + 1 + k) % ln_i;
                 // Selectively reveal lt's cycle at index li (no matching loop).
+                lemma_cycle_at(lt, li);
                 lemma_next_edge_from_eq(lt, li);
                 if i < ln_i - 2 {
                     lemma_small_mod(1, ln_i as nat);
@@ -282,6 +341,7 @@ pub mod ETSPMtEph {
             } else if i == ln_i - 1 {
                 // Bridge: left -> right.
                 // Selectively reveal rt's cycle at best_ri.
+                lemma_cycle_at(rt, best_ri);
                 lemma_next_edge_from_eq(rt, best_ri);
                 let m: int = 0;
                 assert(combined[next_i] == combined[(ln_i + 0)]);
@@ -290,6 +350,7 @@ pub mod ETSPMtEph {
                 let m = i - ln_i;
                 let ri = (best_ri + 1 + m) % rn_i;
                 // Selectively reveal rt's cycle at ri.
+                lemma_cycle_at(rt, ri);
                 lemma_next_edge_from_eq(rt, ri);
                 assert(combined[(ln_i + m)] == rt[ri]);
                 if m < rn_i - 2 {
@@ -306,11 +367,13 @@ pub mod ETSPMtEph {
             } else {
                 // Bridge: right -> left (wraps to index 0).
                 // Selectively reveal lt's cycle at best_li.
+                lemma_cycle_at(lt, best_li);
                 lemma_next_edge_from_eq(lt, best_li);
                 let k: int = 0;
                 assert(combined[next_i].from == lt[((best_li + 1) % ln_i)].from);
             }
         }
+        lemma_cycle_intro(combined);
     }
 
     //		Section 8b. traits
@@ -348,6 +411,10 @@ pub mod ETSPMtEph {
         ensures spec_etsp(tour@, points@),
         decreases points@.len(),
     {
+        // The recursive case uses the cycle property only as an atom: the recursive
+        // calls produce it and lemma_combined_cycle consumes it. Unfolded, its
+        // quantifier fires on every tour index term in this body.
+        hide(spec_edges_form_cycle);
         let n = points.len();
 
         // Base case: n == 2
@@ -356,7 +423,7 @@ pub mod ETSPMtEph {
             tour.push(Edge { from: points[0], to: points[1] });
             tour.push(Edge { from: points[1], to: points[0] });
             proof {
-                reveal(spec_next_edge_from);
+                lemma_two_edge_cycle(tour@, points@[0], points@[1]);
             }
             return tour;
         }
@@ -368,16 +435,7 @@ pub mod ETSPMtEph {
             tour.push(Edge { from: points[1], to: points[2] });
             tour.push(Edge { from: points[2], to: points[0] });
             proof {
-                assert(tour@[0] == (Edge { from: points[0], to: points[1] }));
-                assert(tour@[1] == (Edge { from: points[1], to: points[2] }));
-                assert(tour@[2] == (Edge { from: points[2], to: points[0] }));
-                // Targeted lemma rather than reveal, to avoid the matching loop.
-                lemma_next_edge_from_eq(tour@, 0);
-                lemma_next_edge_from_eq(tour@, 1);
-                lemma_next_edge_from_eq(tour@, 2);
-                assert(spec_point_eq(tour@[0].to, spec_next_edge_from(tour@, 0)));
-                assert(spec_point_eq(tour@[1].to, spec_next_edge_from(tour@, 1)));
-                assert(spec_point_eq(tour@[2].to, spec_next_edge_from(tour@, 2)));
+                lemma_three_edge_cycle(tour@, points@[0], points@[1], points@[2]);
                 // Conjunction flakiness fix: assert each conjunct then the whole.
                 let c1 = tour@.len() == points@.len();
                 let c2 = spec_sources_valid(tour@, points@);

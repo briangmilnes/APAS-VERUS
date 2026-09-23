@@ -1,0 +1,45 @@
+Mode: isolate
+Isolate: including Chap35 Chap18 Chap19 Chap02
+verification results:: 1225 verified, 0 errors
+(use --output-json for machine-readable output)
+verus-build-info
+Verus
+  Version: 0.2026.09.13.671956e
+  Profile: release
+  Platform: linux_x86_64
+  Toolchain: 1.98.1-x86_64-unknown-linux-gnu (overridden by environment variable RUSTUP_TOOLCHAIN)
+
+total-time:            7065 ms    (estimated total cpu time 19106 ms)
+    rust-time:                2525 ms
+        init-and-types:           1378 ms
+        trait-conflicts:            72 ms
+        compile-time:             1075 ms
+    verification-time:        3989 ms
+        vir-time:                 1544 ms
+            hir-time:                  416 ms
+            import-time:               105 ms
+            rust-to-vir:               329 ms
+        verify-crate-time:        2445 ms
+    unaccounted-time:          550 ms
+
+verify-crate-time-breakdown
+    total verify-time:          14128 ms   (8 threads)
+      1. Chap18::ArraySeqMtEph::ArraySeqMtEph           1279 ms
+      2. Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice       1034 ms
+      3. Chap19::ArraySeqMtEph::ArraySeqMtEph            978 ms
+        total air-time:              3251 ms   (8 threads)
+      1. Chap18::ArraySeqMtEph::ArraySeqMtEph            272 ms
+      2. Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice        234 ms
+      3. Chap19::ArraySeqMtEph::ArraySeqMtEph            224 ms
+        total smt-time:              6048 ms   (8 threads)
+            total smt-init:                25 ms,   237088 rlimit (8 threads)
+                1. vstdplus::checked_int::checked_int                3 ms
+                2. vstdplus::checked_nat::checked_nat                2 ms
+                3. vstdplus::total_order::total_order                2 ms
+            total smt-run:               6023 ms, 46829599 rlimit (8 threads)
+                1. Chap18::ArraySeqMtEph::ArraySeqMtEph            713 ms,  4431229 rlimit
+                2. Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice        593 ms,  5045650 rlimit
+                3. Chap19::ArraySeqMtEph::ArraySeqMtEph            547 ms,  3957392 rlimit
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 979MB, peak z3 RSS: 33MB, min free: 25660MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 8s

@@ -552,11 +552,12 @@ pub mod OrderStatSelectMtEph {
             assert forall|j: int| 0 <= j < sorted_left.len() implies
                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
             {
-                // Veracity: NEEDED assert
-                // Veracity: NEEDED assert
-                assert(left@.to_multiset().count(sorted_left[j]) > 0);
+                // sort_by adds no elements, so sorted_left[j] occurs in left@.
+                assert(sorted_left.contains(sorted_left[j]));
+                assert(left@.contains(sorted_left[j]));
                 let idx = choose|idx: int|
                     0 <= idx < left@.len() && left@[idx] == sorted_left[j];
+                assert(T::le(left@[idx], pivot));
             };
 
             // Veracity: NEEDED assert
@@ -564,11 +565,12 @@ pub mod OrderStatSelectMtEph {
             assert forall|j: int| 0 <= j < sorted_right.len() implies
                 T::le(pivot, #[trigger] sorted_right[j]) && sorted_right[j] != pivot by
             {
-                // Veracity: NEEDED assert
-                // Veracity: NEEDED assert
-                assert(right@.to_multiset().count(sorted_right[j]) > 0);
+                // sort_by adds no elements, so sorted_right[j] occurs in right@.
+                assert(sorted_right.contains(sorted_right[j]));
+                assert(right@.contains(sorted_right[j]));
                 let idx = choose|idx: int|
                     0 <= idx < right@.len() && right@[idx] == sorted_right[j];
+                assert(T::le(pivot, right@[idx]));
             };
 
             // Veracity: NEEDED assert

@@ -1,0 +1,1149 @@
+Mode: isolate
+Isolate: including Chap18 Chap26 Chap02
+note: verifying module Chap26::ETSPMtEph::ETSPMtEph (selected functions)
+
+{
+  "func-details": {
+    "vstd::std_specs::num::usize_specs_tmp::impl&%1::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::u64_specs_tmp::impl&%1::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::view_reverse_for_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%42::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::impl&%0::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%58::le": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%18::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::spec_unwrap": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%48::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%49::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%46::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_ext_equal_deep": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%18::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::slice::impl&%9::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_cycle_intro": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%51::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::WrappedF64::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%6::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::f64_sqrt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::f64_mul": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%54::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::axiom_array_decreases_to_seq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::vec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::DeepView::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_new_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::FnWithRequiresEnsures::ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::f64_add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "verus_builtin::impl&%9::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::PartialOrd::le": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%13::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%3::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::sort_and_split": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%12::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_cycle_at": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::WrappedF64::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::view_reverse_for_eq_sized": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%4::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::axiom_strictly_cloned_implies_eq_owned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_edge_valid_transitive": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%9::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::VecAdditionalSpecFns::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%0::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::cloned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::le_ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%5::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::FnWithRequiresEnsures::requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::function::axiom_fn_mut_call_requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::lemma_slice_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::Point::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_has_resolved": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_new_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%1::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%3::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%4::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::Vec::etsp_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%10::le": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_point_distance": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::PartialOrd::lt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%2::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::lemma_seq_empty_equality": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::vec_clone_trigger": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::sync::impl&%32::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%50::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::u64_specs_tmp::impl&%0::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::float::FloatBitsProperties::is_finite_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::boxed::impl&%15::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::PartialOrdSpec::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::obeys_feq_clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::find_best_swap_par": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::f64_sub_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%6::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%0::arrow_0": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%30::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::len%returns_clause_autospec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::usize_specs_tmp::impl&%0::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%2::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_sources_valid": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%54::lt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::PartialOrdSpec::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::ArrayAdditionalSpecFns::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::impl&%2::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::u64_specs_tmp::impl&%1::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%10::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%0::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::UNREACHABLE_SPEC": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%1::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::push": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::lemma_array_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::impl&%2::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_two_edge_cycle": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%43::push": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_slice_has_resolved": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::find_best_swap": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%31::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%58::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::f64_sub": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::impl&%2::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%16::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%1::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::float::impl&%1::is_finite_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::partial_cmp_ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::div_mod::lemma_add_mod_noop": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::array_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::impl&%0::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::WrappedF64::spec_is_finite": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%2::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::point_distance": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::SliceAdditionalSpecFns::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::float::FloatBitsProperties::to_bits_abs_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%0::with_capacity": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::View::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%4::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::f64_mul_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%16::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%7::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::impl&%2::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::axiom_strictly_cloned_implies_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::PartialOrd::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::ptrs_mut_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%8::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%4::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::axiom_array_has_resolved": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::div_mod::lemma_mod_self_0": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%18::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::Edge::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_combined_cycle": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::f64_add_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::axiom_cloned_implies_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::ptrs_mut_eq_sized": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%10::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::impl&%3::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::impl&%0::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::is_none": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "verus_builtin::impl&%7::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::unreachable_dist": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%10::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::axiom_array_ext_equal": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_next_edge_from": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::function::axiom_fn_mut_call_ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%66::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%66::le": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::sync::impl&%16::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_decreases_to_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%54::le": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::lemma_array_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_ext_equal": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_index_same": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_slice_decreases_to_seq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::div_mod::lemma_fundamental_div_mod": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%9::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::axiom_cloned_implies_eq_owned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::impl&%0::requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%27::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::PartialEqSpec::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%3::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%2::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::is_some": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::spec_vec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::impl&%2::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_mod_successor": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%14::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::float::FloatBitsProperties::to_bits_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%26::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_targets_valid": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::lt_ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%38::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::smart_ptrs::smart_ptrs::arc_deref": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%10::lt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_etsp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_three_edge_cycle": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_index_different": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%6::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%15::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::ETSPMtTrait::etsp_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::ETSPPointTrait::distance": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::impl&%1::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%58::lt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::spec_slice_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%13::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::div_mod::lemma_mod_multiples_vanish": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%0::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::array_len_matches_n": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%15::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::etsp_parallel_inner": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::OptionAdditionalFns::arrow_0": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::sort_and_split_impl": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::impl&%0::ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%12::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::div_mod::lemma_small_mod": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::impl&%1::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::Clone::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_next_edge_from_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%19::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_point_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%17::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_slice_ext_equal": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::strictly_cloned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::float::impl&%1::to_bits_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%16::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%10::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::array::impl&%20::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_point_in_seq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::float::impl&%1::to_bits_abs_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::float::float::f64_sqrt_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%66::lt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%1::len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::find_best_swap_impl": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%47::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_edges_form_cycle": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::usize_specs_tmp::impl&%1::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::spec_edges_valid": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::vec_clone_deep_view_proof": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%2::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::Point::distance": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_point_in_seq_transitive": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    }
+  },
+  "verification-results": {
+    "encountered-error": false,
+    "encountered-vir-error": false,
+    "verified": 1,
+    "errors": 0,
+    "is-verifying-entire-crate": false
+  },
+  "times-ms": {
+    "verus-build": {
+      "profile": "release",
+      "version": "0.2026.09.13.671956e"
+    },
+    "num-threads": 1,
+    "total": 4430,
+    "estimated-cpu-time": 4430,
+    "rust": {
+      "total": 2150,
+      "init-and-types": 1151,
+      "trait-conflicts": 67,
+      "compile": 931
+    },
+    "verification": {
+      "total": 1821,
+      "vir": {
+        "total": 1322,
+        "hir": 347,
+        "import": 106,
+        "rust-to-vir": 282
+      }
+    },
+    "total-verify": 161,
+    "total-verify-module-times": [
+      {
+        "module": "Chap26::ETSPMtEph::ETSPMtEph",
+        "time": 161
+      }
+    ],
+    "air": {
+      "total": 47,
+      "module-times": [
+        {
+          "module": "Chap26::ETSPMtEph::ETSPMtEph",
+          "time": 47
+        }
+      ]
+    },
+    "smt": {
+      "total": 26,
+      "smt-init": 0,
+      "rlimit-init": 910,
+      "smt-init-module-times": [
+        {
+          "module": "Chap26::ETSPMtEph::ETSPMtEph",
+          "time": 0,
+          "time-micros": 35,
+          "rlimit": 910
+        }
+      ],
+      "smt-run": 26,
+      "rlimit-run": 355410,
+      "smt-run-module-times": [
+        {
+          "module": "Chap26::ETSPMtEph::ETSPMtEph",
+          "time": 26,
+          "time-micros": 26967,
+          "rlimit": 355410,
+          "function-breakdown": [
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_combined_cycle",
+              "mode:": "proof",
+              "time": 26,
+              "time-micros": 26967,
+              "rlimit": 355410,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_edge_valid_transitive",
+              "mode:": "proof",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::Point::distance",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_cycle_at",
+              "mode:": "proof",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::find_best_swap",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_three_edge_cycle",
+              "mode:": "proof",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_cycle_intro",
+              "mode:": "proof",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_next_edge_from_eq",
+              "mode:": "proof",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::find_best_swap_impl",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::point_distance",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::Point::clone",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::etsp_parallel_inner",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "alloc::vec::Vec::etsp_parallel",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_two_edge_cycle",
+              "mode:": "proof",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::sort_and_split",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_point_in_seq_transitive",
+              "mode:": "proof",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::lemma_mod_successor",
+              "mode:": "proof",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::find_best_swap_par",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            },
+            {
+              "function": "lib::Chap26::ETSPMtEph::ETSPMtEph::Edge::clone",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 0,
+              "rlimit": 0,
+              "success": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verus": {
+    "profile": "release",
+    "version": "0.2026.09.13.671956e",
+    "platform": {
+      "os": "linux",
+      "arch": "x86_64"
+    },
+    "toolchain": "1.98.1-x86_64-unknown-linux-gnu (overridden by environment variable RUSTUP_TOOLCHAIN)",
+    "commit": "671956ec527d3b7164779f767bdbfe769bedce6c"
+  }
+}
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 683MB, peak z3 RSS: 0MB, min free: 26181MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 0s

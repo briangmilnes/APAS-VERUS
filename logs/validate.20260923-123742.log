@@ -1,0 +1,58 @@
+Mode: isolate
+Isolate: including Chap18 Chap26 Chap02
+note: verifying module Chap26::ETSPMtEph::ETSPMtEph (selected functions)
+
+error: function body check: Resource limit (rlimit) exceeded
+   --> src/Chap26/ETSPMtEph.rs:344:5
+    |
+344 |     fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Z3 4.16.0
+note: Analyzing prover log for (profile rerun) lib::Chap26::ETSPMtEph::ETSPMtEph::etsp_parallel_inner ...
+
+note: Log analysis complete for (profile rerun) lib::Chap26::ETSPMtEph::ETSPMtEph::etsp_parallel_inner
+
+
+thread '<unnamed>' (1082401) panicked at rust_verify/src/verifier.rs:716:36:
+Failed to find quantifier user_no_function_3
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+note: Profile statistics for lib::Chap26::ETSPMtEph::ETSPMtEph::etsp_parallel_inner
+
+note: Observed 4,687 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 233274004 (Instantiated 422 times - 9% of the total, cost 552782) top 1 of 17 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:158:35
+    |
+158 |           forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+    |  _________-                         ^^^^^^^
+159 | |             spec_point_eq(tour[i].to, spec_next_edge_from(tour, i))
+    | |___________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3694610 (Instantiated 422 times - 9% of the total, cost 8755) top 2 of 17 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:128:35
+    |
+128 |           forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+    |  _________-                         ^^^^^^^
+129 | |             spec_point_in_seq(tour[i].to, points)
+    | |_________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1969859 (Instantiated 421 times - 8% of the total, cost 4679) top 3 of 17 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:436:43
+    |
+436 |                   forall|k: int| #![trigger left_pts_view[k]] 0 <= k < left_pts_view.len() ==>
+    |  _________________-                         ^^^^^^^^^^^^^^^^
+437 | |                     spec_point_in_seq(left_pts_view[k], points@),
+    | |________________________________________________________________- Triggers selected for this quantifier
+
+
+thread '<unnamed>' (1082401) panicked at rust_verify/src/verifier.rs:2198:29:
+worker thread panicked
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 727MB, peak z3 RSS: 188MB, min free: 26101MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 0s

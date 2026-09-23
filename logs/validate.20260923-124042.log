@@ -1,0 +1,59 @@
+Mode: isolate
+Isolate: including Chap18 Chap26 Chap02
+note: verifying module Chap26::ETSPMtEph::ETSPMtEph (selected functions)
+
+note: Analyzing prover log for module Chap26::ETSPMtEph::ETSPMtEph ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap26::ETSPMtEph::ETSPMtEph
+
+note: Profile statistics for module Chap26::ETSPMtEph::ETSPMtEph
+
+note: Observed 2,158 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 3408517962 (Instantiated 1,951 times - 90% of the total, cost 1747062) top 1 of 5 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:158:35
+    |
+158 |           forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+    |  _________-                         ^^^^^^^
+159 | |             spec_point_eq(tour[i].to, spec_next_edge_from(tour, i))
+    | |___________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1505660 (Instantiated 130 times - 6% of the total, cost 11582) top 2 of 5 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:275:39
+    |
+275 |               forall|k: int| #![trigger combined[k]] 0 <= k < ln_i - 1 ==>
+    |  _____________-                         ^^^^^^^^^^^
+276 | |                 combined[k] == lt[((best_li + 1 + k) % ln_i)],
+    | |_____________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3904 (Instantiated 61 times - 2% of the total, cost 64) top 3 of 5 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:278:39
+    |
+278 |               forall|m: int| #![trigger combined[(ln_i + m)]] 0 <= m < rn_i - 1 ==>
+    |  _____________-                         ^^^^^^^^^^^^^^^^^^^^
+279 | |                 combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)],
+    | |______________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1940 (Instantiated 10 times - 0% of the total, cost 194) top 4 of 5 user-level quantifiers.
+      
+   --> src/Chap26/ETSPMtEph.rs:286:42
+    |
+286 |         assert forall|i: int| #![trigger combined[i]] 0 <= i < n implies
+    |         ------                           ^^^^^^^^^^^
+    |         |
+    |         Triggers selected for this quantifier
+
+note: Cost * Instantiations: 36 (Instantiated 6 times - 0% of the total, cost 6) top 5 of 5 user-level quantifiers.
+      
+ --> seq_lib.rs:3505:0
+  |
+  = note: Triggers selected for this quantifier
+
+verification results:: 1 verified, 0 errors (partial verification with `--verify-*`)
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 725MB, peak z3 RSS: 77MB, min free: 26105MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 0s

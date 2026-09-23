@@ -1,0 +1,6 @@
+Mode: isolate
+Isolate: including Chap35 Chap18 Chap19 Chap02
+Error: When using --verify-function, use --verify-only-module instead of --verify-module
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 26761MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

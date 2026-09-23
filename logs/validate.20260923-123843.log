@@ -1,0 +1,60 @@
+Mode: isolate
+Isolate: including Chap18 Chap26 Chap02
+error: This verus_builtin header should go at the beginning of the function body (this is probably a Verus bug, unless you are manually writing calls to Verus builtin headers, which is unusual)
+   --> src/Chap26/ETSPMtEph.rs:354:17
+    |
+354 |         proof { hide(spec_edges_form_cycle); }
+    |                 ^^^^
+
+error: aborting due to 1 previous error
+
+{
+  "func-details": {},
+  "verification-results": {
+    "encountered-error": true,
+    "encountered-vir-error": true
+  },
+  "times-ms": {
+    "verus-build": {
+      "profile": "release",
+      "version": "0.2026.09.13.671956e"
+    },
+    "num-threads": 1,
+    "total": 2682,
+    "estimated-cpu-time": 2682,
+    "rust": {
+      "total": 1248,
+      "init-and-types": 1248,
+      "trait-conflicts": 0,
+      "compile": 0
+    },
+    "verification": {
+      "total": 461,
+      "vir": {
+        "total": 461,
+        "hir": 356,
+        "import": 105,
+        "rust-to-vir": 0
+      }
+    },
+    "total-verify": 0,
+    "total-verify-module-times": [],
+    "air": {
+      "total": 0,
+      "module-times": []
+    }
+  },
+  "verus": {
+    "profile": "release",
+    "version": "0.2026.09.13.671956e",
+    "platform": {
+      "os": "linux",
+      "arch": "x86_64"
+    },
+    "toolchain": "1.98.1-x86_64-unknown-linux-gnu (overridden by environment variable RUSTUP_TOOLCHAIN)",
+    "commit": "671956ec527d3b7164779f767bdbfe769bedce6c"
+  }
+}
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 439MB, peak z3 RSS: 0MB, min free: 26495MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s
