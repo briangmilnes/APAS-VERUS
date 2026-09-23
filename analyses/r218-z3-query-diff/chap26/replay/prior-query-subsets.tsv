@@ -1,0 +1,13 @@
+config	kept_queries	target_result	target_rlimit
+iso	7	unknown	30000000
+iso	1 7	unsat	7863441
+iso	2 3 4 5 6 7	unsat	7127222
+iso	6 7	unsat	6293245
+iso	1 2 3 4 5 6 7	unsat	4888736
+iso	1 2 3 4 5 6 7 8	unsat	4888736
+full	7	unknown	30000000
+full	1 7	unknown	30000000
+full	2 3 4 5 6 7	unsat	17015107
+full	6 7	unknown	30000000
+full	1 2 3 4 5 6 7	unknown	30000000
+full	1 2 3 4 5 6 7 8	unknown	30000000

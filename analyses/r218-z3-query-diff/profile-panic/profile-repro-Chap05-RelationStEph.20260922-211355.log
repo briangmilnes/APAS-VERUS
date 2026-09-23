@@ -1,0 +1,23 @@
+note: verifying module Chap05::RelationStEph::RelationStEph
+
+note: Analyzing prover log for module Chap05::RelationStEph::RelationStEph ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap05::RelationStEph::RelationStEph
+
+
+thread 'rustc' (1060411) panicked at rust_verify/src/profiler.rs:29:45:
+called `Option::unwrap()` on a `None` value
+stack backtrace:
+   0: __rustc::rust_begin_unwind
+   1: core::panicking::panic_fmt
+   2: core::panicking::panic
+   3: core::option::unwrap_failed
+   4: <hashbrown::raw::RawIterRange<(alloc::string::String, ())>>::fold_impl::<<hashbrown::map::Iter<alloc::string::String, ()> as core::iter::traits::iterator::Iterator>::fold<(), <hashbrown::map::Keys<alloc::string::String, ()> as core::iter::traits::iterator::Iterator>::fold<(), core::iter::adapters::map::map_fold<&alloc::string::String, (alloc::string::String, alloc::rc::Rc<internals_interface::QuantifierX>), (), rust_verify::profiler::write_instantiation_graph::{closure#0}, core::iter::traits::iterator::Iterator::for_each::call<(alloc::string::String, alloc::rc::Rc<internals_interface::QuantifierX>), <hashbrown::map::HashMap<alloc::string::String, alloc::rc::Rc<internals_interface::QuantifierX>, std::hash::random::RandomState> as core::iter::traits::collect::Extend<(alloc::string::String, alloc::rc::Rc<internals_interface::QuantifierX>)>>::extend<core::iter::adapters::map::Map<std::collections::hash::set::Iter<alloc::string::String>, rust_verify::profiler::write_instantiation_graph::{closure#0}>>::{closure#0}>::{closure#0}>::{closure#0}>::{closure#0}>::{closure#0}, ()>
+   5: rust_verify::profiler::write_instantiation_graph
+   6: <rust_verify::verifier::Verifier>::verify_bucket::<rust_verify::verifier::Reporter>
+   7: <rust_verify::verifier::Verifier>::verify_crate_inner
+   8: <rust_verify::verifier::VerifierCallbacksEraseMacro>::finish_verus
+   9: <rust_verify::verifier::VerifierCallbacksEraseMacro as rustc_driver_impl::Callbacks>::after_expansion
+  10: rustc_interface::interface::run_compiler::<(), rustc_driver_impl::run_compiler::{closure#0}>::{closure#1}
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
