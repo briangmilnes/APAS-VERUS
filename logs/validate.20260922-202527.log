@@ -1,0 +1,58 @@
+Mode: full
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtEph.rs:553:17
+    |
+553 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtPer.rs:551:17
+    |
+551 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPMtEph.rs:223:11
+    |
+223 |       proof fn lemma_combined_cycle(
+    |  ___________^
+224 | |         combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
+225 | |         ln_i: int, rn_i: int, best_li: int, best_ri: int,
+226 | |         el_from: Point, el_to: Point, er_from: Point, er_to: Point,
+227 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPMtEph.rs:344:5
+    |
+344 |     fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5612 verified, 4 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 77s
+Sampled Memory Usage: peak rust_verify RSS: 9726MB, peak z3 RSS: 569MB, min free: 16739MB
+Sampled CPU Usage: rust_verify: 215s, z3 children: 137s

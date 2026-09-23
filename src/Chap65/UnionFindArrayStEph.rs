@@ -160,6 +160,7 @@ pub mod UnionFindArrayStEph {
         }
     }
 
+    #[verifier::spinoff_prover]
     proof fn lemma_find_after_link(
         po: Seq<int>, ro: Seq<int>, pn: Seq<int>, rn: Seq<int>,
         n: nat, ra: int, rb: int, z: int,
@@ -323,6 +324,7 @@ pub mod UnionFindArrayStEph {
     /// every other root is unchanged. Either the ranks are unchanged and
     /// `ro[ra] < ro[rb]`, or they were equal and `rb`'s rank grows by one.
     /// Pure-sequence statement of the three `union` branches, factored out in r214.
+    #[verifier::spinoff_prover]
     proof fn lemma_link_preserves_wf(po: Seq<int>, ro: Seq<int>, n: nat, ra: int, rb: int, rn: Seq<int>)
         requires
             spec_wf(UnionFindArrayView { parent: po, rank: ro, n }),

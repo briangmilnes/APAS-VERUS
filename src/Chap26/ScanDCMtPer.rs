@@ -116,6 +116,7 @@ pub mod ScanDCMtPer {
     /// Parallel prefix sums inner recursion. Structural logic verified, recursion parallelized.
     /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n) — parallel recursive calls + O(n)/O(1) combine.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — parallel recursion via join(), sequential O(n) combine: S(n) = S(n/2) + O(n) = O(n).
+    #[verifier::spinoff_prover]
     fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
         requires a.spec_len() <= usize::MAX,
         ensures

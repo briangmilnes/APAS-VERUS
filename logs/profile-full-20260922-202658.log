@@ -1,0 +1,72 @@
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+note: Analyzing prover log for module Chap03::InsertionSortStEph::InsertionSortStEph ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap03::InsertionSortStEph::InsertionSortStEph
+
+note: Analyzing prover log for module Chap05::KleeneStPer::KleeneStPer ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap05::KleeneStPer::KleeneStPer
+
+note: Analyzing prover log for module Chap05::RelationStEph::RelationStEph ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap05::RelationStEph::RelationStEph
+
+
+thread '<unnamed>' (566871) panicked at rust_verify/src/profiler.rs:29:45:
+called `Option::unwrap()` on a `None` value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Z3 4.16.0
+note: Analyzing prover log for module Chap05::MappingStEph::MappingStEph ...
+
+
+thread '<unnamed>' (566871) panicked at rust_verify/src/verifier.rs:2198:29:
+worker thread panicked
+
+thread '<unnamed>' (566876) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (566866) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (566867) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (566868) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (566865) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (566875) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (566869) panicked at rust_verify/src/verifier.rs:237:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (566876) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (566875) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (566869) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (566866) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (566867) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (566868) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (566865) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }

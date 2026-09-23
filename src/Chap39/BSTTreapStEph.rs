@@ -2050,6 +2050,7 @@ l@.disjoint(r@)
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     // Veracity: NEEDED proof block
+    #[verifier::spinoff_prover]
     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
     ) -> (joined: BSTTreapStEph<T>)

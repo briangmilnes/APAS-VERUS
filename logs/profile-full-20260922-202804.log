@@ -1,0 +1,79 @@
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+note: Analyzing prover log for module Chap03::InsertionSortStEph::InsertionSortStEph ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap03::InsertionSortStEph::InsertionSortStEph
+
+note: Analyzing prover log for module Chap05::KleeneStPer::KleeneStPer ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap05::KleeneStPer::KleeneStPer
+
+Z3 4.16.0
+note: Analyzing prover log for module Chap05::MappingStEph::MappingStEph ...
+
+note: Analyzing prover log for module Chap05::RelationStEph::RelationStEph ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap05::MappingStEph::MappingStEph
+
+note: Log analysis complete for module Chap05::RelationStEph::RelationStEph
+
+
+thread '<unnamed>' (567435) panicked at rust_verify/src/profiler.rs:29:45:
+called `Option::unwrap()` on a `None` value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+note: Analyzing prover log for module Chap06::LabDirGraphMtEph::LabDirGraphMtEph ...
+
+Z3 4.16.0
+
+thread '<unnamed>' (567435) panicked at rust_verify/src/verifier.rs:2198:29:
+worker thread panicked
+
+thread '<unnamed>' (567430) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (567429) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (567440) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+Error parsing line 417578 (SubpatNoBlame([t8372])): "[new-match] 1281424027 #16203 #6905 #22150 #9993 #9992 ; #22995 #27805 (#9992 #9992) (#9993 #9993) (#22150 #22150) #24811 (#9992 #9992) (#9993 #9993) (#22150 #22150) #6959 (#9992 #9992) (#9993 #9993) (#18320 #27805) (#28632 #33358)"
+
+thread '<unnamed>' (567432) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+Error parsing line 518396 (SubpatNoBlame([t8372])): "[new-match] 1338656014 #16203 #6905 #20683 #9993 #9992 ; #31553 #19754 (#9992 #9992) (#9993 #9993) (#20683 #20683) #31548 (#9992 #9992) (#9993 #9993) (#20683 #20683) #30706 (#9992 #9992) (#9993 #9993) (#18320 #19754) (#30719 #21679)"
+
+thread '<unnamed>' (567439) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (567433) panicked at rust_verify/src/verifier.rs:207:64:
+could not send!: SendError { .. }
+
+thread '<unnamed>' (567431) panicked at rust_verify/src/verifier.rs:237:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (567430) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (567440) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (567433) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (567439) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (567432) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (567429) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (567431) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
