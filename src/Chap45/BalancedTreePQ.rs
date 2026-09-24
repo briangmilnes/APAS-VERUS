@@ -710,6 +710,10 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn split(&self, element: &T) -> (Self, bool, Self) {
+                // The proof uses the views only through their lengths. Unfolded,
+                // spec_inorder turns every view term into `l + seq![v] + r`, which
+                // the group_seq_properties quantifiers then instantiate.
+                hide(spec_inorder);
                 let mut left = Self::empty();
                 let mut right = Self::empty();
                 let mut found = false;

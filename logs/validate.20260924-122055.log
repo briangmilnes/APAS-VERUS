@@ -1,0 +1,48 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+note: verifying module Chap45::BalancedTreePQ::BalancedTreePQ (selected functions)
+
+note: Analyzing prover log for module Chap45::BalancedTreePQ::BalancedTreePQ ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap45::BalancedTreePQ::BalancedTreePQ
+
+note: Profile statistics for module Chap45::BalancedTreePQ::BalancedTreePQ
+
+note: Observed 315 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 12560 (Instantiated 80 times - 25% of the total, cost 157) top 1 of 17 user-level quantifiers.
+      
+ --> seq_lib.rs:3505:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 2852 (Instantiated 46 times - 14% of the total, cost 62) top 2 of 17 user-level quantifiers.
+      
+ --> seq.rs:1340:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1734 (Instantiated 34 times - 10% of the total, cost 51) top 3 of 17 user-level quantifiers.
+      
+ --> seq.rs:1307:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 948 (Instantiated 6 times - 1% of the total, cost 158) top 4 of 17 user-level quantifiers.
+      
+ --> std_specs/iter.rs:35:4
+ ::: std_specs/iter.rs:54:5
+  |
+  = note: Triggers selected for this quantifier
+
+
+thread '<unnamed>' (491307) panicked at rust_verify/src/verifier.rs:716:36:
+Failed to find quantifier user_no_function_0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (491307) panicked at rust_verify/src/verifier.rs:2198:29:
+worker thread panicked
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1031MB, peak z3 RSS: 0MB, min free: 28493MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

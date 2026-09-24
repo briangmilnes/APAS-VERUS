@@ -1,0 +1,85 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+note: verifying module Chap45::BalancedTreePQ::BalancedTreePQ (selected functions)
+
+error: function body check: Resource limit (rlimit) exceeded
+   --> src/Chap45/BalancedTreePQ.rs:712:13
+    |
+712 |             fn split(&self, element: &T) -> (Self, bool, Self) {
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Analyzing prover log for (profile rerun) lib::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ::split ...
+
+Z3 4.16.0
+note: Log analysis complete for (profile rerun) lib::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ::split
+
+note: Profile statistics for lib::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ::split
+
+note: Observed 4,856 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 32212600 (Instantiated 392 times - 8% of the total, cost 82175) top 1 of 23 user-level quantifiers.
+      
+ --> seq_lib.rs:559:4
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1986635 (Instantiated 1,085 times - 22% of the total, cost 1831) top 2 of 23 user-level quantifiers.
+      
+ --> seq_lib.rs:3505:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1534489 (Instantiated 701 times - 14% of the total, cost 2189) top 3 of 23 user-level quantifiers.
+      
+ --> seq_lib.rs:550:4
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1136520 (Instantiated 738 times - 15% of the total, cost 1540) top 4 of 23 user-level quantifiers.
+      
+ --> seq.rs:1722:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 663960 (Instantiated 660 times - 13% of the total, cost 1006) top 5 of 23 user-level quantifiers.
+      
+ --> seq.rs:1376:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 335340 (Instantiated 486 times - 10% of the total, cost 690) top 6 of 23 user-level quantifiers.
+      
+ --> seq_lib.rs:541:4
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 60000 (Instantiated 240 times - 4% of the total, cost 250) top 7 of 23 user-level quantifiers.
+      
+ --> seq.rs:1307:0
+  |
+  = note: Triggers selected for this quantifier
+
+note: Cost * Instantiations: 56406 (Instantiated 237 times - 4% of the total, cost 238) top 8 of 23 user-level quantifiers.
+      
+ --> seq.rs:1340:0
+  |
+  = note: Triggers selected for this quantifier
+
+[rust_verify/src/verifier.rs:113:17] &note = "Triggers selected for this quantifier"
+[rust_verify/src/verifier.rs:113:17] &sp.as_string = "std_specs/range.rs:539:9: 539:56 (#5018)"
+note: Cost * Instantiations: 54636 (Instantiated 58 times - 1% of the total, cost 942) top 9 of 23 user-level quantifiers.
+      
+
+note: Cost * Instantiations: 21576 (Instantiated 58 times - 1% of the total, cost 372) top 10 of 23 user-level quantifiers.
+      
+ --> std_specs/iter.rs:35:4
+ ::: std_specs/iter.rs:54:5
+  |
+  = note: Triggers selected for this quantifier
+
+verification results:: 0 verified, 1 errors (partial verification with `--verify-*`)
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 1189MB, peak z3 RSS: 221MB, min free: 28163MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 0s
