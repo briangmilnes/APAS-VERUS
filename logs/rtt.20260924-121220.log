@@ -1,0 +1,8 @@
+    Finished `release` profile [optimized] target(s) in 0.11s
+────────────
+ Nextest run ID 2d7a5e3a-09a3-414f-b629-8544c06c3672 with nextest profile: default
+    Starting 0 tests across 263 binaries (4328 tests skipped)
+────────────
+     Summary [   0.005s] 0 tests run: 0 passed, 4328 skipped
+warning: no tests to run
+Elapsed: 0s

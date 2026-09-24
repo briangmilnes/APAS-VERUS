@@ -1,0 +1,8 @@
+    Finished `release` profile [optimized] target(s) in 0.14s
+────────────
+ Nextest run ID 4af8fdd2-3ea7-4846-bad2-f7a522dd0c04 with nextest profile: default
+    Starting 1 test across 263 binaries (4327 tests skipped)
+        PASS [   0.005s] (1/1) apas-verus::TestConnectivityMtEph test_connected_components_mt_multiple
+────────────
+     Summary [   0.009s] 1 test run: 1 passed, 4327 skipped
+Elapsed: 1s

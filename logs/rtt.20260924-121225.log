@@ -1,0 +1,30 @@
+    Finished `release` profile [optimized] target(s) in 0.12s
+────────────
+ Nextest run ID 4fb812d6-2608-40b7-b43a-36e28309d613 with nextest profile: default
+    Starting 1 test across 263 binaries (4327 tests skipped)
+        FAIL [   0.007s] (1/1) apas-verus::TestConnectivityMtEph test_connected_components_mt_multiple
+  stdout ───
+
+    running 1 test
+    test test_connected_components_mt_multiple ... FAILED
+
+    failures:
+
+    failures:
+        test_connected_components_mt_multiple
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.00s
+
+  stderr ───
+
+    thread 'test_connected_components_mt_multiple' (465210) panicked at tests/Chap63/TestConnectivityMtEph.rs:70:5:
+    assertion `left == right` failed
+      left: 4
+     right: 3
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+────────────
+     Summary [   0.012s] 1 test run: 0 passed, 1 failed, 4327 skipped
+        FAIL [   0.007s] (1/1) apas-verus::TestConnectivityMtEph test_connected_components_mt_multiple
+error: test run failed
+Elapsed: 1s
