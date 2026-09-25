@@ -1,0 +1,68 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTBBAlphaStEph.rs:530:16
+    |
+530 |         assert(spec_weights_balanced(link_weight(rln.left), link_weight(rln.right)));
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTBBAlphaStEph.rs:531:16
+    |
+531 |         assert(spec_is_wb_link(rln.left) && spec_is_wb_link(rln.right) && spec_is_wb_link(rn.right));
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTBBAlphaStEph.rs:532:16
+    |
+532 |           assert(spec_size_cached_link(rln.left) && spec_size_cached_link(rln.right)
+    |  ________________^
+533 | |             && spec_size_cached_link(rn.right));
+    | |______________________________________________^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTBBAlphaStEph.rs:170:9
+    |
+170 |         3 * a >= b && 3 * b >= a
+    |         ^^^^^^^^^^    ^^^^^^^^^^
+
+note: 
+
+spec_weights_balanced(link_weight(rln.left), link_weight(rln.right))
+|   clip(nat, 3 * link_weight(rln.left)) >= link_weight(rln.right) ✘
+|   clip(nat, 3 * link_weight(rln.right)) >= link_weight(rln.left) ✘
++---
+
+error: assertion failed
+   --> src/Chap37/BSTBBAlphaStEph.rs:640:16
+    |
+640 |         assert(spec_weights_balanced(link_weight(lrn.left), link_weight(lrn.right)));
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTBBAlphaStEph.rs:641:16
+    |
+641 |         assert(spec_is_wb_link(lrn.left) && spec_is_wb_link(lrn.right) && spec_is_wb_link(ln.left));
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTBBAlphaStEph.rs:642:16
+    |
+642 |           assert(spec_size_cached_link(lrn.left) && spec_size_cached_link(lrn.right)
+    |  ________________^
+643 | |             && spec_size_cached_link(ln.left));
+    | |_____________________________________________^ assertion failed
+
+note: 
+
+spec_weights_balanced(link_weight(lrn.left), link_weight(lrn.right))
+|   clip(nat, 3 * link_weight(lrn.left)) >= link_weight(lrn.right) ✘
+|   clip(nat, 3 * link_weight(lrn.right)) >= link_weight(lrn.left) ✘
++---
+
+verification results:: 2013 verified, 2 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1647MB, peak z3 RSS: 443MB, min free: 26954MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 24s

@@ -1,0 +1,194 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/BSTBBAlphaStEph.rs:498:13
+    |
+481 |     proof fn lemma_double_left<T: TotalOrder>(l: Link<T>, k: T, r: Link<T>)
+    |           ----------------------------------------------------------------- at the end of the function body
+...
+498 |             spec_size_cached_link(spec_double_left(l, k, r)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTBBAlphaStEph.rs:499:13
+    |
+481 |     proof fn lemma_double_left<T: TotalOrder>(l: Link<T>, k: T, r: Link<T>)
+    |           ----------------------------------------------------------------- at the end of the function body
+...
+499 |             spec_is_wb_link(spec_double_left(l, k, r)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTBBAlphaStEph.rs:156:20
+    |
+156 |                 && spec_size_cached_link(node.left)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+157 |                 && spec_size_cached_link(node.right)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+180 |                 spec_is_wb_link(node.left)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+181 |                 && spec_is_wb_link(node.right)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+498 |             spec_size_cached_link(spec_double_left(l, k, r)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+499 |             spec_is_wb_link(spec_double_left(l, k, r)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(r).0.left is Some ✔
+spec_is_bst_link(spec_double_left(old(l), old(k), old(r))) ✔
+forall |z|
+    link_contains(spec_double_left(old(l), old(k), old(r)), z) == (z == old(k) || link_contains(old(l), z) || link_contains(old(r), z)) ✔
+link_spec_size(spec_double_left(old(l), old(k), old(r))) == clip(nat, clip(nat, link_spec_size(old(l)) + link_spec_size(old(r))) + 1) ✔
+spec_size_cached_link(spec_double_left(old(l), old(k), old(r))) ✘
+|   spec_double_left(old(l), old(k), old(r)) is None ==>
+|       true ✔
+|   !(spec_double_left(old(l), old(k), old(r)) is None) ==>
+|       let node = spec_double_left(old(l), old(k), old(r)).0;
+|           node.size == link_spec_size(spec_double_left(old(l), old(k), old(r))) ✔
+|           spec_size_cached_link(node.left) ✘
+|               reached fuel limit for recursion
+|           spec_size_cached_link(node.right) ✘
+|               reached fuel limit for recursion
++---
+spec_is_wb_link(spec_double_left(old(l), old(k), old(r))) ✘
+|   spec_double_left(old(l), old(k), old(r)) is None ==>
+|       true ✔
+|   !(spec_double_left(old(l), old(k), old(r)) is None) ==>
+|       let node = spec_double_left(old(l), old(k), old(r)).0;
+|           spec_is_wb_link(node.left) ✘
+|               reached fuel limit for recursion
+|           spec_is_wb_link(node.right) ✘
+|               reached fuel limit for recursion
+|           spec_weights_balanced(link_weight(node.left), link_weight(node.right)) 
++---
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTBBAlphaStEph.rs:599:13
+    |
+582 |     proof fn lemma_double_right<T: TotalOrder>(l: Link<T>, k: T, r: Link<T>)
+    |           ------------------------------------------------------------------ at the end of the function body
+...
+599 |             spec_size_cached_link(spec_double_right(l, k, r)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTBBAlphaStEph.rs:600:13
+    |
+582 |     proof fn lemma_double_right<T: TotalOrder>(l: Link<T>, k: T, r: Link<T>)
+    |           ------------------------------------------------------------------ at the end of the function body
+...
+600 |             spec_is_wb_link(spec_double_right(l, k, r)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTBBAlphaStEph.rs:156:20
+    |
+156 |                 && spec_size_cached_link(node.left)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+157 |                 && spec_size_cached_link(node.right)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+180 |                 spec_is_wb_link(node.left)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+181 |                 && spec_is_wb_link(node.right)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+599 |             spec_size_cached_link(spec_double_right(l, k, r)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+600 |             spec_is_wb_link(spec_double_right(l, k, r)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(l).0.right is Some ✔
+spec_is_bst_link(spec_double_right(old(l), old(k), old(r))) ✔
+forall |z|
+    link_contains(spec_double_right(old(l), old(k), old(r)), z) == (z == old(k) || link_contains(old(l), z) || link_contains(old(r), z)) ✔
+link_spec_size(spec_double_right(old(l), old(k), old(r))) == clip(nat, clip(nat, link_spec_size(old(l)) + link_spec_size(old(r))) + 1) ✔
+spec_size_cached_link(spec_double_right(old(l), old(k), old(r))) ✘
+|   spec_double_right(old(l), old(k), old(r)) is None ==>
+|       true ✔
+|   !(spec_double_right(old(l), old(k), old(r)) is None) ==>
+|       let node = spec_double_right(old(l), old(k), old(r)).0;
+|           node.size == link_spec_size(spec_double_right(old(l), old(k), old(r))) ✔
+|           spec_size_cached_link(node.left) ✘
+|               reached fuel limit for recursion
+|           spec_size_cached_link(node.right) ✘
+|               reached fuel limit for recursion
++---
+spec_is_wb_link(spec_double_right(old(l), old(k), old(r))) ✘
+|   spec_double_right(old(l), old(k), old(r)) is None ==>
+|       true ✔
+|   !(spec_double_right(old(l), old(k), old(r)) is None) ==>
+|       let node = spec_double_right(old(l), old(k), old(r)).0;
+|           spec_is_wb_link(node.left) ✘
+|               reached fuel limit for recursion
+|           spec_is_wb_link(node.right) ✘
+|               reached fuel limit for recursion
+|           spec_weights_balanced(link_weight(node.left), link_weight(node.right)) 
++---
+
+error: assertion failed
+    --> src/Chap37/BSTBBAlphaStEph.rs:1110:91
+     |
+1110 |                         assert forall|x: T| #[trigger] link_contains(old_link, x) implies TotalOrder::le(key, x) by {
+     |                                                                                           ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+key.le(x) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap37/BSTBBAlphaStEph.rs:1140:5
+     |
+1140 |     fn delete_link(self, target: &T) -> (deleted: Self)
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap37/BSTBBAlphaStEph.rs:1173:49
+     |
+1173 |   ...                   assert forall|x: T| #[trigger] link_contains(spec_balance(left, key, new_right), x)
+     |  ___________________________________________^
+1174 | | ...                       == (link_contains(old_link, x) && x != *target) by {};
+     | |_________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTBBAlphaStEph.rs:90:20
+     |
+  90 |                 || link_contains(node.right, target),
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1174 |                                 == (link_contains(old_link, x) && x != *target) by {};
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^
+
+note: 
+
+link_contains(spec_balance(left, key, new_right), x) == (link_contains(old_link, x) && !(x == target))
+|   link_contains(spec_balance(left, key, new_right), x) ==>
+|       link_contains(old_link, x) ✘
+|       |   old_link is None ==>
+|       |       false ✔
+|       |   !(old_link is None) ==>
+|       |       let node = old_link.0;
+|       |           !(node.key == x || link_contains(node.left, x)) ==>
+|       |               link_contains(node.right, x) ✘
+|       |                   reached fuel limit for recursion
+|       +---
+|       !(x == target) ✘
+|   link_contains(old_link, x) && !(x == target) ==>
+|       link_contains(spec_balance(left, key, new_right), x) ✔
++---
+
+verification results:: 2004 verified, 4 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1621MB, peak z3 RSS: 395MB, min free: 27049MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 21s
