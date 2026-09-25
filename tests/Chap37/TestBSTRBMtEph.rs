@@ -339,3 +339,91 @@ fn test_rb_balance_report() {
         println!("MtEph {:<11} n=500 max height {}", name, h);
     }
 }
+
+/// Checks the red-black shape, the size, and the height bound of `tree`.
+fn mt_check(tree: &BSTRBMtEph<i64>, context: &str) {
+    let shape = check_red_black(&mt_pre_order(tree))
+        .unwrap_or_else(|e| panic!("{}: {}", context, e));
+    assert_eq!(shape.size, tree.size(), "{}: size", context);
+    assert_eq!(shape.height, tree.height(), "{}: height", context);
+    assert!(height_within_two_lg(tree.size(), tree.height()), "{}: height bound", context);
+}
+
+/// Builds a tree from `keys` by insertion.
+fn mt_build(keys: &[i64]) -> BSTRBMtEph<i64> {
+    let mut tree = BSTRBMtEph::<i64>::new();
+    for &k in keys { tree.insert(k).unwrap(); }
+    tree
+}
+
+/// Deletes `keys` one at a time, checking the shape, the size, and the absence of the key.
+fn mt_delete_checked(tree: &mut BSTRBMtEph<i64>, keys: &[i64]) {
+    for &k in keys {
+        let before = tree.size();
+        let present = tree.contains(&k);
+        tree.delete(&k).unwrap();
+        assert!(!tree.contains(&k), "after delete {}: still present", k);
+        assert_eq!(tree.size() + present as usize, before, "after delete {}: size", k);
+        mt_check(tree, &format!("after delete {}", k));
+    }
+}
+
+#[test]
+fn test_rb_mt_delete_ascending_to_empty() {
+    let mut tree = mt_build(&random_permutation(500, 3));
+    mt_delete_checked(&mut tree, &ascending(500));
+    assert!(tree.is_empty());
+}
+
+#[test]
+fn test_rb_mt_delete_descending_to_empty() {
+    let mut tree = mt_build(&ascending(500));
+    mt_delete_checked(&mut tree, &descending(500));
+    assert!(tree.is_empty());
+}
+
+#[test]
+fn test_rb_mt_delete_random_to_empty() {
+    for seed in 1..=3 {
+        let mut tree = mt_build(&ascending(500));
+        mt_delete_checked(&mut tree, &random_permutation(500, seed + 10));
+        assert!(tree.is_empty());
+    }
+}
+
+#[test]
+fn test_rb_mt_delete_absent_keys() {
+    let evens: Vec<i64> = (0..250).map(|i| 2 * i).collect();
+    let odds: Vec<i64> = (0..250).map(|i| 2 * i + 1).collect();
+    let mut tree = mt_build(&evens);
+    mt_delete_checked(&mut tree, &odds);
+    assert_eq!(tree.size(), 250);
+    assert_eq!(tree.in_order().seq, evens);
+}
+
+#[test]
+fn test_rb_mt_delete_from_empty() {
+    let mut tree = BSTRBMtEph::<i64>::new();
+    mt_delete_checked(&mut tree, &[0, 1, -1]);
+    assert!(tree.is_empty());
+}
+
+#[test]
+fn test_rb_mt_insert_delete_interleaved() {
+    let mut rng = SeededRng::new(99);
+    let mut tree = BSTRBMtEph::<i64>::new();
+    let mut model = std::collections::BTreeSet::new();
+    for step in 0..2000 {
+        let k = rng.below(200) as i64;
+        if rng.below(3) == 0 {
+            tree.delete(&k).unwrap();
+            model.remove(&k);
+        } else {
+            tree.insert(k).unwrap();
+            model.insert(k);
+        }
+        mt_check(&tree, &format!("step {}", step));
+        assert_eq!(tree.size(), model.len());
+    }
+    assert_eq!(tree.in_order().seq, model.into_iter().collect::<Vec<_>>());
+}

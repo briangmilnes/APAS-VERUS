@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap37/BSTBBAlphaMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap37/BSTRBMtEph.rs
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,24 +20,20 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ BSTBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1920: info: accept()
-   Info: 1 total
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1811: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == link); } [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1841: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == link); } [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1866: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1877: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1888: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1902: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1919: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1932: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1933: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1934: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1946: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1947: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1948: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
-   Info: 13 × structural_false_positive
-   26 clean proof functions
+ℹ BSTRBMtEph.rs
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:2188: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:2204: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3741: info: accept()
+   Info: 3 total
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3530: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3609: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3684: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3696: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3706: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3722: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3740: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+   Info: 7 × structural_false_positive
+   38 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -47,13 +43,13 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-BSTBBAlphaMtEph  depends upon only clean modules
+BSTRBMtEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-BSTBBAlphaMtEph.rs  depends upon only clean modules
+BSTRBMtEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
@@ -65,26 +61,27 @@ Modules:
    1 total
 
 Proof Functions:
-   26 clean (100%)
+   38 clean (100%)
    0 holed (0%)
-   26 total
+   38 total
 
 Function Specs:
-   53 exec fns with complete spec (requires+ensures) (43%)
-   0 exec fns missing spec (0%)
-   70 proof/spec fns clean (56%)
+   81 exec fns with complete spec (requires+ensures) (41%)
+   2 exec fns missing spec (1%)
+   114 proof/spec fns clean (57%)
    0 proof/spec fns with holes (0%)
-   123 total fns
+   197 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Accepted (reviewed): 1 total
+Accepted (reviewed): 3 total
+   2 × fn_missing_requires
    1 × accept()
 
-Structural (info only): 13
-   13 × RWLOCK_GHOST
+Structural (info only): 7
+   7 × RWLOCK_GHOST
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -92,8 +89,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-24 21:55:48 -07:00
-Ended:     2026-09-24 21:55:48 -07:00
-Duration:  34ms
+Started:   2026-09-25 10:07:36 -07:00
+Ended:     2026-09-25 10:07:36 -07:00
+Duration:  64ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

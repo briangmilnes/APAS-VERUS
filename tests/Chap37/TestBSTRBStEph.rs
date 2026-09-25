@@ -228,3 +228,18 @@ fn test_rb_balance_report() {
         println!("StEph {:<11} n=2000 max height {}", name, h);
     }
 }
+
+#[test]
+fn test_rb_minimum_maximum() {
+    let tree = BSTRBStEph::<i64>::new();
+    assert_eq!(tree.minimum(), None);
+    assert_eq!(tree.maximum(), None);
+    let (mut tree, _) = st_insert_checked(BSTRBStEph::new(), &random_permutation(300, 5));
+    assert_eq!(tree.minimum(), Some(&0));
+    assert_eq!(tree.maximum(), Some(&299));
+    for k in 0..299 {
+        tree = tree.delete(&k);
+        assert_eq!(tree.minimum(), Some(&(k + 1)));
+        assert_eq!(tree.maximum(), Some(&299));
+    }
+}

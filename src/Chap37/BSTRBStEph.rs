@@ -1975,20 +1975,20 @@ pub mod BSTRBStEph {
                 forall|x: T| #[trigger] self.spec_contains(x) <==> (old(self).spec_contains(x) && x != *key),
                 self.spec_size() + 1 == old(self).spec_size(),
             decreases old(self).spec_size(), 2nat;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
         fn find_link(&self, target: &T) -> (found: Option<&T>)
             requires self.spec_bst(),
             ensures
                 found.is_some() <==> self.spec_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
         fn min_link(&self) -> (min: Option<&T>)
             requires self.spec_bst(),
             ensures
                 !self.spec_is_empty() ==> min.is_some(),
                 min.is_some() ==> self.spec_contains(*min.unwrap()),
                 min.is_some() ==> forall|x: T| #[trigger] self.spec_contains(x) ==> TotalOrder::le(*min.unwrap(), x);
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
         fn max_link(&self) -> (max: Option<&T>)
             requires self.spec_bst(),
             ensures
@@ -2779,7 +2779,7 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
     fn find_link(&self, target: &T) -> (found: Option<&T>)
         decreases *self,
     {
@@ -2817,7 +2817,7 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
     fn min_link(&self) -> (min: Option<&T>)
         decreases *self,
     {
@@ -2869,7 +2869,7 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
     fn max_link(&self) -> (max: Option<&T>)
         decreases *self,
     {
@@ -3052,14 +3052,14 @@ pub mod BSTRBStEph {
                 !deleted.spec_root().tree_contains(*target),
                 forall|x: T| (#[trigger] deleted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) && x != *target);
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
         fn contains(&self, target: &T) -> (found: bool)
             requires
                 self.spec_bstrbsteph_wf(),
                 self.spec_root().tree_is_bst(),
             ensures found == self.spec_root().tree_contains(*target);
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires
                 self.spec_bstrbsteph_wf(),
@@ -3067,6 +3067,26 @@ pub mod BSTRBStEph {
             ensures
                 found.is_some() == self.spec_root().tree_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
+        /// The smallest key (APAS ordered-set `first`).
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — descends the leftmost path.
+        fn minimum(&self) -> (min: Option<&T>)
+            requires self.spec_bstrbsteph_wf(),
+            ensures
+                self.spec_root().spec_size() == 0 ==> min.is_none(),
+                self.spec_root().spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> self.spec_root().tree_contains(*min.unwrap()),
+                min.is_some() ==> forall|x: T| #[trigger] self.spec_root().tree_contains(x)
+                    ==> TotalOrder::le(*min.unwrap(), x);
+        /// The largest key (APAS ordered-set `last`).
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — descends the rightmost path.
+        fn maximum(&self) -> (max: Option<&T>)
+            requires self.spec_bstrbsteph_wf(),
+            ensures
+                self.spec_root().spec_size() == 0 ==> max.is_none(),
+                self.spec_root().spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> self.spec_root().tree_contains(*max.unwrap()),
+                max.is_some() ==> forall|x: T| #[trigger] self.spec_root().tree_contains(x)
+                    ==> TotalOrder::le(x, *max.unwrap());
         /// The keys in in-order (ascending key order).
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n)
         fn in_order(&self) -> (traversal: Vec<T>)
@@ -3237,6 +3257,40 @@ pub mod BSTRBStEph {
         fn find(&self, target: &T) -> (found: Option<&T>) {
             proof { lemma_link_to_bbt_contains::<T>(self.root, *target); }
             self.root.find_link(target)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — descends the leftmost path.
+        fn minimum(&self) -> (min: Option<&T>) {
+            let min = self.root.min_link();
+            proof {
+                lemma_link_to_bbt_size::<T>(self.root);
+                if min.is_some() {
+                    assert forall|x: T| #[trigger] self.spec_root().tree_contains(x)
+                        implies TotalOrder::le(*min.unwrap(), x) by {
+                        lemma_link_to_bbt_contains::<T>(self.root, x);
+                        assert(self.root.spec_contains(x));
+                    };
+                    lemma_link_to_bbt_contains::<T>(self.root, *min.unwrap());
+                }
+            }
+            min
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — descends the rightmost path.
+        fn maximum(&self) -> (max: Option<&T>) {
+            let max = self.root.max_link();
+            proof {
+                lemma_link_to_bbt_size::<T>(self.root);
+                if max.is_some() {
+                    assert forall|x: T| #[trigger] self.spec_root().tree_contains(x)
+                        implies TotalOrder::le(x, *max.unwrap()) by {
+                        lemma_link_to_bbt_contains::<T>(self.root, x);
+                        assert(self.root.spec_contains(x));
+                    };
+                    lemma_link_to_bbt_contains::<T>(self.root, *max.unwrap());
+                }
+            }
+            max
         }
 
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n)

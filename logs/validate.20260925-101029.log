@@ -1,0 +1,8 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+note: verifying module Chap37::BSTRBStEph::BSTRBStEph
+
+verification results:: 80 verified, 0 errors
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1240MB, peak z3 RSS: 60MB, min free: 27937MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 2s
