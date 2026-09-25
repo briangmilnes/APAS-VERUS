@@ -1,0 +1,2918 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+note: verifying module Chap37::BSTRBMtEph::BSTRBMtEph
+
+{
+  "func-details": {
+    "lib::vstdplus::feq::feq::axiom_cloned_implies_eq_owned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rotate_right_preserves": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::spec_slice_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::slice::impl&%11::decrease": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%46::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%5::le": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::slice::impl&%10::decrease": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_descend_right_rotate": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::reduce": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_subrange_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_delete_right_ready": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%47::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::function::axiom_fn_mut_call_ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::find_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_rejoin": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::Ord::max": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::View::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::update": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_size_cached_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::OrdSpec::cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_delete_ready": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::is_some": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait::spec_arrayseqstper_wf": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%6::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%0::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_add_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%11::obeys_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rejoin_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::power2::lemma_pow2_unfold": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::find": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::slice::into_iter_elts": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "verus_builtin::impl&%7::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_new_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::new_node": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_delete_borrow_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::power2::lemma_pow2_adds": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_move_red_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::delete_at_ready": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::power2::lemma_pow2_pos": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeq::ArraySeq::ArraySeqS::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::tuple::impl&%16::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_updated_fields": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%4::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::function::axiom_fn_mut_call_requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_black_height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%11::cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_is_bst_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%3::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Color::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_update_same": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::iter::impl&%2::remaining": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_move_red_left_borrow": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::spec_slice_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::delete_link_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::rotate_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_tail_successor": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::iter::IteratorSpec::decrease": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%3::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_bst": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::from_sorted_slice": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%6::borrow": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTree::tree_contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%7::acquire_write": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::view_reverse_for_eq_sized": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%27::antisymmetric": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%58::lt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::string::axiom_str_literal_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%14::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::spec_bstrbmteph_wf": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_fix_up_preserves_bst": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::delete_min_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_delete_pre": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::size_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_descend_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%6::rwlock": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%5::cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::clone_plus::clone_plus::ClonePlus::clone_plus": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_delete_min_ready": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::from_sorted_slice": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_is_right_red_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::impl&%2::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::slice::impl&%11::remaining": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::string::impl&%2::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::slice::impl&%9::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%5::obeys_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_has_resolved": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::sync::impl&%62::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%17::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::default::Default::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_link_to_bbt_is_bst": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%0::is_some": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::pre_order": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::default::impl&%2::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%13::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_subrange_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns::tree_contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%16::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::DeepView::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_flipped": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::ptrs_mut_eq_sized": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::minimum": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinNode::tree_contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%18::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::height_rec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_rotated_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_llrb_size_lower_bound": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_slice_ext_equal": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%58::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::reduce_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::fix_up": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%7::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_fix_up_pre": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_new_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_update_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%10::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTree::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::OptionAdditionalFns::arrow_0": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::obeys_feq_clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%18::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%6::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::minimum": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_tail_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::spec_unwrap": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_needs_rotate_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::usize_specs_tmp::impl&%0::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::slice::impl&%0::len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::slice::impl&%10::remaining": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::spec_ghost_root": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%12::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_delete_borrow_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::fix_up": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::axiom_array_ext_equal": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%9::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::view_reverse_for_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%31::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::in_order": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Color::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::PartialOrd::lt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%5::reflexive": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::axiom_strictly_cloned_implies_eq_owned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_move_red_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_needs_rotate_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_is_empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::power::pow": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::delete_link_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%2::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::SliceAdditionalSpecFns::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::PartialOrdSpec::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::rotate_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::usize_specs_tmp::impl&%1::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%19::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeq::ArraySeq::ArraySeqS::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_updated": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::filter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%10::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::impl&%3::remaining": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::impl&%2::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTree::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_update_different": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%3::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%2::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_ext_equal_deep": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::impl&%2::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::PartialEqSpec::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::power2::lemma_pow2_strictly_increases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_llrb_height_upper_bound": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_spec_slice_update": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%1::unref": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%27::reflexive": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::impl&%3::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_delete_min_pre": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::rotate_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::OrdSpec::obeys_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%18::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::as_ref": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::filter_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::usize_specs_tmp::impl&%2::cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%5::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%7::inv": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::exec_nonstatic_call": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::impl&%1::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::ArrayAdditionalSpecFns::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%3::obeys_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeq::ArraySeq::ArraySeqS::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::rc::impl&%38::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::vec_clone_deep_view_proof": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::iter::impl&%2::decrease": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_tail_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::subrange": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::insert": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::impl&%7::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::power2::pow2": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%6::release_read": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%3::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::in_order_collect": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_toggle": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_size_cached": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%0::is_none": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::TotalOrder::antisymmetric": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_delete_step": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::boxed::impl&%11::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::Clone::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_is_rb_tree_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_index_different": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::build_balanced": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::sync::impl&%32::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::lemma_array_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::PartialOrd::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::in_order_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::find_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_red": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinNode::tree_is_bst": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%12::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%45::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::TotalOrder::transitive": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::sync::impl&%16::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::push_distributes_over_add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::min_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::axiom_array_has_resolved": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%4::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeq::ArraySeq::ArraySeqS::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::len%returns_clause_autospec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_llrb_relaxed": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%0::arrow_Some_0": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::impl&%2::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_sorted_split": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::add_empty_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::slice::impl&%9::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%5::cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTree::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%14::obeys_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::spec_vec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::string::impl&%1::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_add_index2": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::pre_order_collect": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::PartialEqSpec::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%13::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::axiom_cloned_implies_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::impl&%3::decrease": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::height_rec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_rotate_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::clone_plus::clone_plus::impl&%0::T::clone_plus": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait::from_vec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::array_len_matches_n": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::TotalOrder::cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::axiom_array_decreases_to_seq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_llrb_height_bound": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::pre_order_collect": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::default::impl&%4::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rotate_left_preserves": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::filter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_black_height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_size_field": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%43::push": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::array::impl&%13::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::in_order_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_slice_decreases_to_seq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_ext_equal": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_fixed_up": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::reduce_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphInv::inv": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_split_contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_is_red": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::RwLockPredicate::inv": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_update_root_preserves": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::impl&%0::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::impl&%0::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::pre_order": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_descend_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%2::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%0::arrow_0": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::array::impl&%20::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_rotated_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::push": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_size_field": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinNode::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_llrb": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_needs_flip": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%7::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%1::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%27::total": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::str::impl&%2::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTree::spec_height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%12::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_fixed_up": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_slice_has_resolved": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTree::tree_is_bst": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::string::impl&%2::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%0::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::slice_subrange": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::feq::feq::axiom_strictly_cloned_implies_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::in_order": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%0::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%4::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::FnWithRequiresEnsures::ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::iter::traits::collect::IntoIterator::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::in_order_collect": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_node_from_sorted": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::min_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::max_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_bst": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::pre_order_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_sorted_strict": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::find": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_toggle_root": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::rotate_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::pre_order_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::maximum": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::impl&%1::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_index_same": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_rotated_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::toggle_color": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::mul::lemma_mul_upper_bound": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::is_none": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::map": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::VecAdditionalSpecFns::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_size_cached": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%44::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_flip_colors": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::arithmetic::power2::lemma2_to64": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::array_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%5::antisymmetric": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_delete_ready": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinNode::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%9::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::insert_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::max_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%10::lt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq_lib::impl&%0::add_empty_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%27::cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_height_le_size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::usize_specs_tmp::impl&%1::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_flipped": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::flip_colors": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rejoin_successor": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%6::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_llrb_relaxed": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::build_split": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_two_subranges_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%7::acquire_read": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_to_bbt": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%27::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_left_min_is_min": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_link_to_bbt_size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_push_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%44::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::iter::IteratorSpec::remaining": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%0::take": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::FnWithRequiresEnsures::requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::impl&%0::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%3::cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::compute_link_spec_size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_flip_colors_preserves": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::wf": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_link_to_bbt_height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::update": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::iter::traits::collect::impl&%0::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%1::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::accept::accept": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_spec_size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%6::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::insert_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::usize_specs_tmp::impl&%0::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%9::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%0::as_ref": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%2::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%27::transitive": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%4::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_is_llrb_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_add_index1": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::impl&%2::spec_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::unreached": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%1::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::axiom_vec_decreases_to_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::reduce": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%8::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::delete_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%48::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%1::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::spec_bstrbmteph_wf": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::maximum": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::TotalOrder::reflexive": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::filter_parallel": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::string::impl&%0::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::impl&%2::obeys_partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_rotated_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%30::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::is_red": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeq::ArraySeq::impl&%7::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_black_height": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_move_red_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns::tree_is_bst": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_llrb": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%4::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%9::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_blacken_root": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::boxed::impl&%0::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::delete_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_move_red_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_size_field_cached": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%27::le": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%14::cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::cloned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rejoin_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::strictly_cloned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::array::lemma_array_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rebalance": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::spec_arrayseqstper_wf": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%0::inv": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::move_red_left_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::into_iter_elts": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::default::impl&%0::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::option::OptionAdditionalFns::arrow_Some_0": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%5::rwlock": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%2::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::boxed::impl&%15::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_fix_up": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%17::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_descend_right_move": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::impl&%2::spec_add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%7::pred": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_descend_right_stay": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%2::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::from_vec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::axiom_spec_slice_index": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::string::axiom_str_literal_get_char": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::default::impl&%1::default": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::delete_min_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_subrange_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Color::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_update_root": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_toggle_root_preserves": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::cmp::impls::impl&%10::partial_cmp": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::num::usize_specs_tmp::impl&%2::obeys_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::compute_link_spec_size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::is_red": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait::is_empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::lemma_slice_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "verus_builtin::impl&%9::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%0::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::add": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::vec_clone_trigger": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::size_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_blacken_root_preserves": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinNode::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::raw_ptr::ptrs_mut_eq": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%5::total": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeq::ArraySeq::ArraySeqS::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::vec::impl&%2::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::slice::spec_slice_update": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::impl&%0::ensures": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::insert": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::slice::iter::impl&%1::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::impl&%5::transitive": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::spec_delete_min_ready": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeq::ArraySeq::ArraySeqS::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::Seq::len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait::spec_len": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::impl&%3::eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::TotalOrder::total": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::array::impl&%1::obeys_eq_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_delete_lean_right": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::new": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::seq::lemma_seq_index_decreases": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "alloc::vec::impl&%1::append": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::move_red_right_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%42::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_is_llrb_relaxed_link": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_fix_up": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTree::spec_size": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%49::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_rotate_left": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::vstdplus::total_order::total_order::TotalOrder::le": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::is_empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::std_specs::cmp::PartialOrdSpec::partial_cmp_spec": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::clone::impls::impl&%10::clone": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::view::impl&%15::deep_view": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_red": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::pervasive::impl&%0::requires": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_size_field": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS::into_iter": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "vstd::rwlock::impl&%5::release_write": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_link_to_bbt_contains": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtNodeFns::flip_colors": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "core::option::impl&%3::cloned": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    },
+    "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::spec_is_empty": {
+      "obligation_proof_notes": [],
+      "failed_proof_notes": []
+    }
+  },
+  "verification-results": {
+    "encountered-error": false,
+    "encountered-vir-error": false,
+    "success": true,
+    "verified": 94,
+    "errors": 0,
+    "is-verifying-entire-crate": true
+  },
+  "times-ms": {
+    "verus-build": {
+      "profile": "release",
+      "version": "0.2026.09.13.671956e"
+    },
+    "num-threads": 1,
+    "total": 11563,
+    "estimated-cpu-time": 11563,
+    "rust": {
+      "total": 4314,
+      "init-and-types": 2240,
+      "trait-conflicts": 102,
+      "compile": 1971
+    },
+    "verification": {
+      "total": 6264,
+      "vir": {
+        "total": 2808,
+        "hir": 689,
+        "import": 102,
+        "rust-to-vir": 597
+      }
+    },
+    "total-verify": 2693,
+    "total-verify-module-times": [
+      {
+        "module": "Chap37::BSTRBMtEph::BSTRBMtEph",
+        "time": 2693
+      }
+    ],
+    "air": {
+      "total": 295,
+      "module-times": [
+        {
+          "module": "Chap37::BSTRBMtEph::BSTRBMtEph",
+          "time": 295
+        }
+      ]
+    },
+    "smt": {
+      "total": 2112,
+      "smt-init": 3,
+      "rlimit-init": 33709,
+      "smt-init-module-times": [
+        {
+          "module": "Chap37::BSTRBMtEph::BSTRBMtEph",
+          "time": 3,
+          "time-micros": 3110,
+          "rlimit": 33709
+        }
+      ],
+      "smt-run": 2109,
+      "rlimit-run": 37190164,
+      "smt-run-module-times": [
+        {
+          "module": "Chap37::BSTRBMtEph::BSTRBMtEph",
+          "time": 2109,
+          "time-micros": 2109792,
+          "rlimit": 37190164,
+          "function-breakdown": [
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::rotate_left",
+              "mode:": "exec",
+              "time": 7,
+              "time-micros": 7782,
+              "rlimit": 51282,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_descend_left",
+              "mode:": "proof",
+              "time": 16,
+              "time-micros": 16737,
+              "rlimit": 96457,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_spec_size",
+              "mode:": "spec",
+              "time": 2,
+              "time-micros": 2226,
+              "rlimit": 12016,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::build_balanced",
+              "mode:": "exec",
+              "time": 194,
+              "time-micros": 194941,
+              "rlimit": 6405784,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_contains",
+              "mode:": "spec",
+              "time": 1,
+              "time-micros": 1520,
+              "rlimit": 11310,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_black_height",
+              "mode:": "spec",
+              "time": 1,
+              "time-micros": 1155,
+              "rlimit": 9338,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::delete_link_left",
+              "mode:": "exec",
+              "time": 185,
+              "time-micros": 185399,
+              "rlimit": 5333097,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::flip_colors",
+              "mode:": "exec",
+              "time": 15,
+              "time-micros": 15406,
+              "rlimit": 105985,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::pre_order_collect",
+              "mode:": "exec",
+              "time": 2,
+              "time-micros": 2833,
+              "rlimit": 24652,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_update_root_preserves",
+              "mode:": "proof",
+              "time": 10,
+              "time-micros": 10204,
+              "rlimit": 88800,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_link_to_bbt_size",
+              "mode:": "proof",
+              "time": 6,
+              "time-micros": 6282,
+              "rlimit": 34280,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_fix_up_preserves_bst",
+              "mode:": "proof",
+              "time": 15,
+              "time-micros": 15210,
+              "rlimit": 84505,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::pre_order",
+              "mode:": "exec",
+              "time": 1,
+              "time-micros": 1645,
+              "rlimit": 11908,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_descend_right_stay",
+              "mode:": "proof",
+              "time": 6,
+              "time-micros": 6166,
+              "rlimit": 33978,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_tail_left",
+              "mode:": "proof",
+              "time": 8,
+              "time-micros": 8725,
+              "rlimit": 53574,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rebalance",
+              "mode:": "proof",
+              "time": 19,
+              "time-micros": 19507,
+              "rlimit": 143687,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::size_link",
+              "mode:": "exec",
+              "time": 1,
+              "time-micros": 1675,
+              "rlimit": 12302,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_size_field_cached",
+              "mode:": "proof",
+              "time": 2,
+              "time-micros": 2682,
+              "rlimit": 11540,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::in_order",
+              "mode:": "exec",
+              "time": 1,
+              "time-micros": 1608,
+              "rlimit": 11989,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::height_rec",
+              "mode:": "exec",
+              "time": 5,
+              "time-micros": 5727,
+              "rlimit": 67648,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_node_from_sorted",
+              "mode:": "proof",
+              "time": 4,
+              "time-micros": 4987,
+              "rlimit": 34675,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::min_link",
+              "mode:": "exec",
+              "time": 4,
+              "time-micros": 4629,
+              "rlimit": 33281,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::minimum",
+              "mode:": "exec",
+              "time": 1,
+              "time-micros": 1670,
+              "rlimit": 12232,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::in_order_parallel",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 201,
+              "rlimit": 1007,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::find_link",
+              "mode:": "exec",
+              "time": 3,
+              "time-micros": 3829,
+              "rlimit": 25849,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_is_llrb_link",
+              "mode:": "spec",
+              "time": 1,
+              "time-micros": 1366,
+              "rlimit": 10959,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_descend_right",
+              "mode:": "proof",
+              "time": 12,
+              "time-micros": 12298,
+              "rlimit": 89753,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_llrb_size_lower_bound",
+              "mode:": "proof",
+              "time": 8,
+              "time-micros": 8318,
+              "rlimit": 68358,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_rejoin",
+              "mode:": "proof",
+              "time": 11,
+              "time-micros": 11556,
+              "rlimit": 88893,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_size_cached_link",
+              "mode:": "spec",
+              "time": 1,
+              "time-micros": 1716,
+              "rlimit": 13601,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::maximum",
+              "mode:": "exec",
+              "time": 2,
+              "time-micros": 2121,
+              "rlimit": 12226,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::new",
+              "mode:": "exec",
+              "time": 2,
+              "time-micros": 2982,
+              "rlimit": 19195,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::from_sorted_slice",
+              "mode:": "exec",
+              "time": 9,
+              "time-micros": 9139,
+              "rlimit": 130580,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::contains",
+              "mode:": "exec",
+              "time": 2,
+              "time-micros": 2746,
+              "rlimit": 16287,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::size",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 220,
+              "rlimit": 1040,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::build_split",
+              "mode:": "exec",
+              "time": 36,
+              "time-micros": 36424,
+              "rlimit": 636247,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_link_to_bbt_is_bst",
+              "mode:": "proof",
+              "time": 8,
+              "time-micros": 8464,
+              "rlimit": 45569,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_move_red_left_borrow",
+              "mode:": "proof",
+              "time": 191,
+              "time-micros": 191053,
+              "rlimit": 4028544,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rotate_right_preserves",
+              "mode:": "proof",
+              "time": 28,
+              "time-micros": 28407,
+              "rlimit": 583275,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::filter_parallel",
+              "mode:": "exec",
+              "time": 3,
+              "time-micros": 3257,
+              "rlimit": 26941,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::height",
+              "mode:": "exec",
+              "time": 4,
+              "time-micros": 4551,
+              "rlimit": 19590,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_move_red_left",
+              "mode:": "proof",
+              "time": 23,
+              "time-micros": 23601,
+              "rlimit": 146175,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::rotate_right",
+              "mode:": "exec",
+              "time": 8,
+              "time-micros": 8104,
+              "rlimit": 48313,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::delete_min_link",
+              "mode:": "exec",
+              "time": 101,
+              "time-micros": 101460,
+              "rlimit": 2029151,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::is_empty",
+              "mode:": "exec",
+              "time": 2,
+              "time-micros": 2062,
+              "rlimit": 14585,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_fix_up",
+              "mode:": "proof",
+              "time": 77,
+              "time-micros": 77541,
+              "rlimit": 777891,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rejoin_successor",
+              "mode:": "proof",
+              "time": 8,
+              "time-micros": 8088,
+              "rlimit": 48987,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Color::clone",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 35,
+              "rlimit": 2,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::default",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 20,
+              "rlimit": 2,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_to_bbt",
+              "mode:": "spec",
+              "time": 1,
+              "time-micros": 1304,
+              "rlimit": 10387,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_split_contains",
+              "mode:": "proof",
+              "time": 4,
+              "time-micros": 4309,
+              "rlimit": 47139,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::update",
+              "mode:": "exec",
+              "time": 4,
+              "time-micros": 4110,
+              "rlimit": 46606,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::spec_is_bst_link",
+              "mode:": "spec",
+              "time": 1,
+              "time-micros": 1526,
+              "rlimit": 12297,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::delete_at_ready",
+              "mode:": "exec",
+              "time": 60,
+              "time-micros": 60001,
+              "rlimit": 1121763,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::new_node",
+              "mode:": "exec",
+              "time": 1,
+              "time-micros": 1530,
+              "rlimit": 11519,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::delete_link_right",
+              "mode:": "exec",
+              "time": 32,
+              "time-micros": 32268,
+              "rlimit": 185010,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_updated_fields",
+              "mode:": "proof",
+              "time": 4,
+              "time-micros": 4193,
+              "rlimit": 46313,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_link_to_bbt_contains",
+              "mode:": "proof",
+              "time": 4,
+              "time-micros": 4268,
+              "rlimit": 22071,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::is_red",
+              "mode:": "exec",
+              "time": 1,
+              "time-micros": 1715,
+              "rlimit": 12065,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rejoin_right",
+              "mode:": "proof",
+              "time": 6,
+              "time-micros": 6738,
+              "rlimit": 47435,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_flip_colors_preserves",
+              "mode:": "proof",
+              "time": 25,
+              "time-micros": 25408,
+              "rlimit": 251432,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::toggle_color",
+              "mode:": "exec",
+              "time": 1,
+              "time-micros": 1443,
+              "rlimit": 10266,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::insert_link",
+              "mode:": "exec",
+              "time": 310,
+              "time-micros": 310700,
+              "rlimit": 6720118,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rejoin_left",
+              "mode:": "proof",
+              "time": 7,
+              "time-micros": 7452,
+              "rlimit": 50905,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::max_link",
+              "mode:": "exec",
+              "time": 4,
+              "time-micros": 4502,
+              "rlimit": 32126,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::in_order_collect",
+              "mode:": "exec",
+              "time": 3,
+              "time-micros": 3093,
+              "rlimit": 23963,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_llrb_height_bound",
+              "mode:": "proof",
+              "time": 6,
+              "time-micros": 6253,
+              "rlimit": 71416,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::move_red_right_link",
+              "mode:": "exec",
+              "time": 13,
+              "time-micros": 13150,
+              "rlimit": 75294,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_link_to_bbt_height",
+              "mode:": "proof",
+              "time": 5,
+              "time-micros": 5018,
+              "rlimit": 34672,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::find",
+              "mode:": "exec",
+              "time": 2,
+              "time-micros": 2372,
+              "rlimit": 16494,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_sorted_split",
+              "mode:": "proof",
+              "time": 7,
+              "time-micros": 7879,
+              "rlimit": 103988,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::move_red_left_link",
+              "mode:": "exec",
+              "time": 30,
+              "time-micros": 30074,
+              "rlimit": 181894,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_descend_right_move",
+              "mode:": "proof",
+              "time": 46,
+              "time-micros": 46745,
+              "rlimit": 454913,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::filter",
+              "mode:": "exec",
+              "time": 2,
+              "time-micros": 2083,
+              "rlimit": 14930,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::reduce",
+              "mode:": "exec",
+              "time": 2,
+              "time-micros": 2389,
+              "rlimit": 15709,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_rotate_left_preserves",
+              "mode:": "proof",
+              "time": 30,
+              "time-micros": 30550,
+              "rlimit": 572391,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::fix_up",
+              "mode:": "exec",
+              "time": 210,
+              "time-micros": 210898,
+              "rlimit": 2202255,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_toggle_root_preserves",
+              "mode:": "proof",
+              "time": 7,
+              "time-micros": 7229,
+              "rlimit": 49793,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_left_min_is_min",
+              "mode:": "proof",
+              "time": 2,
+              "time-micros": 2846,
+              "rlimit": 17450,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::link_height",
+              "mode:": "spec",
+              "time": 1,
+              "time-micros": 1324,
+              "rlimit": 9938,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::pre_order_parallel",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 162,
+              "rlimit": 981,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::reduce_parallel",
+              "mode:": "exec",
+              "time": 3,
+              "time-micros": 3519,
+              "rlimit": 28580,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::insert",
+              "mode:": "exec",
+              "time": 16,
+              "time-micros": 16614,
+              "rlimit": 129528,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEph::iter",
+              "mode:": "exec",
+              "time": 0,
+              "time-micros": 274,
+              "rlimit": 1390,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_height_le_size",
+              "mode:": "proof",
+              "time": 4,
+              "time-micros": 4404,
+              "rlimit": 51703,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_tail_right",
+              "mode:": "proof",
+              "time": 8,
+              "time-micros": 8522,
+              "rlimit": 52099,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_blacken_root_preserves",
+              "mode:": "proof",
+              "time": 5,
+              "time-micros": 5996,
+              "rlimit": 42444,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_descend_right_rotate",
+              "mode:": "proof",
+              "time": 80,
+              "time-micros": 80226,
+              "rlimit": 2173344,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::compute_link_spec_size",
+              "mode:": "exec",
+              "time": 4,
+              "time-micros": 4432,
+              "rlimit": 59737,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_move_red_right",
+              "mode:": "proof",
+              "time": 41,
+              "time-micros": 41644,
+              "rlimit": 343252,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::Link::delete_link",
+              "mode:": "exec",
+              "time": 7,
+              "time-micros": 7175,
+              "rlimit": 34187,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_delete_tail_successor",
+              "mode:": "proof",
+              "time": 16,
+              "time-micros": 16660,
+              "rlimit": 118071,
+              "success": true
+            },
+            {
+              "function": "lib::Chap37::BSTRBMtEph::BSTRBMtEph::lemma_llrb_height_upper_bound",
+              "mode:": "proof",
+              "time": 8,
+              "time-micros": 8472,
+              "rlimit": 114956,
+              "success": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "verus": {
+    "profile": "release",
+    "version": "0.2026.09.13.671956e",
+    "platform": {
+      "os": "linux",
+      "arch": "x86_64"
+    },
+    "toolchain": "1.98.1-x86_64-unknown-linux-gnu (overridden by environment variable RUSTUP_TOOLCHAIN)",
+    "commit": "671956ec527d3b7164779f767bdbfe769bedce6c"
+  }
+}
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1198MB, peak z3 RSS: 71MB, min free: 27751MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 2s

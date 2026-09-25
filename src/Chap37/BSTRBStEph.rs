@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Umut Acar, Guy Blelloch and Brian Milnes
 //! REVIEWED: NO
-//! Ephemeral red-black balanced binary search tree (APAS Chap37, Section 37.3).
+//! Ephemeral red-black balanced binary search tree (APAS Chap37).
 //! Left-leaning red-black trees (Sedgewick 2008, the 2-3 variant). Layer 1
 //! (sections 4a-9b) verifies insert and delete on colored nodes with a size cache;
 //! Layer 2 (sections 4c-10c) wraps a link whose view is the colorless BalBinTree.
@@ -992,12 +992,9 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// `move_red_left` on a red node whose left child is a black 2-node: the new left
-    /// child is a red left-leaning red-black tree below a black root, or a black one
-    /// with a red left child below a red root; the right subtree is a left-leaning
-    /// red-black tree of equal black height, black when the root is red; the black
-    /// height, keys, size, BST order, and size cache are unchanged.
-    proof fn lemma_move_red_left<T: TotalOrder>(link: Link<T>)
+    /// `move_red_left` when the right child's left child is red: the borrow case, in
+    /// which a key moves from the right sibling to the left through the root.
+    proof fn lemma_move_red_left_borrow<T: TotalOrder>(link: Link<T>)
         requires
             link is Some,
             link->Some_0.color == Color::Red,
@@ -1007,6 +1004,8 @@ pub mod BSTRBStEph {
             spec_is_bst_link(link),
             spec_size_cached_link(link),
             link_spec_size(link) <= usize::MAX,
+            link->Some_0.right is Some,
+            link_is_red(link->Some_0.right->Some_0.left),
         ensures
             spec_move_red_left(link) is Some,
             forall|z: T| #[trigger] link_contains(spec_move_red_left(link), z) == link_contains(link, z),
@@ -1033,9 +1032,6 @@ pub mod BSTRBStEph {
         reveal_with_fuel(link_spec_size, 2);
         reveal_with_fuel(link_contains, 2);
         reveal_with_fuel(spec_is_bst_link, 2);
-        // h is red, so both children are black; they have equal black height, and the
-        // left child is a node, so the right child is a node too.
-        assert(r is Some);
         lemma_toggle_root_preserves(l);
         lemma_toggle_root_preserves(r);
         lemma_flip_colors_preserves(link);
@@ -1096,7 +1092,62 @@ pub mod BSTRBStEph {
             assert(spec_is_llrb_link(fh.left));
             assert(spec_is_llrb_link(out.left));
             assert(spec_is_llrb_link(out.right));
+        }
+    }
+
+    /// `move_red_left` on a red node whose left child is a black 2-node: the new left
+    /// child is a red left-leaning red-black tree below a black root, or a black one
+    /// with a red left child below a red root; the right subtree is a left-leaning
+    /// red-black tree of equal black height, black when the root is red; the black
+    /// height, keys, size, BST order, and size cache are unchanged.
+    proof fn lemma_move_red_left<T: TotalOrder>(link: Link<T>)
+        requires
+            link is Some,
+            link->Some_0.color == Color::Red,
+            spec_is_llrb_link(link),
+            link->Some_0.left is Some,
+            !link_is_red(link->Some_0.left->Some_0.left),
+            spec_is_bst_link(link),
+            spec_size_cached_link(link),
+            link_spec_size(link) <= usize::MAX,
+        ensures
+            spec_move_red_left(link) is Some,
+            forall|z: T| #[trigger] link_contains(spec_move_red_left(link), z) == link_contains(link, z),
+            link_spec_size(spec_move_red_left(link)) == link_spec_size(link),
+            spec_is_bst_link(spec_move_red_left(link)),
+            spec_size_cached_link(spec_move_red_left(link)),
+            link_black_height(spec_move_red_left(link)) == link_black_height(link),
+            spec_delete_min_pre(spec_move_red_left(link)->Some_0.left),
+            spec_is_llrb_link(spec_move_red_left(link)->Some_0.right),
+            link_black_height(spec_move_red_left(link)->Some_0.left)
+                == link_black_height(spec_move_red_left(link)->Some_0.right),
+            spec_move_red_left(link)->Some_0.color == Color::Red ==>
+                !link_is_red(spec_move_red_left(link)->Some_0.left)
+                && !link_is_red(spec_move_red_left(link)->Some_0.right),
+            forall|z: T| #[trigger] link_contains(link->Some_0.left, z) ==>
+                link_contains(spec_move_red_left(link)->Some_0.left, z),
+    {
+        let h = link->Some_0;
+        let l = h.left;
+        let r = h.right;
+        reveal_with_fuel(spec_is_llrb_link, 2);
+        reveal_with_fuel(link_black_height, 2);
+        // h is red, so both children are black; they have equal black height, and the
+        // left child is a node, so the right child is a node too.
+        assert(r is Some);
+        if link_is_red(r->Some_0.left) {
+            lemma_move_red_left_borrow(link);
         } else {
+            reveal_with_fuel(spec_size_cached_link, 2);
+            reveal_with_fuel(link_contains, 2);
+            reveal_with_fuel(spec_is_bst_link, 2);
+            lemma_toggle_root_preserves(l);
+            lemma_toggle_root_preserves(r);
+            lemma_flip_colors_preserves(link);
+            let f = spec_flip_colors(link);
+            let fh = f->Some_0;
+            assert(fh.left == spec_toggle_root(l));
+            assert(fh.right == spec_toggle_root(r));
             assert(spec_move_red_left(link) == f);
             assert(spec_is_llrb_link(fh.left));
             assert(spec_is_llrb_link(fh.right));
@@ -1823,13 +1874,11 @@ pub mod BSTRBStEph {
         spec fn spec_in_order_seq(self) -> Seq<T>;
         spec fn spec_pre_order_seq(self) -> Seq<T>;
 
-        // veracity: no_requires
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_red(&self) -> (red: bool)
             ensures
                 self.spec_is_empty() ==> !red,
                 red == self.spec_red();
-        // veracity: no_requires
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size_link(&self) -> (size: usize)
             ensures
@@ -1988,7 +2037,6 @@ pub mod BSTRBStEph {
         }
     }
 
-    // veracity: no_requires
     /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn update<T: TotalOrder>(node: &mut Node<T>)
@@ -2006,7 +2054,6 @@ pub mod BSTRBStEph {
         }
     }
 
-    // veracity: no_requires
     /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(1), Span O(1)
     fn toggle_color(c: Color) -> (toggled: Color)
         ensures toggled == spec_toggle(c),

@@ -1,0 +1,8 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+note: verifying module Chap37::BSTRBMtEph::BSTRBMtEph (selected functions)
+
+verification results:: 1 verified, 0 errors (partial verification with `--verify-*`)
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 1143MB, peak z3 RSS: 0MB, min free: 27832MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 0s

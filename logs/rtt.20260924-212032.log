@@ -1,0 +1,30 @@
+    Finished `release` profile [optimized] target(s) in 0.11s
+────────────
+ Nextest run ID 531fa830-aa9a-4841-ab47-67b9d28025c4 with nextest profile: default
+    Starting 1 test across 263 binaries (4345 tests skipped)
+        FAIL [   0.005s] (1/1) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_two_vertices
+  stdout ───
+
+    running 1 test
+    test test_spanning_tree_mt_two_vertices ... FAILED
+
+    failures:
+
+    failures:
+        test_spanning_tree_mt_two_vertices
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+  stderr ───
+
+    thread 'test_spanning_tree_mt_two_vertices' (1555059) panicked at tests/Chap64/TestSpanTreeMtEph.rs:69:5:
+    assertion `left == right` failed
+      left: 0
+     right: 1
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+────────────
+     Summary [   0.010s] 1 test run: 0 passed, 1 failed, 4345 skipped
+        FAIL [   0.005s] (1/1) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_two_vertices
+error: test run failed
+Elapsed: 1s
