@@ -1,0 +1,30 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-r222)
+    Finished `release` profile [optimized] target(s) in 1.14s
+────────────
+ Nextest run ID 15125830-fd6e-48c5-b690-e0bd41ea0ab0 with nextest profile: default
+    Starting 1 test across 263 binaries (4367 tests skipped)
+        FAIL [   0.004s] (1/1) apas-verus::TestBSTMtEph mt_bbalpha_comprehensive_operations
+  stdout ───
+
+    running 1 test
+    test mt_bbalpha_comprehensive_operations ... FAILED
+
+    failures:
+
+    failures:
+        mt_bbalpha_comprehensive_operations
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 18 filtered out; finished in 0.00s
+
+  stderr ───
+    HEIGHT30 8
+
+    thread 'mt_bbalpha_comprehensive_operations' (1611147) panicked at tests/Chap37/TestBSTMtEph.rs:213:5:
+    assertion failed: height <= 7
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+────────────
+     Summary [   0.007s] 1 test run: 0 passed, 1 failed, 4367 skipped
+        FAIL [   0.004s] (1/1) apas-verus::TestBSTMtEph mt_bbalpha_comprehensive_operations
+error: test run failed
+Elapsed: 2s

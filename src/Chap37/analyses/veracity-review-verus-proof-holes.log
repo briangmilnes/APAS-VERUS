@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap37/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap37/BSTBBAlphaMtEph.rs
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,147 +20,24 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ AVLTreeSeq.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeq.rs:1354: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeq.rs:1355: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeq.rs:1356: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeq.rs:1379: info: accept()
-   Info: 4 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeq.rs:1255: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Info: 1 × structural_false_positive
-   3 clean proof functions
-ℹ AVLTreeSeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqMtPer.rs:1005: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqMtPer.rs:1006: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqMtPer.rs:1007: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqMtPer.rs:1020: info: accept()
-   Info: 4 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqMtPer.rs:793: info: structural_false_positive OPAQUE_EXTERNAL subseq_copy — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqMtPer.rs:919: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Info: 2 × structural_false_positive
-   3 clean proof functions
-ℹ AVLTreeSeqStEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStEph.rs:1305: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStEph.rs:1402: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStEph.rs:1403: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStEph.rs:1404: info: accept()
-   Info: 4 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStEph.rs:1326: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Info: 1 × structural_false_positive
-   5 clean proof functions
-ℹ AVLTreeSeqStPer.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStPer.rs:963: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStPer.rs:1124: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStPer.rs:1125: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStPer.rs:1126: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStPer.rs:1141: info: accept()
-   Info: 5 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/AVLTreeSeqStPer.rs:1045: info: structural_false_positive STD_TRAIT_IMPL next — #[verifier::external_body] [high]
-   Info: 1 × structural_false_positive
-   5 clean proof functions
-ℹ BSTAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTAVLMtEph.rs:919: info: accept()
-   Info: 1 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTAVLMtEph.rs:846: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTAVLMtEph.rs:872: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTAVLMtEph.rs:884: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTAVLMtEph.rs:896: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTAVLMtEph.rs:907: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTAVLMtEph.rs:918: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-   Info: 6 × structural_false_positive
-✓ BSTAVLStEph.rs
 ℹ BSTBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:726: info: accept()
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1920: info: accept()
    Info: 1 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:639: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:662: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:677: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:689: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:702: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:713: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:725: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:739: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:740: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:741: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:753: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:754: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTBBAlphaMtEph.rs:755: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1811: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == link); } [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1841: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == link); } [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1866: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1877: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1888: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1902: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1919: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1932: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1933: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1934: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1946: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1947: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
+/home/milnes/projects/APAS-VERUS-r222/src/Chap37/BSTBBAlphaMtEph.rs:1948: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
    Info: 13 × structural_false_positive
-✓ BSTBBAlphaStEph.rs
-ℹ BSTPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:705: info: accept()
-   Info: 1 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:619: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:642: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == tree); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:657: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:668: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:680: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is Leaf)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:692: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:704: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:718: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() == 0 ==> min.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:719: info: structural_false_positive RWLOCK_GHOST minimum — assume(self@.spec_size() > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:720: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> self@.tree_contains(min.unwrap())); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:732: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() == 0 ==> max.is_none()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:733: info: structural_false_positive RWLOCK_GHOST maximum — assume(self@.spec_size() > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTPlainMtEph.rs:734: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> self@.tree_contains(max.unwrap())); [medium]
-   Info: 13 × structural_false_positive
-✓ BSTPlainStEph.rs
-ℹ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:2188: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:2205: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:3657: info: accept()
-   Info: 3 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:3518: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:3600: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:3612: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:3622: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:3638: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBMtEph.rs:3656: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-   Info: 6 × structural_false_positive
-   38 clean proof functions
-ℹ BSTRBStEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBStEph.rs:2045: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTRBStEph.rs:2062: info: fn_missing_requires
-   Info: 2 total
-   35 clean proof functions
-ℹ BSTSetAVLMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSetAVLMtEph.rs:181: info: fn_missing_requires
-   Info: 1 total
-ℹ BSTSetBBAlphaMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSetBBAlphaMtEph.rs:180: info: fn_missing_requires
-   Info: 1 total
-ℹ BSTSetPlainMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSetPlainMtEph.rs:180: info: fn_missing_requires
-   Info: 1 total
-ℹ BSTSetRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSetRBMtEph.rs:180: info: fn_missing_requires
-   Info: 1 total
-✓ BSTSetSplayMtEph.rs
-✓ BSTSpecsAndLemmas.rs
-   11 clean proof functions
-ℹ BSTSplayMtEph.rs
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1545: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:2000: info: accept()
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:2102: info: accept()
-   Info: 3 total
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1927: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1934: info: structural_false_positive RWLOCK_GHOST insert — assume(link_node_count(current) <= usize::MAX as nat); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1935: info: structural_false_positive RWLOCK_GHOST insert — assume(link_spec_size(current) <= link_spec_size(old(self)@) [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1954: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == link_contains(self@, *target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1964: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == link_spec_size(self@)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1975: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@ is None)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1989: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == link_height(self@)); } [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:1999: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() <==> link_contains(self@, *target)); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:2011: info: structural_false_positive RWLOCK_GHOST minimum — assume(link_spec_size(self@) > 0 ==> min.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:2012: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> link_contains(self@, min.unwrap())) [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:2013: info: structural_false_positive RWLOCK_GHOST minimum — assume(min.is_some() ==> forall|x: T| link_contains(self@, x [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:2025: info: structural_false_positive RWLOCK_GHOST maximum — assume(link_spec_size(self@) > 0 ==> max.is_some()); [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:2026: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> link_contains(self@, max.unwrap())) [medium]
-/home/milnes/projects/APAS-VERUS-r221/src/Chap37/BSTSplayMtEph.rs:2027: info: structural_false_positive RWLOCK_GHOST maximum — assume(max.is_some() ==> forall|x: T| link_contains(self@, x [medium]
-   Info: 14 × structural_false_positive
-   3 clean proof functions
-✓ BSTSplayStEph.rs
-   3 clean proof functions
+   26 clean proof functions
 
 =================================================================
 2. Depends Upon
@@ -170,85 +47,44 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-AVLTreeSeq  depends upon only clean modules
-AVLTreeSeqMtPer  depends upon only clean modules
-AVLTreeSeqStEph  depends upon only clean modules
-AVLTreeSeqStPer  depends upon only clean modules
-BSTAVLMtEph  depends upon only clean modules
-BSTAVLStEph  depends upon only clean modules
 BSTBBAlphaMtEph  depends upon only clean modules
-BSTBBAlphaStEph  depends upon only clean modules
-BSTPlainMtEph  depends upon only clean modules
-BSTPlainStEph  depends upon only clean modules
-BSTRBMtEph  depends upon only clean modules
-BSTRBStEph  depends upon only clean modules
-BSTSetAVLMtEph  depends upon only clean modules
-BSTSetBBAlphaMtEph  depends upon only clean modules
-BSTSetPlainMtEph  depends upon only clean modules
-BSTSetRBMtEph  depends upon only clean modules
-BSTSetSplayMtEph  depends upon only clean modules
-BSTSpecsAndLemmas  depends upon only clean modules
-BSTSplayMtEph  depends upon only clean modules
-BSTSplayStEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-AVLTreeSeq.rs  depends upon only clean modules
-AVLTreeSeqMtPer.rs  depends upon only clean modules
-AVLTreeSeqStEph.rs  depends upon only clean modules
-AVLTreeSeqStPer.rs  depends upon only clean modules
-BSTAVLMtEph.rs  depends upon only clean modules
-BSTAVLStEph.rs  depends upon only clean modules
 BSTBBAlphaMtEph.rs  depends upon only clean modules
-BSTBBAlphaStEph.rs  depends upon only clean modules
-BSTPlainMtEph.rs  depends upon only clean modules
-BSTPlainStEph.rs  depends upon only clean modules
-BSTRBMtEph.rs  depends upon only clean modules
-BSTRBStEph.rs  depends upon only clean modules
-BSTSetAVLMtEph.rs  depends upon only clean modules
-BSTSetBBAlphaMtEph.rs  depends upon only clean modules
-BSTSetPlainMtEph.rs  depends upon only clean modules
-BSTSetRBMtEph.rs  depends upon only clean modules
-BSTSetSplayMtEph.rs  depends upon only clean modules
-BSTSpecsAndLemmas.rs  depends upon only clean modules
-BSTSplayMtEph.rs  depends upon only clean modules
-BSTSplayStEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   20 clean (no holes, no errors; 100%)
+   1 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   20 total
+   1 total
 
 Proof Functions:
-   106 clean (100%)
+   26 clean (100%)
    0 holed (0%)
-   106 total
+   26 total
 
 Function Specs:
-   938 exec fns with complete spec (requires+ensures) (62%)
-   10 exec fns missing spec (0%)
-   556 proof/spec fns clean (36%)
+   53 exec fns with complete spec (requires+ensures) (43%)
+   0 exec fns missing spec (0%)
+   70 proof/spec fns clean (56%)
    0 proof/spec fns with holes (0%)
-   1504 total fns
+   123 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Accepted (reviewed): 32 total
-   23 × accept()
-   9 × fn_missing_requires
+Accepted (reviewed): 1 total
+   1 × accept()
 
-Structural (info only): 57
-   52 × RWLOCK_GHOST
-   4 × STD_TRAIT_IMPL
-   1 × OPAQUE_EXTERNAL
+Structural (info only): 13
+   13 × RWLOCK_GHOST
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -256,8 +92,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-24 21:23:32 -07:00
-Ended:     2026-09-24 21:23:32 -07:00
-Duration:  232ms
+Started:   2026-09-24 21:55:48 -07:00
+Ended:     2026-09-24 21:55:48 -07:00
+Duration:  34ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

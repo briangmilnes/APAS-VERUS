@@ -1,0 +1,37 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-r222)
+    Finished `release` profile [optimized] target(s) in 8.36s
+────────────
+ Nextest run ID 0dc7a0cd-c7fb-4b82-8808-ce3670a83c9e with nextest profile: default
+    Starting 29 tests across 263 binaries (4339 tests skipped)
+        PASS [   0.004s] ( 1/29) apas-verus::TestBSTBBAlphaMtEph test_bstbbalphamtephlit_macro_functionality
+        PASS [   0.005s] ( 2/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_balance_duplicates
+        PASS [   0.006s] ( 3/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_balance_descending
+        PASS [   0.007s] ( 4/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_balance_ascending
+        PASS [   0.005s] ( 5/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_balance_zigzag
+        PASS [   0.006s] ( 6/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_delete_absent_keys
+        PASS [   0.006s] ( 7/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_delete_ascending_to_empty
+        PASS [   0.013s] ( 8/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_balance_random
+        PASS [   0.008s] ( 9/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_delete_descending_to_empty
+        PASS [   0.017s] (10/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_balance_report
+        PASS [   0.011s] (11/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_insert_delete_interleaved
+        PASS [   0.013s] (12/29) apas-verus::TestBSTBBAlphaMtEph test_mt_bb_delete_random_to_empty
+        PASS [   0.008s] (13/29) apas-verus::TestBSTBBAlphaStEph test_bb_balance_duplicates
+        PASS [   0.011s] (14/29) apas-verus::TestBSTBBAlphaStEph test_bb_delete_absent_keys
+        PASS [   0.013s] (15/29) apas-verus::TestBSTBBAlphaStEph test_bb_delete_ascending_to_empty
+        PASS [   0.037s] (16/29) apas-verus::TestBSTBBAlphaStEph test_bb_balance_ascending
+        PASS [   0.027s] (17/29) apas-verus::TestBSTBBAlphaStEph test_bb_balance_zigzag
+        PASS [   0.042s] (18/29) apas-verus::TestBSTBBAlphaStEph test_bb_balance_descending
+        PASS [   0.004s] (19/29) apas-verus::TestBSTBBAlphaStEph test_bstbbalphastephlit_macro_empty
+        PASS [   0.003s] (20/29) apas-verus::TestBSTBBAlphaStEph test_bstbbalphastephlit_macro_with_elements
+        PASS [   0.004s] (21/29) apas-verus::TestBSTMtEph mt_bbalpha_basic_ops
+        PASS [   0.003s] (22/29) apas-verus::TestBSTMtEph mt_bbalpha_comprehensive_operations
+        PASS [   0.023s] (23/29) apas-verus::TestBSTBBAlphaStEph test_bb_delete_descending_to_empty
+        PASS [   0.024s] (24/29) apas-verus::TestBSTBBAlphaStEph test_bb_insert_delete_interleaved
+        PASS [   0.004s] (25/29) apas-verus::TestBSTMtEph mt_concurrent_bbalpha_operations
+        PASS [   0.003s] (26/29) apas-verus::TestBSTSetBBAlphaMtEph test_bstsetbbalphamtephlit_macro_functionality
+        PASS [   0.047s] (27/29) apas-verus::TestBSTBBAlphaStEph test_bb_delete_random_to_empty
+        PASS [   0.080s] (28/29) apas-verus::TestBSTBBAlphaStEph test_bb_balance_report
+        PASS [   0.118s] (29/29) apas-verus::TestBSTBBAlphaStEph test_bb_balance_random
+────────────
+     Summary [   0.137s] 29 tests run: 29 passed, 4339 skipped
+Elapsed: 8s

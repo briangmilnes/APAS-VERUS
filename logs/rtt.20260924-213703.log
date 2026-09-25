@@ -1,0 +1,118 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.22
+   Compiling quote v1.0.41
+   Compiling cfg-if v1.0.4
+   Compiling libc v0.2.177
+   Compiling serde_core v1.0.228
+   Compiling crossbeam-utils v0.8.21
+   Compiling verus_syn v0.0.0-2026-09-06-0133 (https://github.com/verus-lang/verus?rev=671956ec527d3b7164779f767bdbfe769bedce6c#671956ec)
+   Compiling zerocopy v0.8.27
+   Compiling either v1.15.0
+   Compiling serde v1.0.228
+   Compiling autocfg v1.5.0
+   Compiling verus_prettyplease v0.0.0-2026-09-06-0133 (https://github.com/verus-lang/verus?rev=671956ec527d3b7164779f767bdbfe769bedce6c#671956ec)
+   Compiling rayon-core v1.13.0
+   Compiling hashbrown v0.16.1
+   Compiling getrandom v0.4.1
+   Compiling rand_core v0.10.0
+   Compiling equivalent v1.0.2
+   Compiling serde_json v1.0.145
+   Compiling convert_case v0.4.0
+   Compiling cpufeatures v0.3.0
+   Compiling regex-syntax v0.8.8
+   Compiling plotters-backend v0.3.7
+   Compiling rustix v0.38.44
+   Compiling ryu v1.0.20
+   Compiling anstyle v1.0.13
+   Compiling memchr v2.7.6
+   Compiling clap_lex v0.7.6
+   Compiling vstd v0.0.0-2026-09-06-0133 (https://github.com/verus-lang/verus?rev=671956ec527d3b7164779f767bdbfe769bedce6c#671956ec)
+   Compiling unicode-xid v0.2.6
+   Compiling itoa v1.0.15
+   Compiling ciborium-io v0.2.2
+   Compiling itertools v0.10.5
+   Compiling chacha20 v0.10.0
+   Compiling bitflags v2.10.0
+   Compiling linux-raw-sys v0.4.15
+   Compiling verus_builtin v0.0.0-2026-09-06-0133 (https://github.com/verus-lang/verus?rev=671956ec527d3b7164779f767bdbfe769bedce6c#671956ec)
+   Compiling cast v0.3.0
+   Compiling same-file v1.0.6
+   Compiling oorandom v11.1.5
+   Compiling plotters-svg v0.3.7
+   Compiling anes v0.1.6
+   Compiling clap_builder v4.5.51
+   Compiling num-traits v0.2.19
+   Compiling walkdir v2.5.0
+   Compiling once_cell v1.21.3
+   Compiling home v0.5.12
+   Compiling crossbeam-epoch v0.9.18
+   Compiling indexmap v2.13.0
+   Compiling crossbeam-deque v0.8.6
+   Compiling syn v2.0.108
+   Compiling plotters v0.3.7
+   Compiling is-terminal v0.4.17
+   Compiling criterion-plot v0.5.0
+   Compiling rayon v1.11.0
+   Compiling rand v0.10.0
+   Compiling regex-automata v0.4.13
+   Compiling which v6.0.3
+   Compiling clap v4.5.51
+   Compiling synstructure v0.13.2
+   Compiling zerocopy-derive v0.8.27
+   Compiling serde_derive v1.0.228
+   Compiling derive_more-impl v1.0.0
+   Compiling verus_state_machines_macros v0.0.0-2026-09-06-0133 (https://github.com/verus-lang/verus?rev=671956ec527d3b7164779f767bdbfe769bedce6c#671956ec)
+   Compiling regex v1.12.2
+   Compiling verus_builtin_macros v0.0.0-2026-09-06-0133 (https://github.com/verus-lang/verus?rev=671956ec527d3b7164779f767bdbfe769bedce6c#671956ec)
+   Compiling derive_more v1.0.0
+   Compiling half v2.7.1
+   Compiling tinytemplate v1.2.1
+   Compiling ciborium-ll v0.2.2
+   Compiling ciborium v0.2.2
+   Compiling criterion v0.5.1
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-r222)
+    Finished `release` profile [optimized] target(s) in 25.94s
+────────────
+ Nextest run ID d96840e7-14dc-4d18-8107-f6f38ce1343b with nextest profile: default
+    Starting 18 tests across 263 binaries (4339 tests skipped)
+        PASS [   0.005s] ( 1/18) apas-verus::TestBSTBBAlphaMtEph test_bstbbalphamtephlit_macro_functionality
+        PASS [   0.007s] ( 2/18) apas-verus::TestBSTBBAlphaStEph test_bb_balance_duplicates
+        PASS [   0.006s] ( 3/18) apas-verus::TestBSTBBAlphaStEph test_bb_delete_absent_keys
+        PASS [   0.013s] ( 4/18) apas-verus::TestBSTBBAlphaStEph test_bb_delete_ascending_to_empty
+        PASS [   0.021s] ( 5/18) apas-verus::TestBSTBBAlphaStEph test_bb_balance_zigzag
+        PASS [   0.029s] ( 6/18) apas-verus::TestBSTBBAlphaStEph test_bb_balance_descending
+        PASS [   0.031s] ( 7/18) apas-verus::TestBSTBBAlphaStEph test_bb_balance_ascending
+        PASS [   0.003s] ( 8/18) apas-verus::TestBSTBBAlphaStEph test_bstbbalphastephlit_macro_empty
+        PASS [   0.003s] ( 9/18) apas-verus::TestBSTBBAlphaStEph test_bstbbalphastephlit_macro_with_elements
+        PASS [   0.003s] (10/18) apas-verus::TestBSTMtEph mt_bbalpha_basic_ops
+        PASS [   0.017s] (11/18) apas-verus::TestBSTBBAlphaStEph test_bb_delete_descending_to_empty
+        FAIL [   0.003s] (12/18) apas-verus::TestBSTMtEph mt_bbalpha_comprehensive_operations
+  stdout ───
+
+    running 1 test
+    test mt_bbalpha_comprehensive_operations ... FAILED
+
+    failures:
+
+    failures:
+        mt_bbalpha_comprehensive_operations
+
+    test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 18 filtered out; finished in 0.00s
+
+  stderr ───
+
+    thread 'mt_bbalpha_comprehensive_operations' (1595798) panicked at tests/Chap37/TestBSTMtEph.rs:213:5:
+    assertion failed: height <= 7
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+        PASS [   0.003s] (13/18) apas-verus::TestBSTMtEph mt_concurrent_bbalpha_operations
+        PASS [   0.003s] (14/18) apas-verus::TestBSTSetBBAlphaMtEph test_bstsetbbalphamtephlit_macro_functionality
+        PASS [   0.027s] (15/18) apas-verus::TestBSTBBAlphaStEph test_bb_insert_delete_interleaved
+        PASS [   0.050s] (16/18) apas-verus::TestBSTBBAlphaStEph test_bb_delete_random_to_empty
+        PASS [   0.082s] (17/18) apas-verus::TestBSTBBAlphaStEph test_bb_balance_report
+        PASS [   0.115s] (18/18) apas-verus::TestBSTBBAlphaStEph test_bb_balance_random
+────────────
+     Summary [   0.116s] 18 tests run: 17 passed, 1 failed, 4339 skipped
+        FAIL [   0.003s] (12/18) apas-verus::TestBSTMtEph mt_bbalpha_comprehensive_operations
+error: test run failed
+Elapsed: 27s

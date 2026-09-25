@@ -1,0 +1,16 @@
+BSTBBAlphaStEph seed 1 logs/validate.20260924-214331.log: verification results:: 62 verified, 0 errors
+BSTBBAlphaStEph seed 2 logs/validate.20260924-214342.log: verification results:: 62 verified, 0 errors
+BSTBBAlphaStEph seed 3 logs/validate.20260924-214353.log: verification results:: 62 verified, 0 errors
+BSTBBAlphaStEph seed 4 logs/validate.20260924-214405.log: verification results:: 62 verified, 0 errors
+BSTBBAlphaStEph seed 5 logs/validate.20260924-214416.log: verification results:: 62 verified, 0 errors
+BSTBBAlphaStEph seed 6 logs/validate.20260924-214427.log: verification results:: 62 verified, 0 errors
+BSTBBAlphaStEph seed 7 logs/validate.20260924-214439.log: verification results:: 61 verified, 1 errors
+BSTBBAlphaStEph seed 8 logs/validate.20260924-214448.log: verification results:: 62 verified, 0 errors
+BSTBBAlphaMtEph seed 1 logs/validate.20260924-214459.log: verification results:: 63 verified, 0 errors
+BSTBBAlphaMtEph seed 2 logs/validate.20260924-214510.log: verification results:: 63 verified, 0 errors
+BSTBBAlphaMtEph seed 3 logs/validate.20260924-214522.log: verification results:: 63 verified, 0 errors
+BSTBBAlphaMtEph seed 4 logs/validate.20260924-214533.log: verification results:: 63 verified, 0 errors
+BSTBBAlphaMtEph seed 5 logs/validate.20260924-214545.log: verification results:: 63 verified, 0 errors
+BSTBBAlphaMtEph seed 6 logs/validate.20260924-214556.log: verification results:: 63 verified, 0 errors
+BSTBBAlphaMtEph seed 7 logs/validate.20260924-214607.log: verification results:: 63 verified, 0 errors
+BSTBBAlphaMtEph seed 8 logs/validate.20260924-214619.log: verification results:: 63 verified, 0 errors

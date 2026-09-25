@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+note: verifying module Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph
+
+verification results:: 62 verified, 0 errors
+(use --output-json for machine-readable output)
+verus-build-info
+Verus
+  Version: 0.2026.09.13.671956e
+  Profile: release
+  Platform: linux_x86_64
+  Toolchain: 1.98.1-x86_64-unknown-linux-gnu (overridden by environment variable RUSTUP_TOOLCHAIN)
+
+total-time:           10562 ms
+    rust-time:                4521 ms
+        init-and-types:           2343 ms
+        trait-conflicts:           106 ms
+        compile-time:             2071 ms
+    verification-time:        5010 ms
+        vir-time:                 3011 ms
+            hir-time:                  722 ms
+            import-time:               104 ms
+            rust-to-vir:               645 ms
+        verify-crate-time:        1999 ms
+    unaccounted-time:         1030 ms
+
+verify-crate-time-breakdown
+    total verify-time:           1224 ms   (1 threads)
+      1. Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph       1224 ms
+        total air-time:               283 ms   (1 threads)
+      1. Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph        283 ms
+        total smt-time:               756 ms   (1 threads)
+            total smt-init:                 2 ms,    16186 rlimit (1 threads)
+                1. Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph          2 ms
+            total smt-run:                754 ms, 20568171 rlimit (1 threads)
+                1. Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph        754 ms, 20568171 rlimit
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1226MB, peak z3 RSS: 49MB, min free: 27685MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 1s

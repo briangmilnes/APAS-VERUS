@@ -358,6 +358,19 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
+    /// One unfolding of the size cache at a node: both children are cached and the
+    /// node's size is one more than the children's sizes.
+    proof fn lemma_cached_node<T: TotalOrder>(link: Link<T>)
+        requires
+            spec_size_cached_link(link),
+            link is Some,
+        ensures
+            spec_size_cached_link(link->Some_0.left),
+            spec_size_cached_link(link->Some_0.right),
+            link_spec_size(link) == 1 + link_spec_size(link->Some_0.left) + link_spec_size(link->Some_0.right),
+    {
+    }
+
     /// A cached link's size field is its structural size.
     proof fn lemma_size_field_cached<T: TotalOrder>(link: Link<T>)
         requires spec_size_cached_link(link),
@@ -1129,7 +1142,7 @@ pub mod BSTBBAlphaStEph {
             link_spec_size(l) + link_spec_size(r) + 1 <= usize::MAX,
         ensures rotated == spec_double_left(l, k, r),
     {
-        proof { reveal_with_fuel(spec_size_cached_link, 2); reveal_with_fuel(link_spec_size, 2); }
+        proof { lemma_cached_node::<T>(r); lemma_cached_node::<T>(r->Some_0.left); }
         match r {
             None => { vstd::pervasive::unreached() },
             Some(rn) => {
@@ -1176,7 +1189,7 @@ pub mod BSTBBAlphaStEph {
             link_spec_size(l) + link_spec_size(r) + 1 <= usize::MAX,
         ensures rotated == spec_double_right(l, k, r),
     {
-        proof { reveal_with_fuel(spec_size_cached_link, 2); reveal_with_fuel(link_spec_size, 2); }
+        proof { lemma_cached_node::<T>(l); lemma_cached_node::<T>(l->Some_0.right); }
         match l {
             None => { vstd::pervasive::unreached() },
             Some(ln) => {

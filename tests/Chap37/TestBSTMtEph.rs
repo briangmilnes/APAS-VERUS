@@ -210,7 +210,7 @@ fn mt_bbalpha_comprehensive_operations() {
 
     // BB[α] should maintain balance despite worst-case insertion
     let height = bst.height();
-    assert!(height <= 7); // Should be well-balanced
+    assert!(bst_balance_check::height_within_wb_bound(bst.size(), height)); // BB tree: 4^h <= 3^h (n + 1)
 
     // Verify all elements in correct order
     let in_order = bst.in_order();

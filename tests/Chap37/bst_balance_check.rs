@@ -8,7 +8,10 @@
 //! - key order at every node;
 //! - red-black: at every node, the maximum leaf depth of its subtree is at most
 //!   twice the minimum leaf depth (depths count internal nodes from that node);
-//! - the height bound h <= 2·lg(n + 1), checked as 2^h <= (n + 1)^2.
+//! - the height bound h <= 2·lg(n + 1), checked as 2^h <= (n + 1)^2;
+//! - weight balance (BB[α], (Δ, Γ) = (3, 2)): at every node, with weight =
+//!   size + 1, 3·w(left) >= w(right) and 3·w(right) >= w(left);
+//! - the weight-balanced height bound 4^h <= 3^h · (n + 1).
 //!
 //! Leaves are empty; an empty tree has height 0 and a single node height 1.
 
@@ -122,4 +125,47 @@ pub fn random_permutation(n: i64, seed: u64) -> Vec<i64> {
         keys.swap(i, j);
     }
     keys
+}
+
+/// Rebuilds the subtree whose pre-order sequence is `keys` and checks key order
+/// and the weight condition 3·w(l) >= w(r) and 3·w(r) >= w(l) at every node.
+fn weight_shape_of<T: Ord + std::fmt::Debug>(keys: &[T]) -> Result<Shape, String> {
+    if keys.is_empty() {
+        return Ok(Shape { size: 0, height: 0, min_leaf_depth: 0 });
+    }
+    let root = &keys[0];
+    let rest = &keys[1..];
+    let split = rest.iter().position(|k| k > root).unwrap_or(rest.len());
+    let (left, right) = rest.split_at(split);
+    if let Some(bad) = right.iter().find(|k| *k <= root) {
+        return Err(format!("key order: {:?} in the right subtree of {:?}", bad, root));
+    }
+    let l = weight_shape_of(left)?;
+    let r = weight_shape_of(right)?;
+    let (wl, wr) = (l.size + 1, r.size + 1);
+    if 3 * wl < wr || 3 * wr < wl {
+        return Err(format!("weights at {:?}: left {} right {}", root, wl, wr));
+    }
+    let height = 1 + l.height.max(r.height);
+    let min_leaf_depth = 1 + l.min_leaf_depth.min(r.min_leaf_depth);
+    Ok(Shape { size: 1 + l.size + r.size, height, min_leaf_depth })
+}
+
+/// Checks key order, weight balance at every node, and 4^h <= 3^h · (n + 1).
+/// Returns the shape.
+pub fn check_weight_balanced<T: Ord + std::fmt::Debug>(pre_order: &[T]) -> Result<Shape, String> {
+    let shape = weight_shape_of(pre_order)?;
+    if !height_within_wb_bound(shape.size, shape.height) {
+        return Err(format!("height {} exceeds the bound for n = {}", shape.height, shape.size));
+    }
+    Ok(shape)
+}
+
+/// Returns true iff 4^h <= 3^h · (n + 1), the weight-balanced height bound
+/// (h <= lg(n + 1) / lg(4/3)).
+pub fn height_within_wb_bound(n: usize, h: usize) -> bool {
+    if h >= 60 { return false; }
+    let four = 4u128.pow(h as u32);
+    let three = 3u128.pow(h as u32);
+    three.checked_mul(n as u128 + 1).map_or(true, |rhs| four <= rhs)
 }

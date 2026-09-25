@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+note: verifying module Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap37/BSTBBAlphaStEph.rs:1170:5
+     |
+1170 |     fn double_right<T: TotalOrder>(l: Link<T>, k: T, r: Link<T>) -> (rotated: Link<T>)
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 61 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1226MB, peak z3 RSS: 57MB, min free: 27798MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 0s
