@@ -1,0 +1,80 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:3341:13
+     |
+3341 |               spec_filtered_link(link, *predicate, filtered@),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+3346 | /         match link {
+3347 | |             None => Vec::new(),
+3348 | |             Some(node) => {
+3349 | |                 let ghost left_link = node.left;
+...    |
+3404 | |             },
+3405 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTRBMtEph.rs:3341:13
+     |
+3341 |             spec_filtered_link(link, *predicate, filtered@),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_filtered_link(old(link), old(predicate), filtered.view()) ✘
+|   old(link) is None ==>
+|       filtered.view() == empty() ✔
+|   !(old(link) is None) ==>
+|       let node = old(link).0;
+|           (exists |l, r| ) ✔
++---
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = filtered.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        link_contains(old(link), filtered.view().index(i)) ✔
+        ClosureEns(old(predicate), (filtered.view().index(i)), true) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: postcondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:3419:17
+     |
+3419 |           ensures spec_reduced_link(link, *op, identity, reduced),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+3422 | /         match link {
+3423 | |             None => identity,
+3424 | |             Some(node) => {
+3425 | |                 let ghost left_link = node.left;
+...    |
+3460 | |             },
+3461 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_reduced_link(old(link), old(op), old(identity), reduced)
+|   old(link) is None ==>
+|       reduced == old(identity) ✔
+|   !(old(link) is None) ==>
+|       let node = old(link).0;
+|           (exists |l, r, w| ) ✔
++---
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 2068 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1686MB, peak z3 RSS: 364MB, min free: 27136MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 28s

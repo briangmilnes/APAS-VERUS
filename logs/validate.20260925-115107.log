@@ -1,0 +1,61 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:3399:28
+     |
+3399 |                     assert(spec_filtered_link(link, *predicate, filtered@));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_filtered_link(link, predicate, filtered.view())
+|   link is None ==>
+|       filtered.view() == empty() ✔
+|   !(link is None) ==>
+|       let node = link.0;
+|           (exists |l, r| ) ✔
++---
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: postcondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:3429:17
+     |
+3429 |           ensures spec_reduced_link(link, *op, identity, reduced),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+3432 | /         match link {
+3433 | |             None => identity,
+3434 | |             Some(node) => {
+3435 | |                 let ghost left_link = node.left;
+...    |
+3471 | |             },
+3472 | |         }
+     | |_________- at the end of the function body
+
+note: 
+
+spec_reduced_link(old(link), old(op), old(identity), reduced)
+|   old(link) is None ==>
+|       reduced == old(identity) ✔
+|   !(old(link) is None) ==>
+|       let node = old(link).0;
+|           (exists |l, r, w| ) ✔
++---
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 2068 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1697MB, peak z3 RSS: 444MB, min free: 27194MB
+Sampled CPU Usage: rust_verify: 21s, z3 children: 30s

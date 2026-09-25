@@ -18,8 +18,11 @@ test_verify_one_file! {
         use vstd::std_specs::iter::*;
         use apas_verus::Chap37::BSTRBMtEph::BSTRBMtEph::*;
         use apas_verus::BSTRBMtEphLit;
+        use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
 
-        fn test_loop_borrow_iter() {
+        fn test_loop_borrow_iter()
+            requires obeys_feq_clone::<u64>()
+        {
             let a: BSTRBMtEph<u64> = BSTRBMtEphLit![1u64, 2u64, 3u64];
 
             let it0 = a.iter();
@@ -107,8 +110,11 @@ test_verify_one_file! {
         use vstd::std_specs::iter::*;
         use apas_verus::Chap37::BSTRBMtEph::BSTRBMtEph::*;
         use apas_verus::BSTRBMtEphLit;
+        use apas_verus::vstdplus::feq::feq::obeys_feq_clone;
 
-        fn test_for_borrow_iter() {
+        fn test_for_borrow_iter()
+            requires obeys_feq_clone::<u64>()
+        {
             let a: BSTRBMtEph<u64> = BSTRBMtEphLit![1u64, 2u64, 3u64];
 
             let it0 = a.iter();
