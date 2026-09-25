@@ -478,3 +478,25 @@ fn test_trait_impl_as_tree() {
     let tree = <BSTSetRBMtEph<i32> as BSTSetRBMtEphTrait<i32>>::as_tree(&set);
     assert_eq!(tree.size(), 1);
 }
+
+mod bst_balance_check;
+
+/// Deletes through the set in random order; after every delete the underlying
+/// tree must still be a valid red-black tree holding exactly the remaining keys.
+#[test]
+fn test_delete_keeps_red_black_shape() {
+    let keys = bst_balance_check::random_permutation(300, 17);
+    let mut set = BSTSetRBMtEph::<i64>::empty();
+    for &k in &keys { let _ = set.insert(k); }
+    let mut model: std::collections::BTreeSet<i64> = keys.iter().copied().collect();
+    for &k in bst_balance_check::random_permutation(300, 23).iter() {
+        set.delete(&k);
+        model.remove(&k);
+        assert!(!set.contains(&k));
+        let shape = bst_balance_check::check_red_black(&set.as_tree().pre_order().seq)
+            .unwrap_or_else(|e| panic!("after delete {}: {}", k, e));
+        assert_eq!(shape.size, model.len());
+        assert!(bst_balance_check::height_within_two_lg(shape.size, shape.height));
+    }
+    assert!(set.is_empty());
+}

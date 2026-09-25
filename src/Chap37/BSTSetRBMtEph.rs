@@ -92,7 +92,7 @@ pub mod BSTSetRBMtEph {
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstsetrbmteph_wf()
             ensures self.spec_bstsetrbmteph_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — the red-black tree's delete.
         fn delete(&mut self, target: &T)
             requires old(self).spec_bstsetrbmteph_wf()
             ensures self.spec_bstsetrbmteph_wf();
@@ -244,28 +244,10 @@ pub mod BSTSetRBMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) { self.tree.insert(value) }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — the red-black tree's delete: a search, then one root-to-leaf path.
         fn delete(&mut self, target: &T) {
-            if !self.contains(target) {
-                return;
-            }
-            let sorted = self.tree.in_order();
-            let n = sorted.length();
-            let mut filtered: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < n
-                invariant
-                    n as nat == sorted.spec_len(),
-                    0 <= i <= n,
-                decreases n - i,
-            {
-                let elem = sorted.nth(i);
-                if *elem != *target {
-                    filtered.push(elem.clone());
-                }
-                i += 1;
-            }
-            self.tree = rebuild_from_vec(filtered);
+            let _ = self.tree.delete(target);
         }
 
         #[verifier::exec_allows_no_decreases_clause]

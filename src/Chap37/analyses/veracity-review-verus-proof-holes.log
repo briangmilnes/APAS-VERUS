@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap37/BSTRBMtEph.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap37/BSTSetRBMtEph.rs
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,20 +20,9 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:2188: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:2204: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3741: info: accept()
-   Info: 3 total
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3530: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3609: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3684: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3696: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3706: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3722: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3740: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
-   Info: 7 × structural_false_positive
-   38 clean proof functions
+ℹ BSTSetRBMtEph.rs
+/home/milnes/projects/APAS-VERUS-r227/src/Chap37/BSTSetRBMtEph.rs:180: info: fn_missing_requires
+   Info: 1 total
 
 =================================================================
 2. Depends Upon
@@ -43,13 +32,13 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-BSTRBMtEph  depends upon only clean modules
+BSTSetRBMtEph  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-BSTRBMtEph.rs  depends upon only clean modules
+BSTSetRBMtEph.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
@@ -61,27 +50,23 @@ Modules:
    1 total
 
 Proof Functions:
-   38 clean (100%)
+   0 clean (0%)
    0 holed (0%)
-   38 total
+   0 total
 
 Function Specs:
-   81 exec fns with complete spec (requires+ensures) (41%)
-   2 exec fns missing spec (1%)
-   114 proof/spec fns clean (57%)
+   46 exec fns with complete spec (requires+ensures) (93%)
+   1 exec fns missing spec (2%)
+   2 proof/spec fns clean (4%)
    0 proof/spec fns with holes (0%)
-   197 total fns
+   49 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Accepted (reviewed): 3 total
-   2 × fn_missing_requires
-   1 × accept()
-
-Structural (info only): 7
-   7 × RWLOCK_GHOST
+Accepted (reviewed): 1 total
+   1 × fn_missing_requires
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -89,8 +74,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-25 10:07:36 -07:00
-Ended:     2026-09-25 10:07:36 -07:00
-Duration:  64ms
+Started:   2026-09-25 11:40:46 -07:00
+Ended:     2026-09-25 11:40:46 -07:00
+Duration:  8ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log
