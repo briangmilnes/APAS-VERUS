@@ -1,0 +1,8 @@
+Mode: isolate
+Isolate: including Chap62 Chap64 Chap19 Chap06 Chap05 Chap02
+note: verifying module Chap64::SpanTreeMtEph::SpanTreeMtEph
+
+verification results:: 2 verified, 0 errors
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1201MB, peak z3 RSS: 0MB, min free: 28065MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 0s

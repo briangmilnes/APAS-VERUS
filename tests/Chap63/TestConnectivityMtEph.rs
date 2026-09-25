@@ -251,3 +251,34 @@ fn test_connected_components_hof_mt_isolated() {
     let (reps, _) = connected_components_hof(&graph, 42);
     assert_eq!(reps.size(), 4);
 }
+
+// Seed sweep (r224): the star_contract_mt framework on small graphs, seeds 0..200.
+#[test]
+fn test_count_components_hof_mt_seed_sweep() {
+    for n in 2..=8usize {
+        let path: Vec<(usize, usize)> = (0..n - 1).map(|i| (i, i + 1)).collect();
+        let half = n / 2;
+        let mut split = Vec::new();
+        for i in 0..half.saturating_sub(1) {
+            split.push((i, i + 1));
+        }
+        for i in half..(2 * half).saturating_sub(1) {
+            split.push((i, i + 1));
+        }
+        let expected_split = n - split.len();
+        for (edges, expected) in [(path, 1usize), (split, expected_split)] {
+            let mut vertices = SetLit![];
+            for i in 0..n {
+                let _ = vertices.insert(i);
+            }
+            let mut edge_set = SetLit![];
+            for &(u, w) in &edges {
+                let _ = edge_set.insert(Edge(u, w));
+            }
+            let graph = <UnDirGraphMtEph<usize> as UnDirGraphMtEphTrait<usize>>::from_sets(vertices, edge_set);
+            for seed in 0..200u64 {
+                assert_eq!(count_components_hof(&graph, seed), expected, "n {n} edges {edges:?} seed {seed}");
+            }
+        }
+    }
+}

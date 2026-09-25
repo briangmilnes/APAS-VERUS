@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: precondition not satisfied
+   --> src/Chap62/StarContractionMtEph.rs:605:27
+    |
+513 | /             forall |j: int| start as int <= j < end as int ==>
+514 | |                 graph_v_view.contains(#[trigger] (*edges).spec_index(j)@.0) &&
+515 | |                 graph_v_view.contains((*edges).spec_index(j)@.1),
+    | |________________________________________________________________- failed precondition
+...
+605 |           let right_edges = route_edges_parallel(
+    |  ___________________________^
+606 | |             edges, partition_map, Ghost(graph_v_view), Ghost(centers_view), mid, end,
+607 | |         );
+    | |_________^
+
+note: diagnostics via expansion
+
+note: 
+
+mid <= end ✔
+end <= edges.view().len() ✔
+valid_key_type_Edge() ✔
+forall |j|
+    let tmp%% = mid in let tmp%% = j in let tmp%% = end in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        graph_v_view.to_iset().contains(edges.spec_index(j).view().0) ✔
+        graph_v_view.to_iset().contains(edges.spec_index(j).view().1) ✔
+spec_valid_partition_map(graph_v_view, centers_view, key_view(partition_map.view())) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 1259 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 1748MB, peak z3 RSS: 255MB, min free: 27101MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 16s
