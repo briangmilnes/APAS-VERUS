@@ -150,3 +150,11 @@ through `-102501.log`).
 `scripts/holes.sh src/Chap62/` and `src/Chap64/`: 0 holes in each, as before.
 No assume, admit, accept, external_body, `#![auto]`, or `veracity:
 no_requires` added; no rlimit raised.
+
+## Full checks (main session, after the round)
+
+| # | Chap | Measure | Value |
+|---|---|---|---|
+| 1 | — | Full `scripts/validate.sh` (covers Chap63) | 5825 verified, 0 errors |
+| 2 | — | Full `scripts/rtt.sh` | 4371 of 4371 pass |
+| 3 | — | `scripts/ptt.sh` | 328 of 328 pass |
