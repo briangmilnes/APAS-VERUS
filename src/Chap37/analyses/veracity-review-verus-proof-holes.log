@@ -21,17 +21,19 @@ Table of Contents:
 =================================================================
 
 ℹ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:2188: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:2204: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3741: info: accept()
-   Info: 3 total
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3530: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3609: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3684: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3696: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3706: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3722: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-r223/src/Chap37/BSTRBMtEph.rs:3740: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:2301: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:2317: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:3311: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:3346: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4092: info: accept()
+   Info: 5 total
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:3881: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:3960: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4035: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4047: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4057: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4073: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4091: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
    Info: 7 × structural_false_positive
    38 clean proof functions
 
@@ -66,18 +68,18 @@ Proof Functions:
    38 total
 
 Function Specs:
-   81 exec fns with complete spec (requires+ensures) (41%)
-   2 exec fns missing spec (1%)
-   114 proof/spec fns clean (57%)
+   85 exec fns with complete spec (requires+ensures) (39%)
+   4 exec fns missing spec (1%)
+   128 proof/spec fns clean (58%)
    0 proof/spec fns with holes (0%)
-   197 total fns
+   217 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Accepted (reviewed): 3 total
-   2 × fn_missing_requires
+Accepted (reviewed): 5 total
+   4 × fn_missing_requires
    1 × accept()
 
 Structural (info only): 7
@@ -89,8 +91,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-25 10:07:36 -07:00
-Ended:     2026-09-25 10:07:36 -07:00
-Duration:  64ms
+Started:   2026-09-25 11:58:38 -07:00
+Ended:     2026-09-25 11:58:38 -07:00
+Duration:  59ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

@@ -49,6 +49,7 @@ pub mod BSTRBMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::mul::lemma_mul_upper_bound;
 
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
@@ -70,7 +71,7 @@ pub mod BSTRBMtEph {
     //		Section 4a. type definitions
 
 
-    // (Arc kept for filter_parallel/reduce_parallel closure sharing.)
+    // (Arc shares the filter_parallel/reduce_parallel closure between join arms.)
 
 
     #[derive(Clone, Copy, PartialEq, Eq, StructuralEq)]
@@ -539,6 +540,92 @@ pub mod BSTRBMtEph {
         &&& (c->Some_0.key == key ==> spec_delete_min_pre(c->Some_0.right))
         &&& (c->Some_0.key != key ==>
                 spec_delete_pre(c->Some_0.right, key) && link_contains(c->Some_0.right, key))
+    }
+
+    /// The keys of `link` whose decision in `decisions` is `true`, in in-order.
+    /// `decisions` is a tree of keep decisions with the shape of `link`.
+    pub open spec fn spec_kept_link<T: StTInMtT + Ord + TotalOrder>(
+        link: Link<T>, decisions: BalBinTree<bool>) -> Seq<T>
+        decreases link,
+    {
+        match link {
+            None => Seq::<T>::empty(),
+            Some(node) => match decisions {
+                BalBinTree::Leaf => Seq::<T>::empty(),
+                BalBinTree::Node(d) =>
+                    spec_kept_link(node.left, d.left)
+                    + (if d.value { seq![node.key] } else { Seq::<T>::empty() })
+                    + spec_kept_link(node.right, d.right),
+            },
+        }
+    }
+
+    /// `decisions` has the shape of `link`, and each decision is a result that `pred`
+    /// may return for the key at the same position.
+    pub open spec fn spec_keep_decisions_link<T: StTInMtT + Ord + TotalOrder, F: Fn(&T) -> bool>(
+        link: Link<T>, pred: F, decisions: BalBinTree<bool>) -> bool
+        decreases link,
+    {
+        match link {
+            None => decisions == BalBinTree::<bool>::Leaf,
+            Some(node) => match decisions {
+                BalBinTree::Leaf => false,
+                BalBinTree::Node(d) =>
+                    pred.ensures((&node.key,), d.value)
+                    && spec_keep_decisions_link(node.left, pred, d.left)
+                    && spec_keep_decisions_link(node.right, pred, d.right),
+            },
+        }
+    }
+
+    /// The keys of `link` that `pred` keeps, in in-order. A relation, not a function:
+    /// a closure's `ensures` need not determine its result, so `kept` is the in-order
+    /// selection under some tree of decisions, each one a result `pred` may return.
+    pub open spec fn spec_filtered_link<T: StTInMtT + Ord + TotalOrder, F: Fn(&T) -> bool>(
+        link: Link<T>, pred: F, kept: Seq<T>) -> bool
+    {
+        exists|decisions: BalBinTree<bool>|
+            #[trigger] spec_keep_decisions_link(link, pred, decisions)
+            && kept == spec_kept_link(link, decisions)
+    }
+
+    /// The value of a reduction witness: `identity` for an empty link, else the
+    /// node's result.
+    pub open spec fn spec_reduce_value<T>(witness: BalBinTree<(T, T)>, identity: T) -> T {
+        match witness {
+            BalBinTree::Leaf => identity,
+            BalBinTree::Node(w) => w.value.1,
+        }
+    }
+
+    /// `witness` has the shape of `link` and records, at each node, results `op` may
+    /// return for `op(left, key)` and for `op(op(left, key), right)`.
+    pub open spec fn spec_reduce_witness_link<T: StTInMtT + Ord + TotalOrder, F: Fn(T, T) -> T>(
+        link: Link<T>, op: F, identity: T, witness: BalBinTree<(T, T)>) -> bool
+        decreases link,
+    {
+        match link {
+            None => witness == BalBinTree::<(T, T)>::Leaf,
+            Some(node) => match witness {
+                BalBinTree::Leaf => false,
+                BalBinTree::Node(w) =>
+                    spec_reduce_witness_link(node.left, op, identity, w.left)
+                    && spec_reduce_witness_link(node.right, op, identity, w.right)
+                    && op.ensures((spec_reduce_value(w.left, identity), node.key), w.value.0)
+                    && op.ensures((w.value.0, spec_reduce_value(w.right, identity)), w.value.1),
+            },
+        }
+    }
+
+    /// The results `op` may produce when it folds `link` as `op(op(left, key), right)`,
+    /// with `identity` at every empty link. A relation for the same reason as
+    /// `spec_filtered_link`.
+    pub open spec fn spec_reduced_link<T: StTInMtT + Ord + TotalOrder, F: Fn(T, T) -> T>(
+        link: Link<T>, op: F, identity: T, reduced: T) -> bool
+    {
+        exists|witness: BalBinTree<(T, T)>|
+            #[trigger] spec_reduce_witness_link(link, op, identity, witness)
+            && spec_reduce_value(witness, identity) == reduced
     }
 
     //		Section 7b. proof fns/broadcast groups
@@ -1991,6 +2078,10 @@ pub mod BSTRBMtEph {
         spec fn spec_fixed_up(self) -> Self;
         spec fn spec_delete_min_ready(self) -> bool;
         spec fn spec_delete_ready(self, key: T) -> bool;
+        spec fn spec_in_order_seq(self) -> Seq<T>;
+        spec fn spec_pre_order_seq(self) -> Seq<T>;
+        spec fn spec_filtered<F: Fn(&T) -> bool>(self, pred: F, kept: Seq<T>) -> bool;
+        spec fn spec_reduced<F: Fn(T, T) -> T>(self, op: F, identity: T, reduced: T) -> bool;
 
         // veracity: no_requires
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -2115,38 +2206,60 @@ pub mod BSTRBMtEph {
                 !self.spec_is_empty() ==> max.is_some(),
                 max.is_some() ==> self.spec_contains(*max.unwrap()),
                 max.is_some() ==> forall|x: T| #[trigger] self.spec_contains(x) ==> TotalOrder::le(x, *max.unwrap());
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// Deep copy: a fresh node for every node, one key clone each.
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — sequential recursion, one clone per key.
+        fn clone_link(&self) -> (copy: Self)
+            requires obeys_feq_clone::<T>(),
+            ensures copy == *self;
+        /// Appends the keys in in-order (left, key, right) to `out`; sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — one clone and one push per key.
         fn in_order_collect(&self, out: &mut Vec<T>)
-            requires self.spec_size() <= usize::MAX as nat,
-            ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn pre_order_collect(&self, out: &mut Vec<T>)
-            requires self.spec_size() <= usize::MAX as nat,
-            ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn in_order_parallel(&self) -> (elements: Vec<T>)
-            requires self.spec_size() <= usize::MAX as nat,
-            ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn pre_order_parallel(&self) -> (elements: Vec<T>)
-            requires self.spec_size() <= usize::MAX as nat,
-            ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn filter_parallel<F>(&self, predicate: &Arc<F>) -> (filtered: Vec<T>)
-            where
-                F: Fn(&T) -> bool + Send + Sync,
             requires
                 self.spec_size() <= usize::MAX as nat,
+                obeys_feq_clone::<T>(),
+            ensures out@ == old(out)@ + self.spec_in_order_seq();
+        /// Appends the keys in pre-order (key, left, right) to `out`; sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — one clone and one push per key.
+        fn pre_order_collect(&self, out: &mut Vec<T>)
+            requires
+                self.spec_size() <= usize::MAX as nat,
+                obeys_feq_clone::<T>(),
+            ensures out@ == old(out)@ + self.spec_pre_order_seq();
+        /// Fork-join in-order traversal of a deep copy (`join` needs owned, `'static` arms).
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — O(n) copy, then `in_order_owned`.
+        fn in_order_parallel(&self) -> (elements: Vec<T>)
+            requires
+                self.spec_size() <= usize::MAX as nat,
+                obeys_feq_clone::<T>(),
+            ensures elements@ == self.spec_in_order_seq();
+        /// Fork-join pre-order traversal of a deep copy (`join` needs owned, `'static` arms).
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — O(n) copy, then `pre_order_owned`.
+        fn pre_order_parallel(&self) -> (elements: Vec<T>)
+            requires
+                self.spec_size() <= usize::MAX as nat,
+                obeys_feq_clone::<T>(),
+            ensures elements@ == self.spec_pre_order_seq();
+        /// Fork-join filter of a deep copy; keeps the in-order of the kept keys.
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — O(n) copy, then `filter_owned`; assumes `predicate` is O(1).
+        fn filter_parallel<F: Pred<T>>(&self, predicate: &Arc<F>) -> (filtered: Vec<T>)
+            requires
+                self.spec_size() <= usize::MAX as nat,
+                obeys_feq_clone::<T>(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
-            ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            ensures
+                self.spec_filtered(**predicate, filtered@),
+                forall|i: int| 0 <= i < filtered@.len() ==>
+                    self.spec_contains(#[trigger] filtered@[i]) && predicate.ensures((&filtered@[i],), true);
+        /// Fork-join reduction of a deep copy: `op(op(left, key), right)` at every node.
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — the O(n) sequential copy dominates; `reduce_owned` has Span O(lg n); assumes `op` is O(1).
         fn reduce_parallel<F>(&self, op: &Arc<F>, identity: T) -> (reduced: T)
             where
-                F: Fn(T, T) -> T + Send + Sync,
+                F: Fn(T, T) -> T + Send + Sync + 'static,
             requires
                 self.spec_size() <= usize::MAX as nat,
+                obeys_feq_clone::<T>(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
-            ensures true;
+            ensures self.spec_reduced(**op, identity, reduced);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_rec(&self) -> (h: usize)
             requires self.spec_height() <= usize::MAX as nat,
@@ -2514,6 +2627,14 @@ pub mod BSTRBMtEph {
     open spec fn spec_fixed_up(self) -> Self { spec_fix_up(self) }
     open spec fn spec_delete_min_ready(self) -> bool { spec_delete_min_pre(self) }
     open spec fn spec_delete_ready(self, key: T) -> bool { spec_delete_pre(self, key) }
+    open spec fn spec_in_order_seq(self) -> Seq<T> { link_to_bbt(self).spec_in_order() }
+    open spec fn spec_pre_order_seq(self) -> Seq<T> { link_to_bbt(self).spec_pre_order() }
+    open spec fn spec_filtered<F: Fn(&T) -> bool>(self, pred: F, kept: Seq<T>) -> bool {
+        spec_filtered_link(self, pred, kept)
+    }
+    open spec fn spec_reduced<F: Fn(T, T) -> T>(self, op: F, identity: T, reduced: T) -> bool {
+        spec_reduced_link(self, op, identity, reduced)
+    }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn is_red(&self) -> (red: bool)
@@ -3064,89 +3185,89 @@ pub mod BSTRBMtEph {
     // Veracity: NEEDED proof block
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — sequential recursion, one clone per key.
+    fn clone_link(&self) -> (copy: Self)
+        decreases *self,
+    {
+        match self {
+            None => None,
+            Some(node) => {
+                let left = node.left.clone_link();
+                let right = node.right.clone_link();
+                let key = node.key.clone_plus();
+                Some(Box::new(Node { key, color: node.color, size: node.size, left, right }))
+            },
+        }
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — one clone and one push per key.
     fn in_order_collect(&self, out: &mut Vec<T>)
         decreases *self,
     {
-        if let Some(node) = self {
-            node.left.in_order_collect(out);
-            out.push(node.key.clone());
-            node.right.in_order_collect(out);
+        match self {
+            None => {
+                proof { assert(out@ =~= old(out)@ + self.spec_in_order_seq()); }
+            },
+            Some(node) => {
+                proof { reveal_with_fuel(link_spec_size, 2); }
+                node.left.in_order_collect(out);
+                let key = node.key.clone_plus();
+                out.push(key);
+                node.right.in_order_collect(out);
+                proof { assert(out@ =~= old(out)@ + self.spec_in_order_seq()); }
+            },
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — one clone and one push per key.
     fn pre_order_collect(&self, out: &mut Vec<T>)
         decreases *self,
     {
-        if let Some(node) = self {
-            out.push(node.key.clone());
-            node.left.pre_order_collect(out);
-            node.right.pre_order_collect(out);
+        match self {
+            None => {
+                proof { assert(out@ =~= old(out)@ + self.spec_pre_order_seq()); }
+            },
+            Some(node) => {
+                proof { reveal_with_fuel(link_spec_size, 2); }
+                let key = node.key.clone_plus();
+                out.push(key);
+                node.left.pre_order_collect(out);
+                node.right.pre_order_collect(out);
+                proof { assert(out@ =~= old(out)@ + self.spec_pre_order_seq()); }
+            },
         }
     }
 
-    // Veracity: NEEDED proof block
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — O(n) copy, then `in_order_owned`.
     fn in_order_parallel(&self) -> (elements: Vec<T>)
     {
-        let mut out = Vec::new();
-        self.in_order_collect(&mut out);
-        out
+        let copy = self.clone_link();
+        in_order_owned(copy)
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — O(n) copy, then `pre_order_owned`.
     fn pre_order_parallel(&self) -> (elements: Vec<T>)
     {
-        let mut out = Vec::new();
-        self.pre_order_collect(&mut out);
-        out
+        let copy = self.clone_link();
+        pre_order_owned(copy)
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn filter_parallel<F>(&self, predicate: &Arc<F>) -> (filtered: Vec<T>)
-        where
-            // Veracity: NEEDED proof block
-            F: Fn(&T) -> bool + Send + Sync,
-        decreases *self,
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — O(n) copy, then `filter_owned`; assumes `predicate` is O(1).
+    fn filter_parallel<F: Pred<T>>(&self, predicate: &Arc<F>) -> (filtered: Vec<T>)
     {
-        match self {
-            | None => Vec::new(),
-            | Some(node) => {
-                proof {
-                    reveal_with_fuel(link_spec_size, 2);
-                }
-                let left_vals = node.left.filter_parallel(predicate);
-                let mut right_vals = node.right.filter_parallel(predicate);
-                let mut result = left_vals;
-                if (**predicate)(&node.key) {
-                    result.push(node.key.clone());
-                }
-                result.append(&mut right_vals);
-                result
-            }
-        }
+        let copy = self.clone_link();
+        let shared = predicate.clone();
+        filter_owned(copy, shared)
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — the O(n) sequential copy dominates; `reduce_owned` has Span O(lg n); assumes `op` is O(1).
     fn reduce_parallel<F>(&self, op: &Arc<F>, identity: T) -> (reduced: T)
         where
-            F: Fn(T, T) -> T + Send + Sync,
-        decreases *self,
+            F: Fn(T, T) -> T + Send + Sync + 'static,
     {
-        match self {
-            | None => identity,
-            | Some(node) => {
-                proof {
-                    reveal_with_fuel(link_spec_size, 2);
-                }
-                let id_left = identity.clone();
-                let left_acc = node.left.reduce_parallel(op, id_left);
-                let right_acc = node.right.reduce_parallel(op, identity);
-                let with_key = (**op)(left_acc, node.key.clone());
-                (**op)(with_key, right_acc)
-            }
-        }
+        let copy = self.clone_link();
+        let shared = op.clone();
+        reduce_owned(copy, shared, identity)
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -3180,6 +3301,235 @@ pub mod BSTRBMtEph {
     }
 
     } // impl BSTRBMtNodeFns for Link
+
+    // Fork-join traversals over an owned link. `join` needs `'static` arms, so each
+    // arm takes ownership of one subtree; the `_parallel` trait methods copy the
+    // borrowed tree once and hand the copy here.
+
+    /// In-order keys of `link`: the two subtrees in parallel, then left ++ [key] ++ right.
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — the concatenation at a node copies O(size of its subtree); the nodes at one depth hold at most n keys and the height is at most 2 lg(n + 1), which bounds the Work, and each node on a root-to-leaf path copies at most n keys, which bounds the Span (O(n) when subtree sizes shrink geometrically down every path).
+    pub(crate) fn in_order_owned<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> (elements: Vec<T>)
+        ensures elements@ == link_to_bbt(link).spec_in_order(),
+        decreases link,
+    {
+        match link {
+            None => Vec::new(),
+            Some(node) => {
+                let ghost left_link = node.left;
+                let ghost right_link = node.right;
+                let Node { key, color: _, size: _, left, right } = *node;
+                let f1 = move || -> (r: Vec<T>)
+                    requires left == left_link,
+                    ensures r@ == link_to_bbt(left_link).spec_in_order(),
+                {
+                    in_order_owned(left)
+                };
+                let f2 = move || -> (r: Vec<T>)
+                    requires right == right_link,
+                    ensures r@ == link_to_bbt(right_link).spec_in_order(),
+                {
+                    in_order_owned(right)
+                };
+                let (mut elements, mut right_elements) = join(f1, f2);
+                let ghost left_seq = elements@;
+                let ghost right_seq = right_elements@;
+                elements.push(key);
+                elements.append(&mut right_elements);
+                proof { assert(elements@ =~= left_seq + seq![key] + right_seq); }
+                elements
+            },
+        }
+    }
+
+    /// Pre-order keys of `link`: the two subtrees in parallel, then [key] ++ left ++ right.
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — as `in_order_owned`: O(size of the subtree) copied per node, height at most 2 lg(n + 1).
+    pub(crate) fn pre_order_owned<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> (elements: Vec<T>)
+        ensures elements@ == link_to_bbt(link).spec_pre_order(),
+        decreases link,
+    {
+        match link {
+            None => Vec::new(),
+            Some(node) => {
+                let ghost left_link = node.left;
+                let ghost right_link = node.right;
+                let Node { key, color: _, size: _, left, right } = *node;
+                let f1 = move || -> (r: Vec<T>)
+                    requires left == left_link,
+                    ensures r@ == link_to_bbt(left_link).spec_pre_order(),
+                {
+                    pre_order_owned(left)
+                };
+                let f2 = move || -> (r: Vec<T>)
+                    requires right == right_link,
+                    ensures r@ == link_to_bbt(right_link).spec_pre_order(),
+                {
+                    pre_order_owned(right)
+                };
+                let (mut left_elements, mut right_elements) = join(f1, f2);
+                let ghost left_seq = left_elements@;
+                let ghost right_seq = right_elements@;
+                let mut elements = Vec::new();
+                elements.push(key);
+                elements.append(&mut left_elements);
+                elements.append(&mut right_elements);
+                proof { assert(elements@ =~= seq![key] + left_seq + right_seq); }
+                elements
+            },
+        }
+    }
+
+    /// Keys of `link` that `predicate` keeps, in in-order: the two subtrees in parallel,
+    /// then left ++ [key if kept] ++ right.
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — as `in_order_owned`, with one O(1) `predicate` call per node.
+    pub(crate) fn filter_owned<T: StTInMtT + Ord + TotalOrder, F: Pred<T>>(
+        link: Link<T>, predicate: Arc<F>,
+    ) -> (filtered: Vec<T>)
+        requires forall|t: &T| #[trigger] predicate.requires((t,)),
+        ensures
+            spec_filtered_link(link, *predicate, filtered@),
+            forall|i: int| 0 <= i < filtered@.len() ==>
+                link_contains(link, #[trigger] filtered@[i]) && predicate.ensures((&filtered@[i],), true),
+        decreases link,
+    {
+        match link {
+            None => {
+                let filtered = Vec::new();
+                proof {
+                    assert(spec_keep_decisions_link(link, *predicate, BalBinTree::<bool>::Leaf));
+                    assert(filtered@ =~= spec_kept_link(link, BalBinTree::<bool>::Leaf));
+                }
+                filtered
+            },
+            Some(node) => {
+                let ghost left_link = node.left;
+                let ghost right_link = node.right;
+                let Node { key, color: _, size: _, left, right } = *node;
+                let left_pred = predicate.clone();
+                let right_pred = predicate.clone();
+                let f1 = move || -> (r: Vec<T>)
+                    requires
+                        left == left_link,
+                        forall|t: &T| #[trigger] left_pred.requires((t,)),
+                    ensures
+                        spec_filtered_link(left_link, *left_pred, r@),
+                        forall|i: int| 0 <= i < r@.len() ==>
+                            link_contains(left_link, #[trigger] r@[i]) && left_pred.ensures((&r@[i],), true),
+                {
+                    filter_owned(left, left_pred)
+                };
+                let f2 = move || -> (r: Vec<T>)
+                    requires
+                        right == right_link,
+                        forall|t: &T| #[trigger] right_pred.requires((t,)),
+                    ensures
+                        spec_filtered_link(right_link, *right_pred, r@),
+                        forall|i: int| 0 <= i < r@.len() ==>
+                            link_contains(right_link, #[trigger] r@[i]) && right_pred.ensures((&r@[i],), true),
+                {
+                    filter_owned(right, right_pred)
+                };
+                let (mut filtered, mut right_kept) = join(f1, f2);
+                let ghost left_seq = filtered@;
+                let ghost right_seq = right_kept@;
+                let keep = (*predicate)(&key);
+                if keep {
+                    filtered.push(key);
+                }
+                filtered.append(&mut right_kept);
+                proof {
+                    let left_decisions = choose|d: BalBinTree<bool>|
+                        #[trigger] spec_keep_decisions_link(left_link, *predicate, d)
+                        && left_seq == spec_kept_link(left_link, d);
+                    let right_decisions = choose|d: BalBinTree<bool>|
+                        #[trigger] spec_keep_decisions_link(right_link, *predicate, d)
+                        && right_seq == spec_kept_link(right_link, d);
+                    let decisions = BalBinTree::Node(Box::new(BalBinNode {
+                        left: left_decisions, value: keep, right: right_decisions,
+                    }));
+                    assert(spec_keep_decisions_link(link, *predicate, decisions));
+                    assert(filtered@ =~= spec_kept_link(link, decisions));
+                    let skip: int = if keep { left_seq.len() as int + 1 } else { left_seq.len() as int };
+                    assert forall|i: int| 0 <= i < filtered@.len() implies
+                        link_contains(link, #[trigger] filtered@[i]) && predicate.ensures((&filtered@[i],), true)
+                    by {
+                        if i < left_seq.len() {
+                            assert(filtered@[i] == left_seq[i]);
+                        } else if i < skip {
+                            assert(filtered@[i] == key);
+                        } else {
+                            assert(filtered@[i] == right_seq[i - skip]);
+                        }
+                    };
+                }
+                filtered
+            },
+        }
+    }
+
+    /// `op(op(left, key), right)` at every node of `link`, `identity` at every empty link:
+    /// the two subtrees in parallel, then two `op` calls.
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(lg n) — O(1) per node, height at most 2 lg(n + 1); assumes `op` is O(1).
+    pub(crate) fn reduce_owned<T: StTInMtT + Ord + TotalOrder, F>(
+        link: Link<T>, op: Arc<F>, identity: T,
+    ) -> (reduced: T)
+        where
+            F: Fn(T, T) -> T + Send + Sync + 'static,
+        requires
+            obeys_feq_clone::<T>(),
+            forall|a: T, b: T| #[trigger] op.requires((a, b)),
+        ensures spec_reduced_link(link, *op, identity, reduced),
+        decreases link,
+    {
+        match link {
+            None => {
+                proof { assert(spec_reduce_witness_link(link, *op, identity, BalBinTree::<(T, T)>::Leaf)); }
+                identity
+            },
+            Some(node) => {
+                let ghost left_link = node.left;
+                let ghost right_link = node.right;
+                let ghost id = identity;
+                let Node { key, color: _, size: _, left, right } = *node;
+                let left_identity = identity.clone_plus();
+                let left_op = op.clone();
+                let right_op = op.clone();
+                let f1 = move || -> (r: T)
+                    requires
+                        left == left_link,
+                        obeys_feq_clone::<T>(),
+                        forall|a: T, b: T| #[trigger] left_op.requires((a, b)),
+                    ensures spec_reduced_link(left_link, *left_op, left_identity, r),
+                {
+                    reduce_owned(left, left_op, left_identity)
+                };
+                let f2 = move || -> (r: T)
+                    requires
+                        right == right_link,
+                        obeys_feq_clone::<T>(),
+                        forall|a: T, b: T| #[trigger] right_op.requires((a, b)),
+                    ensures spec_reduced_link(right_link, *right_op, identity, r),
+                {
+                    reduce_owned(right, right_op, identity)
+                };
+                let (left_reduced, right_reduced) = join(f1, f2);
+                let with_key = (*op)(left_reduced, key);
+                let reduced = (*op)(with_key, right_reduced);
+                proof {
+                    let left_witness = choose|w: BalBinTree<(T, T)>|
+                        #[trigger] spec_reduce_witness_link(left_link, *op, id, w)
+                        && spec_reduce_value(w, id) == left_reduced;
+                    let right_witness = choose|w: BalBinTree<(T, T)>|
+                        #[trigger] spec_reduce_witness_link(right_link, *op, id, w)
+                        && spec_reduce_value(w, id) == right_reduced;
+                    let witness = BalBinTree::Node(Box::new(BalBinNode {
+                        left: left_witness, value: (with_key, reduced), right: right_witness,
+                    }));
+                    assert(spec_reduce_witness_link(link, *op, id, witness));
+                }
+                reduced
+            },
+        }
+    }
 
     // Free function: builds balanced tree from sorted slice.
 
@@ -3428,32 +3778,33 @@ pub mod BSTRBMtEph {
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
         fn maximum(&self) -> (max: Option<T>)
             ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `in_order_parallel` under the read lock.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires obeys_feq_clone::<T>(),
             ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `pre_order_parallel` under the read lock.
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires obeys_feq_clone::<T>(),
             ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
-        where
-            // Veracity: NEEDED proof block
-            F: Fn(&T) -> bool + Send + Sync
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `filter_parallel` under the read lock; assumes `predicate` is O(1).
+        fn filter<F: Pred<T>>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
             requires
                 self.spec_bstrbmteph_wf(),
+                obeys_feq_clone::<T>(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — `reduce_parallel` under the read lock; assumes `op` is O(1).
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
-            F: Fn(T, T) -> T + Send + Sync
+            F: Fn(T, T) -> T + Send + Sync + 'static
             requires
                 self.spec_bstrbmteph_wf(),
+                obeys_feq_clone::<T>(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `in_order`, then an O(1) conversion.
         fn iter(&self) -> (it: std::vec::IntoIter<T>)
-            requires self.spec_bstrbmteph_wf()
+            requires self.spec_bstrbmteph_wf(), obeys_feq_clone::<T>()
             ensures
                 vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
                 IteratorSpec::decrease(&it) is Some;
@@ -3764,7 +4115,7 @@ pub mod BSTRBMtEph {
             max
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `in_order_parallel` under the read lock.
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
@@ -3774,7 +4125,7 @@ pub mod BSTRBMtEph {
             ArraySeqStPerS::from_vec(out)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `pre_order_parallel` under the read lock.
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
@@ -3784,10 +4135,8 @@ pub mod BSTRBMtEph {
             ArraySeqStPerS::from_vec(out)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
-        fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
-        where
-            F: Fn(&T) -> bool + Send + Sync,
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `filter_parallel` under the read lock; assumes `predicate` is O(1).
+        fn filter<F: Pred<T>>(&self, predicate: F) -> ArraySeqStPerS<T>
         {
             let handle = self.root.acquire_read();
             let predicate = Arc::new(predicate);
@@ -3798,10 +4147,10 @@ pub mod BSTRBMtEph {
             ArraySeqStPerS::from_vec(out)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — `reduce_parallel` under the read lock; assumes `op` is O(1).
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
-            F: Fn(T, T) -> T + Send + Sync,
+            F: Fn(T, T) -> T + Send + Sync + 'static,
         {
             let handle = self.root.acquire_read();
             let op = Arc::new(op);
@@ -3812,7 +4161,7 @@ pub mod BSTRBMtEph {
             accumulated
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `in_order`, then an O(1) conversion.
         fn iter(&self) -> std::vec::IntoIter<T> {
             let seq = self.in_order();
             seq.seq.into_iter()

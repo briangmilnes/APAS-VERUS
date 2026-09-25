@@ -427,3 +427,107 @@ fn test_rb_mt_insert_delete_interleaved() {
     }
     assert_eq!(tree.in_order().seq, model.into_iter().collect::<Vec<_>>());
 }
+
+// Fork-join traversals (r225): in_order, pre_order, filter, and reduce against a
+// sequential model. Each check runs on its own thread under a timeout, so a
+// deadlocked join fails the test instead of hanging it.
+
+/// Runs `f` on a new thread and panics if it does not finish within 60 seconds.
+fn with_timeout<R: Send + 'static>(f: impl FnOnce() -> R + Send + 'static) -> R {
+    let (tx, rx) = std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        let _ = tx.send(f());
+    });
+    rx.recv_timeout(std::time::Duration::from_secs(60))
+        .expect("parallel traversal did not finish within 60 seconds")
+}
+
+/// Checks the four parallel traversals of `tree` against `model`, the sorted distinct keys.
+fn mt_check_parallel_traversals(tree: &BSTRBMtEph<i64>, model: &[i64], context: &str) {
+    let in_order = tree.in_order().seq;
+    assert_eq!(in_order, model, "{}: in_order", context);
+
+    let pre_order = tree.pre_order().seq;
+    let shape = check_red_black(&pre_order)
+        .unwrap_or_else(|e| panic!("{}: pre_order is not a red-black pre-order: {}", context, e));
+    assert_eq!(shape.size, model.len(), "{}: pre_order size", context);
+    let mut sorted_pre = pre_order.clone();
+    sorted_pre.sort();
+    assert_eq!(sorted_pre, model, "{}: pre_order keys", context);
+
+    let multiples_of_three: Vec<i64> = model.iter().copied().filter(|x| x % 3 == 0).collect();
+    assert_eq!(tree.filter(|x: &i64| *x % 3 == 0).seq, multiples_of_three, "{}: filter", context);
+    assert_eq!(tree.filter(|_: &i64| true).seq, model, "{}: filter all", context);
+    assert!(tree.filter(|_: &i64| false).seq.is_empty(), "{}: filter none", context);
+
+    let sum: i64 = model.iter().sum();
+    assert_eq!(tree.reduce(|a: i64, b: i64| a + b, 0), sum, "{}: reduce sum", context);
+    let max = model.iter().copied().max().unwrap_or(i64::MIN);
+    assert_eq!(tree.reduce(|a: i64, b: i64| a.max(b), i64::MIN), max, "{}: reduce max", context);
+    // Associative but not commutative: the leftmost nonzero key in in-order.
+    let first_nonzero = model.iter().copied().find(|x| *x != 0).unwrap_or(0);
+    assert_eq!(
+        tree.reduce(|a: i64, b: i64| if a != 0 { a } else { b }, 0),
+        first_nonzero,
+        "{}: reduce leftmost nonzero",
+        context,
+    );
+}
+
+/// Builds a tree from `keys` by insertion and checks the parallel traversals.
+fn mt_parallel_traversals_of(keys: Vec<i64>, context: &'static str) {
+    with_timeout(move || {
+        let tree = mt_build(&keys);
+        let model: Vec<i64> = keys.iter().copied().collect::<std::collections::BTreeSet<_>>()
+            .into_iter().collect();
+        mt_check_parallel_traversals(&tree, &model, context);
+    });
+}
+
+#[test]
+fn test_rb_mt_parallel_traversals_empty() {
+    mt_parallel_traversals_of(Vec::new(), "empty");
+}
+
+#[test]
+fn test_rb_mt_parallel_traversals_ascending() {
+    mt_parallel_traversals_of(ascending(500), "ascending 500");
+}
+
+#[test]
+fn test_rb_mt_parallel_traversals_descending() {
+    mt_parallel_traversals_of(descending(500), "descending 500");
+}
+
+#[test]
+fn test_rb_mt_parallel_traversals_random() {
+    for seed in 1..=4 {
+        mt_parallel_traversals_of(random_permutation(500, seed), "random permutation 500");
+    }
+}
+
+#[test]
+fn test_rb_mt_parallel_traversals_random_duplicates() {
+    mt_parallel_traversals_of(random_keys(500, 200, 11), "random keys with duplicates");
+}
+
+#[test]
+fn test_rb_mt_parallel_traversals_from_sorted_slice() {
+    with_timeout(|| {
+        for n in [0i64, 1, 2, 3, 7, 64, 500] {
+            let keys = ascending(n);
+            let tree = BSTRBMtEph::from_sorted_slice(&keys);
+            mt_check_parallel_traversals(&tree, &keys, "from_sorted_slice");
+        }
+    });
+}
+
+#[test]
+fn test_rb_mt_parallel_iter() {
+    with_timeout(|| {
+        let keys = random_permutation(500, 5);
+        let tree = mt_build(&keys);
+        let collected: Vec<i64> = tree.iter().collect();
+        assert_eq!(collected, ascending(500));
+    });
+}

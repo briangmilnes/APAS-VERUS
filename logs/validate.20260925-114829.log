@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error[E0507]: cannot move out of an `Arc`
+    --> src/Chap37/BSTRBMtEph.rs:3351:37
+     |
+3351 |                 let ghost pred: F = *predicate;
+     |                                     ^^^^^^^^^^ move occurs because value has type `F`, which does not implement the `Copy` trait
+     |
+help: if `F` implemented `Clone`, you could clone the value
+    --> src/Chap37/BSTRBMtEph.rs:3336:64
+     |
+3336 |     pub(crate) fn filter_owned<T: StTInMtT + Ord + TotalOrder, F: Pred<T>>(
+     |                                                                ^ consider constraining this type parameter with `Clone`
+...
+3351 |                 let ghost pred: F = *predicate;
+     |                                     ---------- you could clone this value
+
+error[E0507]: cannot move out of an `Arc`
+    --> src/Chap37/BSTRBMtEph.rs:3430:40
+     |
+3430 |                 let ghost combine: F = *op;
+     |                                        ^^^ move occurs because value has type `F`, which does not implement the `Copy` trait
+     |
+help: if `F` implemented `Clone`, you could clone the value
+    --> src/Chap37/BSTRBMtEph.rs:3414:64
+     |
+3414 |     pub(crate) fn reduce_owned<T: StTInMtT + Ord + TotalOrder, F>(
+     |                                                                ^ consider constraining this type parameter with `Clone`
+...
+3430 |                 let ghost combine: F = *op;
+     |                                        --- you could clone this value
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0507`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 1063MB, peak z3 RSS: 0MB, min free: 28154MB
+Sampled CPU Usage: rust_verify: 5s, z3 children: 0s
