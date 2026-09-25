@@ -1,0 +1,90 @@
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+note: Analyzing prover log for module Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas ...
+
+Z3 4.16.0
+note: Log analysis complete for module Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas
+
+Z3 4.16.0
+note: Analyzing prover log for module Chap18::ArraySeqStPer::ArraySeqStPer ...
+
+Z3 4.16.0
+note: Analyzing prover log for module Chap18::LinkedListStEph::LinkedListStEph ...
+
+note: Log analysis complete for module Chap18::ArraySeqStPer::ArraySeqStPer
+
+note: Log analysis complete for module Chap18::LinkedListStEph::LinkedListStEph
+
+Z3 4.16.0
+note: Analyzing prover log for module Chap18::ArraySeqMtEph::ArraySeqMtEph ...
+
+Z3 4.16.0
+note: Analyzing prover log for module Chap18::LinkedListStPer::LinkedListStPer ...
+
+Error parsing line 425000 (SubpatNoBlame([t114016])): "[new-match] 1831559108 #17841 #17753 #25484 #24416 #25739 ; #27345 (#23804 #23804) (#27410 #18063) (#24134 #23804) #22970 (#23804 #24134) (#22487 #22645) (#25484 #26965) #20974 (#27596 #24134) (#25739 #25739) (#21249 #21249)"
+Error parsing line 425015 (UnknownFingerprint(Fingerprint(103906906376))): "[instance] 1831559108 ; 4"
+Error parsing line 425022 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.16.0
+note: Analyzing prover log for module Chap18::ArraySeqStEph::ArraySeqStEph ...
+
+Z3 4.16.0
+note: Analyzing prover log for module Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice ...
+
+Error parsing line 127131 (SubpatNoBlame([t41923])): "[new-match] 3861832405 #14396 #14499 #15119 #15086 #4125 ; #15311 (#13241 #13241) (#15310 #15394) (#12644 #13241) #15166 (#13241 #12644) (#15170 #14105) (#15119 #14001) #14955 (#13160 #12644) (#4125 #4125) (#14895 #14895)"
+Error parsing line 127146 (UnknownFingerprint(Fingerprint(242154152965))): "[instance] 3861832405 ; 4"
+Error parsing line 127153 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap18::LinkedListStPer::LinkedListStPer
+
+Error parsing line 399958 (SubpatNoBlame([t110376])): "[new-match] 3116356662 #22523 #22549 #13860 #22601 #24776 ; #21731 (#14796 #14796) (#21842 #16395) (#15346 #14796) #22459 (#14796 #15346) (#22260 #16280) (#21187 #22976) #24387 (#13926 #15346) (#17437 #17437) (#24450 #24450)"
+Error parsing line 399969 (UnknownFingerprint(Fingerprint(210825995874))): "[instance] 3116356662 ; 3"
+Error parsing line 399976 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap18::ArraySeqMtEph::ArraySeqMtEph
+
+
+thread '<unnamed>' (1012204) panicked at rust_verify/src/profiler.rs:29:45:
+called `Option::unwrap()` on a `None` value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+note: Log analysis complete for module Chap18::ArraySeqStEph::ArraySeqStEph
+
+note: Analyzing prover log for module Chap18::ArraySeqMtPer::ArraySeqMtPer ...
+
+Z3 4.16.0
+
+thread '<unnamed>' (1012204) panicked at rust_verify/src/verifier.rs:2198:29:
+worker thread panicked
+
+thread '<unnamed>' (1012202) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (1012203) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (1012201) panicked at rust_verify/src/verifier.rs:229:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (1012205) panicked at rust_verify/src/verifier.rs:237:14:
+could not send the message!: SendError { .. }
+Error parsing line 689642 (SubpatNoBlame([t177582])): "[new-match] 1599541519 #31329 #31316 #25408 #30829 #23793 ; #29084 (#28997 #28997) (#29063 #17005) (#31701 #28997) #28133 (#28997 #31701) (#27424 #25586) (#25408 #27079) #28534 (#26799 #31701) (#23793 #23793) (#28533 #28533)"
+Error parsing line 689657 (UnknownFingerprint(Fingerprint(92766737689))): "[instance] 1599541519 ; 4"
+Error parsing line 689664 (UnmatchedEndOfInstance): "[end-of-instance]"
+
+thread '<unnamed>' (1012202) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (1012203) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (1012201) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (1012205) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (1012208) panicked at rust_verify/src/verifier.rs:207:64:
+could not send!: SendError { .. }
+
+thread '<unnamed>' (1012208) panicked at rust_verify/src/verifier.rs:2197:34:
+mpsc open: SendError { .. }

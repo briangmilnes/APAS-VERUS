@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap37/BSTRBMtEph.rs:2317:5
+     |
+2317 |     fn delete_link_right<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, key: &T)
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1906 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1528MB, peak z3 RSS: 339MB, min free: 27090MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 22s

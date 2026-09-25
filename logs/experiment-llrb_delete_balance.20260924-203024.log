@@ -1,0 +1,39 @@
+rustc 1.98.1 (48a229cea 2026-09-01)
+
+running 1 test
+test llrb_delete_branches ...      291  OTHER:B(B,R) :: nomove eq child=llrb:R(B,B) => llrb:B(B,B)
+     690  OTHER:B(B,R) :: nomove eq child=llrb:R(B,B) => llrb:B(R,B)
+    1157  OTHER:B(B,R) :: nomove gt child=llrb:R(B,B) => llrb:B(B,B)
+    8150  OTHER:B(B,R) :: nomove gt child=llrb:R(B,B) => llrb:B(R,B)
+    1342  OTHER:B(_,R) :: nomove eq child=llrb:R(_,_) => llrb:B(_,_)
+    1322  OTHER:B(_,R) :: nomove gt child=llrb:R(_,_) => llrb:B(_,_)
+    2675  llrb:B(R,B) :: ge-rotR nomove gt child=llrb:R(B,B) => llrb:B(B,B)
+   14532  llrb:B(R,B) :: ge-rotR nomove gt child=llrb:R(B,B) => llrb:B(R,B)
+    5796  llrb:B(R,B) :: lt-nomove child=llrb:R(B,B) => llrb:B(B,B)
+   31738  llrb:B(R,B) :: lt-nomove child=llrb:R(B,B) => llrb:B(R,B)
+    3811  llrb:B(R,_) :: ge-rotR nomove gt child=llrb:R(_,_) => llrb:B(_,_)
+    4755  llrb:B(R,_) :: lt-nomove child=llrb:R(_,_) => llrb:B(_,_)
+    2434  llrb:R(B,B) :: lt-moveRL child=llrb:R(B,B) => llrb:B(R,B)
+   15339  llrb:R(B,B) :: lt-moveRL child=llrb:R(B,B) => llrb:R(B,B)
+    2349  llrb:R(B,B) :: lt-moveRL child=llrb:R(_,_) => llrb:B(R,_)
+    7758  llrb:R(B,B) :: lt-moveRL-rot child=llrb:B(R,B) => llrb:R(B,B)
+     950  llrb:R(B,B) :: lt-moveRL-rot child=llrb:B(R,_) => llrb:R(B,B)
+   18060  llrb:R(B,B) :: lt-nomove child=llrb:B(R,B) => llrb:R(B,B)
+    3450  llrb:R(B,B) :: lt-nomove child=llrb:B(R,_) => llrb:R(B,B)
+     719  llrb:R(B,B) :: moveRR eq child=llrb:R(B,B) => llrb:B(R,B)
+    1508  llrb:R(B,B) :: moveRR eq child=llrb:R(B,B) => llrb:R(B,B)
+    3227  llrb:R(B,B) :: moveRR eq child=llrb:R(_,_) => llrb:B(R,_)
+    3320  llrb:R(B,B) :: moveRR gt child=llrb:R(B,B) => llrb:B(R,B)
+   19770  llrb:R(B,B) :: moveRR gt child=llrb:R(B,B) => llrb:R(B,B)
+    3364  llrb:R(B,B) :: moveRR gt child=llrb:R(_,_) => llrb:B(R,_)
+   10288  llrb:R(B,B) :: moveRR-rot gt child=OTHER:B(B,R) => llrb:R(B,B)
+    2664  llrb:R(B,B) :: moveRR-rot gt child=OTHER:B(_,R) => llrb:R(B,B)
+    1617  llrb:R(B,B) :: nomove eq child=llrb:B(R,B) => llrb:R(B,B)
+    2129  llrb:R(B,B) :: nomove eq child=llrb:B(R,_) => llrb:R(B,B)
+   23165  llrb:R(B,B) :: nomove gt child=llrb:B(R,B) => llrb:R(B,B)
+    4166  llrb:R(B,B) :: nomove gt child=llrb:B(R,_) => llrb:R(B,B)
+   15601  llrb:R(_,_) :: leaf
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.62s
+

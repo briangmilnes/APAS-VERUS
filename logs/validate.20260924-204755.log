@@ -1,0 +1,24 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:2378:9
+     |
+1978 |             requires old(self).spec_bst(),
+     |                      -------------------- failed precondition
+...
+2378 |         link.fix_up();
+     |         ^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+(mut_ref_current(tmp%)).spec_bst() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1540MB, peak z3 RSS: 191MB, min free: 27208MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 22s

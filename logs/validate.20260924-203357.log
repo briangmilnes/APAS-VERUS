@@ -1,0 +1,47 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:1005:33
+     |
+1005 |             assert forall|z: T| #[trigger] link_contains(g, z) == link_contains(f, z) by {};
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTRBMtEph.rs:116:20
+     |
+ 116 |                 || link_contains(node.right, target),
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1005 |             assert forall|z: T| #[trigger] link_contains(g, z) == link_contains(f, z) by {};
+     |                                            ^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+link_contains(g, z) == link_contains(f, z)
+|   link_contains(g, z) ==>
+|       link_contains(f, z) ✘
+|       |   f is None ==>
+|       |       false ✔
+|       |   !(f is None) ==>
+|       |       let node = f.0;
+|       |           !(node.key == z || link_contains(node.left, z)) ==>
+|       |               link_contains(node.right, z)
+|       |               |   node.right is None ==>
+|       |               |       false ✔
+|       |               |   !(node.right is None) ==>
+|       |               |       let node = node.right.0;
+|       |               |           !(node.key == z || link_contains(node.left, z)) ==>
+|       |               |               link_contains(node.right, z) ✘
+|       |               |                   reached fuel limit for recursion
+|       |               +---
+|       +---
+|   link_contains(f, z) ==>
+|       link_contains(g, z) ✘
++---
+
+verification results:: 1887 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1501MB, peak z3 RSS: 366MB, min free: 27046MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 14s

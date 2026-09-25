@@ -1,0 +1,11 @@
+rustc 1.98.1 (48a229cea 2026-09-01)
+
+running 2 tests
+test llrb_delete_balance_inputs ... interleaved deletes: 26965, balance inputs outside fix_up_pre: 0 []
+ok
+test llrb_delete_balance_variants ... Conditional   first failure: None
+Unconditional first failure: None
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+

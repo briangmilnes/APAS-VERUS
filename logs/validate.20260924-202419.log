@@ -1,0 +1,68 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:919:29
+    |
+919 |         assert forall|x: T| #[trigger] link_contains(Some(Box::new(node)), x) <==> s.contains(x) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:919:29
+    |
+919 |         assert forall|x: T| #[trigger] link_contains(Some(Box::new(node)), x) <==> s.contains(x) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^
+
+note: 
+
+link_contains(Some(node), x) == s.contains(x)
+|   link_contains(Some(node), x) ==>
+|       s.contains(x) ✘
+|       |   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = s.len() in tmp%% <= tmp%% && tmp%% < tmp%% && s.index(i) == x) 
+|       +---
+|   s.contains(x) ==>
+|       link_contains(Some(node), x) ✘
++---
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap37/BSTRBMtEph.rs:1799:5
+     |
+1799 | /     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T], cap: usize, Ghost(b): Ghost<nat>)
+1800 | |         -> (link: Link<T>)
+     | |_________________________^
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:1852:17
+     |
+ 905 |             node.key == s[mid],
+     |             ------------------ failed precondition
+...
+1852 |                 lemma_node_from_sorted(s, mid as int, *node);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:1889:24
+     |
+1889 |                 assert(p.key == sp[a as int]);
+     |                        ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:1900:17
+     |
+ 905 |             node.key == s[mid],
+     |             ------------------ failed precondition
+...
+1900 |                 lemma_node_from_sorted(s, q as int, *node);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+p.key == sp.index(a) 
+
+verification results:: 1882 verified, 2 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1499MB, peak z3 RSS: 375MB, min free: 27222MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 26s

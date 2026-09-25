@@ -271,3 +271,71 @@ fn test_trait_methods_direct() {
     tree.insert(10).unwrap();
     assert!(tree.contains(&10));
 }
+
+// Balance workloads: the red-black shape is checked after every operation from
+// the pre-order traversal alone (tests/Chap37/bst_balance_check.rs).
+
+mod bst_balance_check;
+use bst_balance_check::*;
+
+fn mt_pre_order(tree: &BSTRBMtEph<i64>) -> Vec<i64> { tree.pre_order().seq }
+
+/// Inserts `keys` one at a time, checking the shape after each insert.
+/// Returns the maximum height observed.
+fn mt_insert_checked(keys: &[i64]) -> usize {
+    let mut tree = BSTRBMtEph::<i64>::new();
+    let mut max_height = 0;
+    for &k in keys {
+        tree.insert(k).unwrap();
+        let shape = check_red_black(&mt_pre_order(&tree))
+            .unwrap_or_else(|e| panic!("after insert {}: {}", k, e));
+        assert_eq!(shape.size, tree.size());
+        max_height = max_height.max(shape.height);
+    }
+    max_height
+}
+
+#[test]
+fn test_rb_balance_ascending() { mt_insert_checked(&ascending(500)); }
+
+#[test]
+fn test_rb_balance_descending() { mt_insert_checked(&descending(500)); }
+
+#[test]
+fn test_rb_balance_zigzag() { mt_insert_checked(&zigzag(500)); }
+
+#[test]
+fn test_rb_balance_random() {
+    for seed in 1..=4 { mt_insert_checked(&random_permutation(500, seed)); }
+}
+
+#[test]
+fn test_rb_balance_duplicates() {
+    mt_insert_checked(&random_keys(500, 50, 7));
+}
+
+#[test]
+fn test_rb_balance_from_sorted_slice() {
+    for n in 0..=300 {
+        let keys = ascending(n);
+        let tree = BSTRBMtEph::from_sorted_slice(&keys);
+        let shape = check_red_black(&mt_pre_order(&tree))
+            .unwrap_or_else(|e| panic!("from_sorted_slice({}): {}", n, e));
+        assert_eq!(shape.size, n as usize);
+        assert_eq!(tree.size(), n as usize);
+    }
+}
+
+/// Prints max height per workload (run with --no-capture for the report).
+#[test]
+fn test_rb_balance_report() {
+    for (name, keys) in [
+        ("ascending", ascending(500)),
+        ("descending", descending(500)),
+        ("zigzag", zigzag(500)),
+        ("random", random_permutation(500, 1)),
+    ] {
+        let h = mt_insert_checked(&keys);
+        println!("MtEph {:<11} n=500 max height {}", name, h);
+    }
+}

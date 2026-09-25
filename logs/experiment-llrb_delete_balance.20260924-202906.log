@@ -1,0 +1,24 @@
+rustc 1.98.1 (48a229cea 2026-09-01)
+
+running 1 test
+test llrb_delete_classes ...     1447  delete OTHER:B(B,R) -> llrb:B(B,B) bh=
+    8659  delete OTHER:B(B,R) -> llrb:B(R,B) bh=
+    2688  delete OTHER:B(_,R) -> llrb:B(_,_) bh=
+    8626  delete llrb:B(R,B) -> llrb:B(B,B) bh=
+   46384  delete llrb:B(R,B) -> llrb:B(R,B) bh=
+    8458  delete llrb:B(R,_) -> llrb:B(_,_) bh=
+    6679  delete llrb:R(B,B) -> llrb:B(R,B) bh=
+    9057  delete llrb:R(B,B) -> llrb:B(R,_) bh=
+  110041  delete llrb:R(B,B) -> llrb:R(B,B) bh=
+   15594  delete llrb:R(_,_) -> empty bh=
+    1214  delete_min llrb:B(R,B) -> llrb:B(B,B) bh=
+    1818  delete_min llrb:B(R,B) -> llrb:B(R,B) bh=
+    4578  delete_min llrb:B(R,_) -> llrb:B(_,_) bh=
+     541  delete_min llrb:R(B,B) -> llrb:B(R,B) bh=
+    2283  delete_min llrb:R(B,B) -> llrb:B(R,_) bh=
+    4916  delete_min llrb:R(B,B) -> llrb:R(B,B) bh=
+   11470  delete_min llrb:R(_,_) -> empty bh=
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.50s
+

@@ -1,0 +1,68 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:509:20
+    |
+509 |             assert(TotalOrder::le(h.key, x.key) && x.key != h.key);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:515:17
+    |
+515 |                 TotalOrder::le(z, x.key) && z != x.key by {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:509:20
+    |
+509 |             assert(TotalOrder::le(h.key, x.key) && x.key != h.key);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^
+
+note: 
+
+h.key.le(x.key) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+!(x.key == h.key) ✘
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:566:20
+    |
+566 |             assert(TotalOrder::le(x.key, h.key) && x.key != h.key);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:572:17
+    |
+572 |                 TotalOrder::le(x.key, z) && z != x.key by {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:566:20
+    |
+566 |             assert(TotalOrder::le(x.key, h.key) && x.key != h.key);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^
+
+note: 
+
+x.key.le(h.key) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+!(x.key == h.key) ✘
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:789:24
+    |
+789 |                 assert(pow2(0) == 1) by { lemma_pow2_unfold(1); lemma_pow2_pos(0); };
+    |                        ^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pow2(0) == 1 
+
+verification results:: 1875 verified, 3 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1479MB, peak z3 RSS: 380MB, min free: 27220MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 18s

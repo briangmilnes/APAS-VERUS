@@ -1,0 +1,252 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:1202:13
+     |
+1202 | /             ({
+1203 | |                 let m = spec_delete_borrow_left(link);
+1204 | |                 &&& spec_delete_step(link, m)
+1205 | |                 &&& spec_delete_min_pre(m->Some_0.left)
+...    |
+1208 | |                         link_contains(m->Some_0.left, z)
+1209 | |             }),
+     | |______________^ failed this postcondition
+...
+1222 | /         if !(l.color == Color::Red) && !link_is_red(l.left) {
+1223 | |             lemma_move_red_left(link);
+1224 | |         } else {
+1225 | |             assert(spec_delete_borrow_left(link) == link);
+1226 | |             assert(spec_is_llrb_link(h.left));
+1227 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTRBMtEph.rs:170:27
+     |
+ 170 |             Some(node) => node.color == Color::Red,
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1188 |                 after->Some_0.color == Color::Black && !link_is_red(after->Some_0.left))
+     |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1204 |                 &&& spec_delete_step(link, m)
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let m = spec_delete_borrow_left(old(link));
+    spec_delete_step(old(link), m) ✘
+    |   m is Some ✔
+    |   forall |z|
+    |       link_contains(m, z) == link_contains(old(link), z) ✔
+    |   link_spec_size(m) == link_spec_size(old(link)) ✔
+    |   spec_is_bst_link(m) ✔
+    |   spec_size_cached_link(m) ✔
+    |   link_black_height(m) == link_black_height(old(link)) ✔
+    |   link_black_height(m.0.left) == link_black_height(m.0.right) ✔
+    |   m.0.color == Red ==>
+    |       !(link_is_red(m.0.left)) ✔
+    |       !(link_is_red(m.0.right)) ✔
+    |   !(link_is_red(old(link))) ==>
+    |       m.0.color == Black ✔
+    |       !(link_is_red(m.0.left)) ✘
+    |       |   m.0.left is None ==>
+    |       |       !false ✔
+    |       |   !(m.0.left is None) ==>
+    |       |       let node = m.0.left.0;
+    |       |           !(node.color == Red) ✘
+    |       +---
+    +---
+    spec_delete_min_pre(m.0.left) ✔
+    spec_is_llrb_link(m.0.right) ✔
+    forall |z|
+        link_contains(old(link).0.left, z) ==>
+            link_contains(m.0.left, z) ✔
+let l = old(link).0.left.0;
+    !(l.color == Red) && !(link_is_red(l.left)) ==>
+        old(link).0.color == Red ✔
+        spec_is_llrb_link(old(link)) ✔
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap37/BSTRBMtEph.rs:2372:5
+     |
+2372 |     fn delete_min_link(&mut self) -> (min: T)
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:2429:13
+     |
+1366 | /             forall|z: T| #[trigger] link_contains(s2->Some_0.left, z) <==>
+1367 | |                 (link_contains(s1->Some_0.left, z) && z != removed),
+     | |___________________________________________________________________- failed precondition
+...
+2429 |               lemma_rejoin_left(s1, s2, min);
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:2436:73
+     |
+2436 |             assert forall|x: T| #[trigger] link_contains(s0, x) implies TotalOrder::le(min, x) by {
+     |                                                                         ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTRBMtEph.rs:113:21
+     |
+ 113 |             None => false,
+     |                     ^^^^^
+...
+ 116 |                 || link_contains(node.right, target),
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1366 |             forall|z: T| #[trigger] link_contains(s2->Some_0.left, z) <==>
+     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1367 |                 (link_contains(s1->Some_0.left, z) && z != removed),
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^
+
+note: 
+
+s1 is Some ✔
+s2 is Some ✔
+s2.0.key == s1.0.key ✔
+s2.0.right == s1.0.right ✔
+spec_is_bst_link(s1) ✔
+spec_is_bst_link(s2.0.left) ✔
+link_contains(s1.0.left, min) ✔
+forall |z|
+    link_contains(s2.0.left, z) == (link_contains(s1.0.left, z) && !(z == min)) ✘
+    |   link_contains(s2.0.left, z) ==>
+    |       link_contains(s1.0.left, z) ✘
+    |       |   s1.0.left is None ==>
+    |       |       false ✔
+    |       |   !(s1.0.left is None) ==>
+    |       |       let node = s1.0.left.0;
+    |       |           !(node.key == z || link_contains(node.left, z)) ==>
+    |       |               link_contains(node.right, z)
+    |       |               |   node.right is None ==>
+    |       |               |       false ✘
+    |       |               |   !(node.right is None) ==>
+    |       |               |       let node = node.right.0;
+    |       |               |           !(node.key == z || link_contains(node.left, z)) ==>
+    |       |               |               link_contains(node.right, z) ✘
+    |       |               |                   reached fuel limit for recursion
+    |       |               +---
+    |       +---
+    |       !(z == min) ✘
+    |   link_contains(s1.0.left, z) && !(z == min) ==>
+    |       link_contains(s2.0.left, z) ✘
+    +---
+clip(nat, link_spec_size(s2.0.left) + 1) == link_spec_size(s1.0.left) 
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap37/BSTRBMtEph.rs:1234:11
+     |
+1234 |     proof fn lemma_delete_descend_right<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, key: T)
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:1295:20
+     |
+1295 |             assert(c->Some_0.key != key);
+     |                    ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:1331:32
+     |
+1331 |                         assert(link_contains(c->Some_0.right, key)) by {
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:116:20
+    |
+116 |                 || link_contains(node.right, target),
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+link_contains(c.0.right, key)
+|   c.0.right is None ==>
+|       false ✔
+|   !(c.0.right is None) ==>
+|       let node = c.0.right.0;
+|           !(node.key == key || link_contains(node.left, key)) ==>
+|               link_contains(node.right, key)
+|               |   node.right is None ==>
+|               |       false ✔
+|               |   !(node.right is None) ==>
+|               |       let node = node.right.0;
+|               |           !(node.key == key || link_contains(node.left, key)) ==>
+|               |               link_contains(node.right, key) ✘
+|               |                   reached fuel limit for recursion
+|               +---
++---
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap37/BSTRBMtEph.rs:2453:5
+     |
+2453 |     fn delete_link(&mut self, key: &T)
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:2587:17
+     |
+1403 | /             forall|z: T| #[trigger] link_contains(s2->Some_0.right, z) <==>
+1404 | |                 (link_contains(s1->Some_0.right, z) && z != removed),
+     | |____________________________________________________________________- failed precondition
+...
+2587 |                   lemma_rejoin_right(s1, s2, *key);
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTRBMtEph.rs:113:21
+     |
+ 113 |             None => false,
+     |                     ^^^^^
+...
+ 116 |                 || link_contains(node.right, target),
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1403 |             forall|z: T| #[trigger] link_contains(s2->Some_0.right, z) <==>
+     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1404 |                 (link_contains(s1->Some_0.right, z) && z != removed),
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^
+
+note: 
+
+s1 is Some ✔
+s2 is Some ✔
+s2.0.key == s1.0.key ✔
+s2.0.left == s1.0.left ✔
+spec_is_bst_link(s1) ✔
+spec_is_bst_link(s2.0.right) ✔
+link_contains(s1.0.right, key) ✔
+forall |z|
+    link_contains(s2.0.right, z) == (link_contains(s1.0.right, z) && !(z == key)) ✘
+    |   link_contains(s2.0.right, z) ==>
+    |       link_contains(s1.0.right, z) ✘
+    |       |   s1.0.right is None ==>
+    |       |       false ✔
+    |       |   !(s1.0.right is None) ==>
+    |       |       let node = s1.0.right.0;
+    |       |           !(node.key == z || link_contains(node.left, z)) ==>
+    |       |               link_contains(node.right, z)
+    |       |               |   node.right is None ==>
+    |       |               |       false ✘
+    |       |               |   !(node.right is None) ==>
+    |       |               |       let node = node.right.0;
+    |       |               |           !(node.key == z || link_contains(node.left, z)) ==>
+    |       |               |               link_contains(node.right, z) ✘
+    |       |               |                   reached fuel limit for recursion
+    |       |               +---
+    |       +---
+    |       !(z == key) ✘
+    |   link_contains(s1.0.right, z) && !(z == key) ==>
+    |       link_contains(s2.0.right, z) ✘
+    +---
+clip(nat, link_spec_size(s2.0.right) + 1) == link_spec_size(s1.0.right) 
+
+verification results:: 1894 verified, 4 errors
+error: aborting due to 9 previous errors
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 1542MB, peak z3 RSS: 346MB, min free: 27085MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 24s

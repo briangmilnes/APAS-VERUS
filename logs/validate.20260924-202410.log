@@ -1,0 +1,27 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find function `lemma_pow2_pos` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:1820:50
+     |
+1820 |                 if b > 0 { lemma_pow2_unfold(b); lemma_pow2_pos((b - 1) as nat); }
+     |                                                  ^^^^^^^^^^^^^^
+     |
+    --> arithmetic/power2.rs:154:0
+     |
+     = note: similarly named function `lemma_pow2_adds` defined here
+help: a function with a similar name exists
+     |
+1820 -                 if b > 0 { lemma_pow2_unfold(b); lemma_pow2_pos((b - 1) as nat); }
+1820 +                 if b > 0 { lemma_pow2_unfold(b); lemma_pow2_adds((b - 1) as nat); }
+     |
+help: consider importing this function
+     |
+  39 +     use vstd::arithmetic::power2::lemma_pow2_pos;
+     |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 229MB, peak z3 RSS: 0MB, min free: 28785MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

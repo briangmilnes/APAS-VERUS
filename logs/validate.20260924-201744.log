@@ -1,0 +1,98 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:1071:28
+     |
+1071 |                     assert(link_contains(h.right, x.key));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:106:21
+    |
+106 |             None => false,
+    |                     ^^^^^
+
+note: 
+
+link_contains(h.right, x.key)
+|   h.right is None ==>
+|       false ✘
+|   !(h.right is None) ==>
+|       let node = h.right.0;
+|           !(node.key == x.key || link_contains(node.left, x.key)) ==>
+|               link_contains(node.right, x.key)
+|               |   node.right is None ==>
+|               |       false ✔
+|               |   !(node.right is None) ==>
+|               |       let node = node.right.0;
+|               |           !(node.key == x.key || link_contains(node.left, x.key)) ==>
+|               |               link_contains(node.right, x.key) ✔
+|               +---
++---
+
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:1149:28
+     |
+1149 |                     assert(link_contains(h.left, x.key));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+link_contains(h.left, x.key)
+|   h.left is None ==>
+|       false ✘
+|   !(h.left is None) ==>
+|       let node = h.left.0;
+|           !(node.key == x.key || link_contains(node.left, x.key)) ==>
+|               link_contains(node.right, x.key)
+|               |   node.right is None ==>
+|               |       false ✔
+|               |   !(node.right is None) ==>
+|               |       let node = node.right.0;
+|               |           !(node.key == x.key || link_contains(node.left, x.key)) ==>
+|               |               link_contains(node.right, x.key) ✔
+|               +---
++---
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:516:17
+    |
+516 |                 TotalOrder::le(z, x.key) && z != x.key by {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:516:17
+    |
+516 |                 TotalOrder::le(z, x.key) && z != x.key by {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^
+
+note: 
+
+z.le(x.key) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+!(z == x.key) ✘
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:574:17
+    |
+574 |                 TotalOrder::le(x.key, z) && z != x.key by {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:574:17
+    |
+574 |                 TotalOrder::le(x.key, z) && z != x.key by {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^
+
+note: 
+
+x.key.le(z) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+!(z == x.key) ✘
+
+verification results:: 1874 verified, 4 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1490MB, peak z3 RSS: 310MB, min free: 27127MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 15s

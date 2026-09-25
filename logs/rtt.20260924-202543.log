@@ -1,0 +1,31 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-r221)
+    Finished `release` profile [optimized] target(s) in 16.51s
+────────────
+ Nextest run ID cb41c954-33ec-459b-a7c6-a3d138bc9e52 with nextest profile: default
+    Starting 23 tests across 263 binaries (4312 tests skipped)
+        PASS [   0.004s] ( 1/23) apas-verus::TestBSTMtEph mt_rb_basic_ops
+        PASS [   0.004s] ( 2/23) apas-verus::TestBSTMtEph mt_rb_comprehensive_operations
+        PASS [   0.004s] ( 3/23) apas-verus::TestBSTRBMtEph test_bstrbmtephlit_macro_functionality
+        PASS [   0.004s] ( 4/23) apas-verus::TestBSTMtEph mt_concurrent_rb_bst_stress
+        PASS [   0.005s] ( 5/23) apas-verus::TestBSTRBMtEph test_rb_balance_ascending
+        PASS [   0.006s] ( 6/23) apas-verus::TestBSTRBMtEph test_rb_balance_descending
+        PASS [   0.003s] ( 7/23) apas-verus::TestBSTRBMtEph test_rb_balance_duplicates
+        PASS [   0.003s] ( 8/23) apas-verus::TestBSTRBMtEph test_rb_balancing
+        PASS [   0.005s] ( 9/23) apas-verus::TestBSTRBMtEph test_rb_balance_from_sorted_slice
+        PASS [   0.003s] (10/23) apas-verus::TestBSTRBStEph test_bstrbstephlit_macro_empty
+        PASS [   0.004s] (11/23) apas-verus::TestBSTRBMtEph test_rb_balance_zigzag
+        PASS [   0.003s] (12/23) apas-verus::TestBSTRBStEph test_bstrbstephlit_macro_with_elements
+        PASS [   0.008s] (13/23) apas-verus::TestBSTRBMtEph test_rb_balance_random
+        PASS [   0.003s] (14/23) apas-verus::TestBSTRBStEph test_rb_balancing_ascending
+        PASS [   0.002s] (15/23) apas-verus::TestBSTRBStEph test_rb_duplicate_insert
+        PASS [   0.003s] (16/23) apas-verus::TestBSTRBStEph test_rb_contains
+        PASS [   0.008s] (17/23) apas-verus::TestBSTRBMtEph test_rb_balance_report
+        PASS [   0.003s] (18/23) apas-verus::TestBSTRBStEph test_rb_height
+        PASS [   0.003s] (19/23) apas-verus::TestBSTRBStEph test_rb_insert_and_find
+        PASS [   0.003s] (20/23) apas-verus::TestBSTRBStEph test_rb_new_empty
+        PASS [   0.003s] (21/23) apas-verus::TestBSTRBStEph test_rb_size
+        PASS [   0.003s] (22/23) apas-verus::TestBSTSetRBMtEph test_bstsetrbmtephlit_macro_functionality
+        PASS [   0.003s] (23/23) apas-verus::TestSpanTreeStEph test_spanning_tree_barbell
+────────────
+     Summary [   0.018s] 23 tests run: 23 passed, 4312 skipped
+Elapsed: 17s

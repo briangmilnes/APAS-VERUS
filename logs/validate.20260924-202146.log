@@ -1,0 +1,151 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: constructed value may fail to meet its declared type invariant
+    --> src/Chap37/BSTRBMtEph.rs:1867:13
+     |
+1833 |           spec fn wf(self) -> bool {
+     |                ------------------- type invariant declared here
+...
+1867 | /             BSTRBMtEph {
+1868 | |                 root: RwLock::new(link, Ghost(BSTRBMtEphInv)),
+1869 | |                 ghost_root: Ghost(ghost_link),
+1870 | |             }
+     | |_____________^
+
+error: precondition not satisfied
+    --> src/Chap37/BSTRBMtEph.rs:1868:23
+     |
+1868 |                 root: RwLock::new(link, Ghost(BSTRBMtEphInv)),
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> rwlock.rs:504:12
+     |
+     = note: failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:163:27
+    |
+163 |             Some(node) => node.color == Color::Red,
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+188 |                 spec_is_llrb_link(node.left)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+189 |                 && spec_is_llrb_link(node.right)
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+190 |                 && !link_is_red(node.right)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^
+191 |                 && !(node.color == Color::Red && link_is_red(node.left))
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^
+...
+384 |         && spec_is_llrb_link(link)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.wf()
+|   spec_is_rb_tree_link(tmp%.ghost_root)
+|   |   link_spec_size(tmp%.ghost_root) <= UnsignedMax(usize::BITS) ✔
+|   |   spec_is_bst_link(tmp%.ghost_root) ✔
+|   |   spec_is_llrb_link(tmp%.ghost_root) ✘
+|   |   |   tmp%.ghost_root is None ==>
+|   |   |       true ✔
+|   |   |   !(tmp%.ghost_root is None) ==>
+|   |   |       let node = tmp%.ghost_root.0;
+|   |   |           spec_is_llrb_link(node.left) ✘
+|   |   |               reached fuel limit for recursion
+|   |   |           spec_is_llrb_link(node.right) ✘
+|   |   |               reached fuel limit for recursion
+|   |   |           !(link_is_red(node.right)) ✘
+|   |   |           |   node.right is None ==>
+|   |   |           |       !false ✔
+|   |   |           |   !(node.right is None) ==>
+|   |   |           |       let node = node.right.0;
+|   |   |           |           !(node.color == Red) ✘
+|   |   |           +---
+|   |   |           node.color == Red ==>
+|   |   |               !(link_is_red(node.left)) ✘
+|   |   |               |   node.left is None ==>
+|   |   |               |       !false ✔
+|   |   |               |   !(node.left is None) ==>
+|   |   |               |       let node = node.left.0;
+|   |   |               |           !(node.color == Red) ✘
+|   |   |               +---
+|   |   |           link_black_height(node.left) == link_black_height(node.right) 
+|   |   +---
+|   |   !(link_is_red(tmp%.ghost_root)) 
+|   |   spec_size_cached_link(tmp%.ghost_root) 
+|   +---
++---
+
+note: automatically chose triggers for this expression:
+    --> src/Chap37/BSTRBMtEph.rs:1321:29
+     |
+1321 | ...                   assert forall|x: T| link_contains(old_link, x) implies
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap37/BSTRBMtEph.rs:1321:49
+     |
+1321 | ...                   assert forall|x: T| link_contains(old_link, x) implies
+     |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap37/BSTRBMtEph.rs:1333:29
+     |
+1333 | ...                   assert forall|x: T| link_contains(*self, x) implies
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap37/BSTRBMtEph.rs:1334:34
+     |
+1334 | ...                   (link_contains(old_link, x) || x == value)
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap37/BSTRBMtEph.rs:1376:29
+     |
+1376 | ...                   assert forall|x: T| link_contains(old_link, x) implies
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap37/BSTRBMtEph.rs:1376:49
+     |
+1376 | ...                   assert forall|x: T| link_contains(old_link, x) implies
+     |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap37/BSTRBMtEph.rs:1388:29
+     |
+1388 | ...                   assert forall|x: T| link_contains(*self, x) implies
+     |                       ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap37/BSTRBMtEph.rs:1389:34
+     |
+1389 | ...                   (link_contains(old_link, x) || x == value)
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap37/BSTRBMtEph.rs:1388:29
+     |
+1388 | ...                   assert forall|x: T| link_contains(*self, x) implies
+     |                       ^^^^^^
+
+verification results:: 1879 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1482MB, peak z3 RSS: 336MB, min free: 27176MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 17s
