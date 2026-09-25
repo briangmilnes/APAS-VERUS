@@ -20,22 +20,67 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-ℹ BSTRBMtEph.rs
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:2301: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:2317: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:3311: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:3346: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4092: info: accept()
-   Info: 5 total
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:3881: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:3960: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == current); } [medium]
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4035: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4047: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4057: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4073: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
-/home/milnes/projects/APAS-VERUS-r225/src/Chap37/BSTRBMtEph.rs:4091: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+❌ BSTRBMtEph.rs
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4240: error: assume() [algorithmic] - proof { assume(self.ghost_root@ == *data); }
+      4237 |         fn minimum(&self) -> Option<T> {
+            ...
+      4238 |             let handle = self.root.acquire_read();
+      4239 |             let data = handle.borrow();
+      4241 |             // spec_is_bst_link(*data) from lock predicate via acquire_read.
+      4242 |             let min = data.min_link().cloned();
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4262: error: assume() [algorithmic] - proof { assume(self.ghost_root@ == *data); }
+      4259 |         fn maximum(&self) -> Option<T> {
+            ...
+      4260 |             let handle = self.root.acquire_read();
+      4261 |             let data = handle.borrow();
+      4263 |             // spec_is_bst_link(*data) from lock predicate via acquire_read.
+      4264 |             let max = data.max_link().cloned();
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4284: error: assume() [algorithmic] - proof { assume(self.ghost_root@ == *data); }
+      4281 |         fn in_order(&self) -> ArraySeqStPerS<T> {
+            ...
+      4282 |             let handle = self.root.acquire_read();
+      4283 |             let data = handle.borrow();
+      4285 |             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
+      4286 |             let out = data.in_order_parallel();
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4302: error: assume() [algorithmic] - proof { assume(self.ghost_root@ == *data); }
+      4299 |         fn pre_order(&self) -> ArraySeqStPerS<T> {
+            ...
+      4300 |             let handle = self.root.acquire_read();
+      4301 |             let data = handle.borrow();
+      4303 |             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
+      4304 |             let out = data.pre_order_parallel();
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4322: error: assume() [algorithmic] - proof { assume(self.ghost_root@ == *data); }
+      4317 |         fn filter<F: Pred<T>>(&self, predicate: F) -> ArraySeqStPerS<T>
+            ...
+      4320 |             let predicate = Arc::new(predicate);
+      4321 |             let data = handle.borrow();
+      4323 |             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
+      4324 |             let out = data.filter_parallel(&predicate);
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4356: error: assume() [algorithmic] - proof { assume(self.ghost_root@ == *data); }
+      4349 |         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
+            ...
+      4354 |             let op = Arc::new(op);
+      4355 |             let data = handle.borrow();
+      4357 |             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
+      4358 |             let accumulated = data.reduce_parallel(&op, identity);
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:2414: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:2430: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:3424: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:3459: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4230: info: accept()
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4019: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4098: info: structural_false_positive RWLOCK_GHOST delete — proof { assume(self.ghost_root@ == current); } [medium]
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4173: info: structural_false_positive RWLOCK_GHOST contains — proof { assume(found == self@.tree_contains(*target)); } [medium]
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4185: info: structural_false_positive RWLOCK_GHOST size — proof { assume(n as nat == self@.spec_size()); } [medium]
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4195: info: structural_false_positive RWLOCK_GHOST is_empty — proof { assume(b == (self@.spec_size() == 0)); } [medium]
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4211: info: structural_false_positive RWLOCK_GHOST height — proof { assume(h as nat == self@.spec_height()); } [medium]
+/home/milnes/projects/APAS-VERUS-r226/src/Chap37/BSTRBMtEph.rs:4229: info: structural_false_positive RWLOCK_GHOST find — assume(found.is_some() == self@.tree_contains(*target)); [medium]
+   Holes: 6 total
+      6 × assume()
    Info: 7 × structural_false_positive
-   38 clean proof functions
+      7 × RWLOCK_GHOST
+   Info: 5 total
+   Proof functions: 40 total (40 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -58,25 +103,26 @@ BSTRBMtEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   1 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   0 clean (no holes, no errors; 0%)
+   1 holed (holes or errors, 100%)
    1 total
 
 Proof Functions:
-   38 clean (100%)
+   40 clean (100%)
    0 holed (0%)
-   38 total
+   40 total
 
 Function Specs:
-   85 exec fns with complete spec (requires+ensures) (39%)
+   85 exec fns with complete spec (requires+ensures) (37%)
    4 exec fns missing spec (1%)
-   128 proof/spec fns clean (58%)
+   135 proof/spec fns clean (60%)
    0 proof/spec fns with holes (0%)
-   217 total fns
+   224 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
+Holes Found: 6 (actionable)
+   6 × assume() [algorithmic] (100%)
+Real Proof Targets: 6 (all actionable)
 
 Accepted (reviewed): 5 total
    4 × fn_missing_requires
@@ -85,14 +131,12 @@ Accepted (reviewed): 5 total
 Structural (info only): 7
    7 × RWLOCK_GHOST
 
-No proof holes or warnings found! All proofs are complete.
-
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-09-25 11:58:38 -07:00
-Ended:     2026-09-25 11:58:38 -07:00
-Duration:  59ms
+Started:   2026-09-25 12:10:10 -07:00
+Ended:     2026-09-25 12:10:10 -07:00
+Duration:  66ms
 
 Full output: src/Chap37/analyses/veracity-review-verus-proof-holes.log

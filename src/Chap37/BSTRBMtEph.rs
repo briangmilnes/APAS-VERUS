@@ -628,6 +628,78 @@ pub mod BSTRBMtEph {
             && spec_reduce_value(witness, identity) == reduced
     }
 
+    /// `spec_kept_link` stated on the `BalBinTree` view.
+    pub open spec fn spec_kept_tree<T: StTInMtT + Ord + TotalOrder>(
+        tree: BalBinTree<T>, decisions: BalBinTree<bool>) -> Seq<T>
+        decreases tree,
+    {
+        match tree {
+            BalBinTree::Leaf => Seq::<T>::empty(),
+            BalBinTree::Node(node) => match decisions {
+                BalBinTree::Leaf => Seq::<T>::empty(),
+                BalBinTree::Node(d) =>
+                    spec_kept_tree(node.left, d.left)
+                    + (if d.value { seq![node.value] } else { Seq::<T>::empty() })
+                    + spec_kept_tree(node.right, d.right),
+            },
+        }
+    }
+
+    /// `spec_keep_decisions_link` stated on the `BalBinTree` view.
+    pub open spec fn spec_keep_decisions_tree<T: StTInMtT + Ord + TotalOrder, F: Fn(&T) -> bool>(
+        tree: BalBinTree<T>, pred: F, decisions: BalBinTree<bool>) -> bool
+        decreases tree,
+    {
+        match tree {
+            BalBinTree::Leaf => decisions == BalBinTree::<bool>::Leaf,
+            BalBinTree::Node(node) => match decisions {
+                BalBinTree::Leaf => false,
+                BalBinTree::Node(d) =>
+                    pred.ensures((&node.value,), d.value)
+                    && spec_keep_decisions_tree(node.left, pred, d.left)
+                    && spec_keep_decisions_tree(node.right, pred, d.right),
+            },
+        }
+    }
+
+    /// `spec_filtered_link` stated on the `BalBinTree` view: `kept` is the in-order
+    /// selection of the keys of `tree` under some tree of decisions `pred` may return.
+    pub open spec fn spec_filtered_tree<T: StTInMtT + Ord + TotalOrder, F: Fn(&T) -> bool>(
+        tree: BalBinTree<T>, pred: F, kept: Seq<T>) -> bool
+    {
+        exists|decisions: BalBinTree<bool>|
+            #[trigger] spec_keep_decisions_tree(tree, pred, decisions)
+            && kept == spec_kept_tree(tree, decisions)
+    }
+
+    /// `spec_reduce_witness_link` stated on the `BalBinTree` view.
+    pub open spec fn spec_reduce_witness_tree<T: StTInMtT + Ord + TotalOrder, F: Fn(T, T) -> T>(
+        tree: BalBinTree<T>, op: F, identity: T, witness: BalBinTree<(T, T)>) -> bool
+        decreases tree,
+    {
+        match tree {
+            BalBinTree::Leaf => witness == BalBinTree::<(T, T)>::Leaf,
+            BalBinTree::Node(node) => match witness {
+                BalBinTree::Leaf => false,
+                BalBinTree::Node(w) =>
+                    spec_reduce_witness_tree(node.left, op, identity, w.left)
+                    && spec_reduce_witness_tree(node.right, op, identity, w.right)
+                    && op.ensures((spec_reduce_value(w.left, identity), node.value), w.value.0)
+                    && op.ensures((w.value.0, spec_reduce_value(w.right, identity)), w.value.1),
+            },
+        }
+    }
+
+    /// `spec_reduced_link` stated on the `BalBinTree` view: the results `op` may
+    /// produce when it folds `tree` as `op(op(left, key), right)`.
+    pub open spec fn spec_reduced_tree<T: StTInMtT + Ord + TotalOrder, F: Fn(T, T) -> T>(
+        tree: BalBinTree<T>, op: F, identity: T, reduced: T) -> bool
+    {
+        exists|witness: BalBinTree<(T, T)>|
+            #[trigger] spec_reduce_witness_tree(tree, op, identity, witness)
+            && spec_reduce_value(witness, identity) == reduced
+    }
+
     //		Section 7b. proof fns/broadcast groups
 
 
@@ -698,6 +770,47 @@ pub mod BSTRBMtEph {
                     lemma_link_to_bbt_contains::<T>(node.right, x);
                 };
             }
+        }
+    }
+
+    /// Bridge: keep decisions for a link are keep decisions for its view, with the
+    /// same kept sequence.
+    proof fn lemma_link_to_bbt_kept<T: StTInMtT + Ord + TotalOrder, F: Fn(&T) -> bool>(
+        link: Link<T>, pred: F, decisions: BalBinTree<bool>)
+        requires spec_keep_decisions_link(link, pred, decisions),
+        ensures
+            spec_keep_decisions_tree(link_to_bbt(link), pred, decisions),
+            spec_kept_tree(link_to_bbt(link), decisions) == spec_kept_link(link, decisions),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => match decisions {
+                BalBinTree::Leaf => {},
+                BalBinTree::Node(d) => {
+                    lemma_link_to_bbt_kept::<T, F>(node.left, pred, d.left);
+                    lemma_link_to_bbt_kept::<T, F>(node.right, pred, d.right);
+                },
+            },
+        }
+    }
+
+    /// Bridge: a reduction witness for a link is a reduction witness for its view.
+    proof fn lemma_link_to_bbt_reduce_witness<T: StTInMtT + Ord + TotalOrder, F: Fn(T, T) -> T>(
+        link: Link<T>, op: F, identity: T, witness: BalBinTree<(T, T)>)
+        requires spec_reduce_witness_link(link, op, identity, witness),
+        ensures spec_reduce_witness_tree(link_to_bbt(link), op, identity, witness),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => match witness {
+                BalBinTree::Leaf => {},
+                BalBinTree::Node(w) => {
+                    lemma_link_to_bbt_reduce_witness::<T, F>(node.left, op, identity, w.left);
+                    lemma_link_to_bbt_reduce_witness::<T, F>(node.right, op, identity, w.right);
+                },
+            },
         }
     }
 
@@ -3774,25 +3887,49 @@ pub mod BSTRBMtEph {
                 found.is_some() ==> found.unwrap() == *target;
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
         fn minimum(&self) -> (min: Option<T>)
-            ensures true;
+            requires
+                self.spec_bstrbmteph_wf(),
+                obeys_feq_clone::<T>(),
+            ensures
+                self@.spec_size() == 0 ==> min.is_none(),
+                self@.spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> self@.tree_contains(min.unwrap()),
+                min.is_some() ==> forall|x: T| #[trigger] self@.tree_contains(x)
+                    ==> TotalOrder::le(min.unwrap(), x);
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(lg n), Span O(lg n) — one root-to-leaf path; height <= 2 lg(n + 1).
         fn maximum(&self) -> (max: Option<T>)
-            ensures true;
+            requires
+                self.spec_bstrbmteph_wf(),
+                obeys_feq_clone::<T>(),
+            ensures
+                self@.spec_size() == 0 ==> max.is_none(),
+                self@.spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> self@.tree_contains(max.unwrap()),
+                max.is_some() ==> forall|x: T| #[trigger] self@.tree_contains(x)
+                    ==> TotalOrder::le(x, max.unwrap());
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `in_order_parallel` under the read lock.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            requires obeys_feq_clone::<T>(),
-            ensures true;
+            requires
+                self.spec_bstrbmteph_wf(),
+                obeys_feq_clone::<T>(),
+            ensures seq.seq@ == self@.spec_in_order();
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `pre_order_parallel` under the read lock.
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
-            requires obeys_feq_clone::<T>(),
-            ensures true;
+            requires
+                self.spec_bstrbmteph_wf(),
+                obeys_feq_clone::<T>(),
+            ensures seq.seq@ == self@.spec_pre_order();
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `filter_parallel` under the read lock; assumes `predicate` is O(1).
         fn filter<F: Pred<T>>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
             requires
                 self.spec_bstrbmteph_wf(),
                 obeys_feq_clone::<T>(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
-            ensures true;
+            ensures
+                spec_filtered_tree(self@, predicate, seq.seq@),
+                forall|i: int| 0 <= i < seq.seq@.len() ==>
+                    self@.tree_contains(#[trigger] seq.seq@[i])
+                    && predicate.ensures((&seq.seq@[i],), true);
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — `reduce_parallel` under the read lock; assumes `op` is O(1).
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
@@ -3801,12 +3938,13 @@ pub mod BSTRBMtEph {
                 self.spec_bstrbmteph_wf(),
                 obeys_feq_clone::<T>(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
-            ensures true;
+            ensures spec_reduced_tree(self@, op, identity, accumulated);
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `in_order`, then an O(1) conversion.
         fn iter(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_bstrbmteph_wf(), obeys_feq_clone::<T>()
             ensures
-                vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
+                IteratorSpec::remaining(&it) == self@.spec_in_order(),
+                vstd::std_specs::vec::into_iter_elts(it) == self@.spec_in_order(),
                 IteratorSpec::decrease(&it) is Some;
     }
 
@@ -4099,8 +4237,20 @@ pub mod BSTRBMtEph {
         fn minimum(&self) -> Option<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
+            proof { assume(self.ghost_root@ == *data); }
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let min = data.min_link().cloned();
+            proof {
+                lemma_link_to_bbt_size::<T>(*data);
+                if min.is_some() {
+                    lemma_link_to_bbt_contains::<T>(*data, min.unwrap());
+                    assert forall|x: T| #[trigger] self@.tree_contains(x)
+                        implies TotalOrder::le(min.unwrap(), x) by {
+                        lemma_link_to_bbt_contains::<T>(*data, x);
+                        assert(data.spec_contains(x));
+                    };
+                }
+            }
             handle.release_read();
             min
         }
@@ -4109,8 +4259,20 @@ pub mod BSTRBMtEph {
         fn maximum(&self) -> Option<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
+            proof { assume(self.ghost_root@ == *data); }
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let max = data.max_link().cloned();
+            proof {
+                lemma_link_to_bbt_size::<T>(*data);
+                if max.is_some() {
+                    lemma_link_to_bbt_contains::<T>(*data, max.unwrap());
+                    assert forall|x: T| #[trigger] self@.tree_contains(x)
+                        implies TotalOrder::le(x, max.unwrap()) by {
+                        lemma_link_to_bbt_contains::<T>(*data, x);
+                        assert(data.spec_contains(x));
+                    };
+                }
+            }
             handle.release_read();
             max
         }
@@ -4119,20 +4281,36 @@ pub mod BSTRBMtEph {
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
+            proof { assume(self.ghost_root@ == *data); }
             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let out = data.in_order_parallel();
             handle.release_read();
-            ArraySeqStPerS::from_vec(out)
+            let seq = ArraySeqStPerS::from_vec(out);
+            proof {
+                assert forall|i: int| 0 <= i < out@.len() implies #[trigger] seq.seq@[i] == out@[i] by {
+                    assert(seq.spec_index(i) == out@[i]);
+                };
+                assert(seq.seq@ =~= out@);
+            }
+            seq
         }
 
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `pre_order_parallel` under the read lock.
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
+            proof { assume(self.ghost_root@ == *data); }
             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let out = data.pre_order_parallel();
             handle.release_read();
-            ArraySeqStPerS::from_vec(out)
+            let seq = ArraySeqStPerS::from_vec(out);
+            proof {
+                assert forall|i: int| 0 <= i < out@.len() implies #[trigger] seq.seq@[i] == out@[i] by {
+                    assert(seq.spec_index(i) == out@[i]);
+                };
+                assert(seq.seq@ =~= out@);
+            }
+            seq
         }
 
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n lg n), Span O(n lg n) — `filter_parallel` under the read lock; assumes `predicate` is O(1).
@@ -4141,10 +4319,30 @@ pub mod BSTRBMtEph {
             let handle = self.root.acquire_read();
             let predicate = Arc::new(predicate);
             let data = handle.borrow();
+            proof { assume(self.ghost_root@ == *data); }
             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let out = data.filter_parallel(&predicate);
+            proof {
+                // The view of the borrowed link carries the Layer-1 filter relation.
+                let pred = *predicate;
+                let decisions = choose|decisions: BalBinTree<bool>|
+                    #[trigger] spec_keep_decisions_link(*data, pred, decisions)
+                    && out@ == spec_kept_link(*data, decisions);
+                lemma_link_to_bbt_kept::<T, F>(*data, pred, decisions);
+                assert forall|i: int| 0 <= i < out@.len()
+                    implies self@.tree_contains(#[trigger] out@[i]) by {
+                    lemma_link_to_bbt_contains::<T>(*data, out@[i]);
+                };
+            }
             handle.release_read();
-            ArraySeqStPerS::from_vec(out)
+            let seq = ArraySeqStPerS::from_vec(out);
+            proof {
+                assert forall|i: int| 0 <= i < out@.len() implies #[trigger] seq.seq@[i] == out@[i] by {
+                    assert(seq.spec_index(i) == out@[i]);
+                };
+                assert(seq.seq@ =~= out@);
+            }
+            seq
         }
 
         /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — `reduce_parallel` under the read lock; assumes `op` is O(1).
@@ -4155,8 +4353,17 @@ pub mod BSTRBMtEph {
             let handle = self.root.acquire_read();
             let op = Arc::new(op);
             let data = handle.borrow();
+            proof { assume(self.ghost_root@ == *data); }
             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let accumulated = data.reduce_parallel(&op, identity);
+            proof {
+                // The view of the borrowed link carries the Layer-1 reduction witness.
+                let f = *op;
+                let witness = choose|witness: BalBinTree<(T, T)>|
+                    #[trigger] spec_reduce_witness_link(*data, f, identity, witness)
+                    && spec_reduce_value(witness, identity) == accumulated;
+                lemma_link_to_bbt_reduce_witness::<T, F>(*data, f, identity, witness);
+            }
             handle.release_read();
             accumulated
         }

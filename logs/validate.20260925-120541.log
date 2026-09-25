@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error[E0507]: cannot move out of an `Arc`
+    --> src/Chap37/BSTRBMtEph.rs:4320:55
+     |
+4320 |                 lemma_link_to_bbt_kept::<T, F>(*data, *predicate, decisions);
+     |                                                       ^^^^^^^^^^ move occurs because value has type `F`, which does not implement the `Copy` trait
+     |
+help: if `F` implemented `Clone`, you could clone the value
+    --> src/Chap37/BSTRBMtEph.rs:4307:19
+     |
+4307 |         fn filter<F: Pred<T>>(&self, predicate: F) -> ArraySeqStPerS<T>
+     |                   ^ consider constraining this type parameter with `Clone`
+...
+4320 |                 lemma_link_to_bbt_kept::<T, F>(*data, *predicate, decisions);
+     |                                                       ---------- you could clone this value
+
+error[E0507]: cannot move out of an `Arc`
+    --> src/Chap37/BSTRBMtEph.rs:4348:65
+     |
+4348 |                 lemma_link_to_bbt_reduce_witness::<T, F>(*data, *op, identity, witness);
+     |                                                                 ^^^ move occurs because value has type `F`, which does not implement the `Copy` trait
+     |
+help: if `F` implemented `Clone`, you could clone the value
+    --> src/Chap37/BSTRBMtEph.rs:4333:19
+     |
+4333 |         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
+     |                   ^ consider constraining this type parameter with `Clone`
+...
+4348 |                 lemma_link_to_bbt_reduce_witness::<T, F>(*data, *op, identity, witness);
+     |                                                                 --- you could clone this value
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0507`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 1067MB, peak z3 RSS: 0MB, min free: 28163MB
+Sampled CPU Usage: rust_verify: 5s, z3 children: 0s
