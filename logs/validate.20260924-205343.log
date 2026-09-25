@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: unexpected end of input, expected one of: `fn`, `const`, `type`, identifier, `self`, `super`, `crate`, `::`
+    --> src/Chap37/BSTRBStEph.rs:1805:50
+     |
+1805 |       pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+     |  __________________________________________________^
+1806 | |         spec fn spec_bst(self) -> bool;
+1807 | |         spec fn spec_size(self) -> nat;
+1808 | |         spec fn spec_contains(self, target: T) -> bool;
+...    |
+1965 | |         /// Exec mirror of link_spec_size for runtime size guards.
+1966 | |     }
+     | |_____^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 225MB, peak z3 RSS: 0MB, min free: 28807MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

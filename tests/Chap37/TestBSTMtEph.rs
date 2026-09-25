@@ -10,6 +10,8 @@ use apas_verus::Chap39::BSTTreapStEph::BSTTreapStEph::*;
 use apas_verus::Types::Types::*;
 use apas_verus::Types::*;
 
+mod bst_balance_check;
+
 type BSTree<T> = BSTPlainMtEph<T>;
 type BSTreeAVL<T> = BSTAVLMtEph<T>;
 type BSTreeBBAlpha<T> = BSTBBAlphaMtEph<T>;
@@ -169,7 +171,7 @@ fn mt_rb_comprehensive_operations() {
 
     // Red-Black tree should maintain good balance
     let height = bst.height();
-    assert!(height <= 8); // RB tree height ≤ 2*log2(n+1)
+    assert!(bst_balance_check::height_within_two_lg(bst.size(), height)); // RB tree height <= 2 lg(n + 1)
 
     // Test comprehensive search
     for &val in &values {

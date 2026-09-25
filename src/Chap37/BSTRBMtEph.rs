@@ -2292,7 +2292,7 @@ pub mod BSTRBMtEph {
         let cur = link.take();
         let mut node = match cur {
             Some(n) => n,
-            None => { unreached() },
+            None => { vstd::pervasive::unreached() },
         };
         let ghost old_left = node.left;
         proof {
@@ -2335,7 +2335,7 @@ pub mod BSTRBMtEph {
         let cur = link.take();
         let mut node = match cur {
             Some(n) => n,
-            None => { unreached() },
+            None => { vstd::pervasive::unreached() },
         };
         let ghost old_right = node.right;
         proof {
@@ -2792,7 +2792,7 @@ pub mod BSTRBMtEph {
             let cur = self.take();
             let node = match cur {
                 Some(n) => n,
-                None => { unreached() },
+                None => { vstd::pervasive::unreached() },
             };
             let n = *node;
             proof {
@@ -2821,7 +2821,7 @@ pub mod BSTRBMtEph {
         let cur = self.take();
         let mut node = match cur {
             Some(n) => n,
-            None => { unreached() },
+            None => { vstd::pervasive::unreached() },
         };
         let ghost old_left = node.left;
         proof {
@@ -2862,7 +2862,7 @@ pub mod BSTRBMtEph {
                 core::cmp::Ordering::Less => true,
                 _ => false,
             },
-            None => { unreached() },
+            None => { vstd::pervasive::unreached() },
         };
         if go_left {
             delete_link_left(self, key);

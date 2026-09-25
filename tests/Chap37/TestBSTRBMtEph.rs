@@ -75,7 +75,7 @@ fn test_height() {
 
     tree.insert(3).unwrap();
     tree.insert(7).unwrap();
-    assert!(tree.height() <= 3);
+    assert!(bst_balance_check::height_within_two_lg(tree.size(), tree.height()));
 }
 
 #[test]
@@ -132,7 +132,7 @@ fn test_rb_balancing() {
     }
 
     let height = tree.height();
-    assert!(height <= 6);
+    assert!(bst_balance_check::height_within_two_lg(tree.size(), height));
     assert_eq!(tree.size(), 15);
 }
 
@@ -165,7 +165,7 @@ fn test_from_sorted_slice() {
     assert!(!tree.contains(&10));
 
     let height = tree.height();
-    assert!(height <= 4);
+    assert!(bst_balance_check::height_within_two_lg(tree.size(), height));
 }
 
 #[test]

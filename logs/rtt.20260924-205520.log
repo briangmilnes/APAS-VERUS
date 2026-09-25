@@ -1,0 +1,67 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-r221)
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBStEph.rs:2153:23
+     |
+2153 |             None => { unreached() },
+     |                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBStEph.rs:2196:23
+     |
+2196 |             None => { unreached() },
+     |                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBStEph.rs:2655:27
+     |
+2655 |                 None => { unreached() },
+     |                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBStEph.rs:2684:23
+     |
+2684 |             None => { unreached() },
+     |                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBStEph.rs:2725:23
+     |
+2725 |             None => { unreached() },
+     |                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:2295:23
+     |
+2295 |             None => { unreached() },
+     |                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:2338:23
+     |
+2338 |             None => { unreached() },
+     |                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:2795:27
+     |
+2795 |                 None => { unreached() },
+     |                           ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:2824:23
+     |
+2824 |             None => { unreached() },
+     |                       ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `unreached` in this scope
+    --> src/Chap37/BSTRBMtEph.rs:2865:23
+     |
+2865 |             None => { unreached() },
+     |                       ^^^^^^^^^ not found in this scope
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (lib) due to 10 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 10 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.98.1-x86_64-unknown-linux-gnu/bin/cargo '--color=auto' test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 7s

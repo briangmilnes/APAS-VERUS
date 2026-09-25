@@ -1,0 +1,30 @@
+    Finished `release` profile [optimized] target(s) in 0.13s
+────────────
+ Nextest run ID 3d81647e-762c-4036-a29c-111312032a0b with nextest profile: default
+    Starting 2 tests across 263 binaries (4344 tests skipped)
+       START [         ] (1/2) apas-verus::TestBSTRBMtEph test_rb_balance_report
+
+running 1 test
+MtEph ascending   n=500 max height 9
+MtEph descending  n=500 max height 15
+MtEph zigzag      n=500 max height 15
+MtEph random      n=500 max height 14
+test test_rb_balance_report ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 31 filtered out; finished in 0.01s
+
+        PASS [   0.011s] (1/2) apas-verus::TestBSTRBMtEph test_rb_balance_report
+       START [         ] (2/2) apas-verus::TestBSTRBStEph test_rb_balance_report
+
+running 1 test
+StEph ascending   n=2000 max height 11
+StEph descending  n=2000 max height 19
+StEph zigzag      n=2000 max height 19
+StEph random      n=2000 max height 15
+test test_rb_balance_report ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 19 filtered out; finished in 0.12s
+
+        PASS [   0.125s] (2/2) apas-verus::TestBSTRBStEph test_rb_balance_report
+────────────
+     Summary [   0.140s] 2 tests run: 2 passed, 4344 skipped
