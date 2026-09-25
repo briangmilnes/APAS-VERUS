@@ -32,6 +32,7 @@ pub mod StarContractionStEph {
     use std::collections::HashMap;
     use std::hash::Hash;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    use crate::vstdplus::feq::feq::feq;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::hash_specs_plus::hash_specs_plus::key_view;
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::sequential_star_partition;
@@ -90,7 +91,16 @@ pub mod StarContractionStEph {
                 ==> #[trigger] expand.requires((v, e, c, p, r)),
             forall|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R, out: R|
                 #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
-        ensures r_inv(contracted);
+        ensures
+            r_inv(contracted),
+            graph@.A.is_empty() ==>
+                exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted),
+            (exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted))
+            || (exists|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
+                    #[trigger] expand.ensures((v, e, c, p, r), contracted)
+                    && v@ == graph@.V && e@ == graph@.A
+                    && v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf()
+                    && spec_valid_partition_map::<V>(graph@.V, c@, key_view(p@)));
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
@@ -104,10 +114,17 @@ pub mod StarContractionStEph {
     //		Section 9. impls
 
 
-    /// Inner recursive star contraction with fuel for termination.
+    /// Inner recursive star contraction.
+    ///
+    /// Every round removes at least one vertex, so the recursion terminates on
+    /// |V|. The greedy partition removes a vertex whenever a non-loop edge
+    /// exists, but its ensures do not state this, so the round checks it; a
+    /// round without progress contracts one non-loop edge
+    /// (`single_edge_partition`). A graph whose edges are all self-loops is a
+    /// base case.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive: O(n + m) per level × O(lg n) levels; St sequential.
-    fn star_contract_fuel<V, R, F, G>(
-        graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
+    fn star_contract_rec<V, R, F, G>(
+        graph: &UnDirGraphStEph<V>, base: &F, expand: &G,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
     ) -> (contracted: R)
     where
@@ -126,11 +143,17 @@ pub mod StarContractionStEph {
             #[trigger] expand.ensures((v, e, c, p, r), out) ==> r_inv(out),
     ensures
         r_inv(contracted),
-        (graph@.A.is_empty() || fuel == 0) ==>
+        graph@.A.is_empty() ==>
             exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted),
-    decreases fuel,
+        (exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted))
+        || (exists|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
+                #[trigger] expand.ensures((v, e, c, p, r), contracted)
+                && v@ == graph@.V && e@ == graph@.A
+                && v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf()
+                && spec_valid_partition_map::<V>(graph@.V, c@, key_view(p@))),
+    decreases graph@.V.len(),
     {
-        if graph.sizeE() == 0 || fuel == 0 {
+        if graph.sizeE() == 0 {
             let verts = graph.vertices();
             // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block (speed hint)
@@ -150,14 +173,32 @@ pub mod StarContractionStEph {
             return result;
         }
 
-        let (centers, partition_map) = sequential_star_partition(graph);
+        let (greedy_centers, greedy_map) = sequential_star_partition(graph);
 
         // spec_valid_partition_map follows from sequential_star_partition's ensures:
         // graph.V@ == graph@.V, result.0@ == centers@, result.1@ == partition_map@.
+        // Its ensures do not state progress, so check it; without progress, contract one edge.
+        let (centers, partition_map) = if greedy_centers.size() < graph.sizeV() {
+            (greedy_centers, greedy_map)
+        } else {
+            match find_non_loop_edge(graph) {
+                Some((u, v)) => single_edge_partition(graph, &u, &v),
+                None => {
+                    // Every edge is a self-loop: no edge joins two vertices.
+                    let verts = graph.vertices();
+                    proof { assert(verts.spec_setsteph_wf()); }
+                    let result = base(verts);
+                    proof {
+                        assert(verts@ == graph@.V && verts.spec_setsteph_wf() && base.ensures((verts,), result));
+                    }
+                    return result;
+                },
+            }
+        };
 
         let quotient_graph = build_quotient_graph(graph, &centers, &partition_map);
 
-        let r = star_contract_fuel(&quotient_graph, base, expand, fuel - 1, Ghost(r_inv));
+        let r = star_contract_rec(&quotient_graph, base, expand, Ghost(r_inv));
 
         // Prove expand's guarded requires: v, e, c are wf; r_inv(r) from induction.
         let verts = graph.vertices();
@@ -173,9 +214,14 @@ pub mod StarContractionStEph {
             assert(centers.spec_setsteph_wf());
         // Veracity: NEEDED proof block
         }
+        let ghost quotient_result = r;
         let result = expand(verts, eds, &centers, &partition_map, r);
         // Veracity: NEEDED proof block
         proof {
+            assert(expand.ensures((verts, eds, &centers, &partition_map, quotient_result), result)
+                && verts@ == graph@.V && eds@ == graph@.A
+                && verts.spec_setsteph_wf() && eds.spec_setsteph_wf() && centers.spec_setsteph_wf()
+                && spec_valid_partition_map::<V>(graph@.V, centers@, key_view(partition_map@)));
         }
         result
     }
@@ -218,10 +264,15 @@ pub mod StarContractionStEph {
         r_inv(contracted),
         graph@.A.is_empty() ==>
             exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted),
+        (exists|s: &SetStEph<V>| s@ == graph@.V && #[trigger] s.spec_setsteph_wf() && base.ensures((s,), contracted))
+        || (exists|v: &SetStEph<V>, e: &SetStEph<Edge<V>>, c: &SetStEph<V>, p: &HashMap<V, V>, r: R|
+                #[trigger] expand.ensures((v, e, c, p, r), contracted)
+                && v@ == graph@.V && e@ == graph@.A
+                && v.spec_setsteph_wf() && e.spec_setsteph_wf() && c.spec_setsteph_wf()
+                && spec_valid_partition_map::<V>(graph@.V, c@, key_view(p@))),
     // Veracity: NEEDED proof block
     {
-        let fuel = graph.sizeV();
-        let result = star_contract_fuel(graph, base, expand, fuel, Ghost(r_inv));
+        let result = star_contract_rec(graph, base, expand, Ghost(r_inv));
         // Veracity: NEEDED proof block
         proof {
             if graph@.A.is_empty() {
@@ -250,6 +301,7 @@ pub mod StarContractionStEph {
             spec_valid_partition_map::<V>(graph@.V, centers@, key_view(partition_map@)),
         ensures
             spec_graphview_wf(quotient@),
+            quotient@.V == centers@,
     {
         let mut quotient_edges: SetStEph<Edge<V>> = SetLit![];
         let edge_vec = graph.E.to_seq();
@@ -336,6 +388,124 @@ pub mod StarContractionStEph {
 
         let quotient = UnDirGraphStEph { V: centers.clone(), E: quotient_edges };
         quotient
+    }
+
+    /// Find an edge whose endpoints differ, or report that every edge is a self-loop.
+    ///
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(m), Span O(m) — sequential scan of the edge set.
+    pub(crate) fn find_non_loop_edge<V: HashOrd>(
+        graph: &UnDirGraphStEph<V>,
+    ) -> (found: Option<(V, V)>)
+        requires
+            valid_key_type_Edge::<V>(),
+            spec_graphview_wf(graph@),
+        ensures
+            found matches Some((u, v)) ==> graph@.A.contains((u@, v@)) && u@ != v@,
+    {
+        proof { assert(graph.E.spec_setsteph_wf()); }
+        let edge_vec = graph.E.to_seq();
+        let ne = edge_vec.len();
+        let ghost mapped_edges = edge_vec@.map(|_i: int, t: Edge<V>| t@);
+        let mut i: usize = 0;
+        while i < ne
+            invariant
+                valid_key_type_Edge::<V>(),
+                i <= ne,
+                ne == edge_vec@.len(),
+                mapped_edges == edge_vec@.map(|_i: int, t: Edge<V>| t@),
+                forall|x: (V::V, V::V)| graph@.A.contains(x) <==> #[trigger] mapped_edges.contains(x),
+            decreases ne - i,
+        {
+            let Edge(a, b) = &edge_vec[i];
+            if !feq(a, b) {
+                proof {
+                    assert(mapped_edges[i as int] == edge_vec@[i as int]@);
+                    assert(mapped_edges.contains(edge_vec@[i as int]@));
+                }
+                return Some((a.clone_view(), b.clone_view()));
+            }
+            i = i + 1;
+        }
+        None
+    }
+
+    /// Partition that contracts the single edge (u, v): v joins the star of
+    /// u, and every other vertex is its own center. Removes exactly one vertex.
+    ///
+    /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — one sequential pass over the vertices.
+    pub(crate) fn single_edge_partition<V: HashOrd>(
+        graph: &UnDirGraphStEph<V>,
+        u: &V,
+        v: &V,
+    ) -> (partition: (SetStEph<V>, HashMap<V, V>))
+        requires
+            valid_key_type_Edge::<V>(),
+            spec_graphview_wf(graph@),
+            graph@.V.contains(u@),
+            graph@.V.contains(v@),
+            u@ != v@,
+        ensures
+            partition.0.spec_setsteph_wf(),
+            spec_valid_partition_map::<V>(graph@.V, partition.0@, key_view(partition.1@)),
+            partition.0@.len() < graph@.V.len(),
+    {
+        proof { assert(graph.V.spec_setsteph_wf()); }
+        let vert_vec = graph.V.to_seq();
+        let nv = vert_vec.len();
+        let ghost mapped = vert_vec@.map(|_i: int, t: V| t@);
+        let mut centers: SetStEph<V> = SetLit![];
+        let mut partition_map: HashMap<V, V> = HashMap::new();
+        let mut i: usize = 0;
+        while i < nv
+            invariant
+                valid_key_type_Edge::<V>(),
+                centers.spec_setsteph_wf(),
+                i <= nv,
+                nv == vert_vec@.len(),
+                mapped == vert_vec@.map(|_i: int, t: V| t@),
+                forall|x: V::V| graph@.V.contains(x) <==> #[trigger] mapped.contains(x),
+                // Centers are graph vertices other than v.
+                forall|x: V::V| #[trigger] centers@.contains(x) ==> graph@.V.contains(x) && x != v@,
+                // Every processed vertex is a key.
+                forall|j: int| 0 <= j < i ==> #[trigger] key_view(partition_map@).contains_key(vert_vec@[j]@),
+                // Every processed vertex other than v is a center.
+                forall|j: int| 0 <= j < i && vert_vec@[j]@ != v@ ==> #[trigger] centers@.contains(vert_vec@[j]@),
+                // Every value is a center or u.
+                forall|x: V::V| #[trigger] key_view(partition_map@).contains_key(x) ==>
+                    centers@.contains(key_view(partition_map@)[x]@) || key_view(partition_map@)[x]@ == u@,
+            decreases nv - i,
+        {
+            let w = &vert_vec[i];
+            proof {
+                assert(mapped[i as int] == vert_vec@[i as int]@);
+                assert(mapped.contains(vert_vec@[i as int]@));
+            }
+            if feq(w, v) {
+                partition_map.insert(w.clone_view(), u.clone_view());
+            } else {
+                let _ = centers.insert(w.clone_view());
+                partition_map.insert(w.clone_view(), w.clone_view());
+            }
+            i = i + 1;
+        }
+        proof {
+            // u is a graph vertex, so it was processed; u != v, so it is a center.
+            assert(mapped.contains(u@));
+            let ju = choose|j: int| 0 <= j < mapped.len() && mapped[j] == u@;
+            assert(vert_vec@[ju]@ == u@);
+            assert(centers@.contains(vert_vec@[ju]@));
+            // Part A: every graph vertex is a key.
+            assert forall|x: V::V| #[trigger] graph@.V.contains(x) implies
+                key_view(partition_map@).contains_key(x) by {
+                assert(mapped.contains(x));
+                let j = choose|j: int| 0 <= j < mapped.len() && mapped[j] == x;
+                assert(vert_vec@[j]@ == x);
+            };
+            // Centers lie in V minus v, which has |V| - 1 elements.
+            assert(centers@.subset_of(graph@.V.remove(v@)));
+            vstd::set_lib::lemma_len_subset(centers@, graph@.V.remove(v@));
+        }
+        (centers, partition_map)
     }
 
     /// One round of sequential star contraction

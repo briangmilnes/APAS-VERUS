@@ -1,0 +1,44 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-r224)
+    Finished `release` profile [optimized] target(s) in 7.90s
+────────────
+ Nextest run ID 27682a70-dd2d-4cc1-98ff-32c315580f7e with nextest profile: default
+    Starting 36 tests across 263 binaries (4332 tests skipped)
+        PASS [   0.004s] ( 1/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_disconnected_pair
+        PASS [   0.004s] ( 2/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_empty
+        PASS [   0.004s] ( 3/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_complete_4
+        PASS [   0.005s] ( 4/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_cycle
+        PASS [   0.002s] ( 5/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_single_vertex
+        PASS [   0.005s] ( 6/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_larger
+        PASS [   0.005s] ( 7/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_path
+        PASS [   0.010s] ( 8/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_large_cycle
+        PASS [   0.005s] ( 9/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_star
+        PASS [   0.004s] (10/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_two_vertices
+        PASS [   0.002s] (11/36) apas-verus::TestSpanTreeStEph test_spanning_tree_barbell
+        PASS [   0.004s] (12/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_wheel
+        PASS [   0.003s] (13/36) apas-verus::TestSpanTreeStEph test_spanning_tree_complete_5
+        PASS [   0.004s] (14/36) apas-verus::TestSpanTreeStEph test_spanning_tree_binary_tree_topology
+        PASS [   0.003s] (15/36) apas-verus::TestSpanTreeStEph test_spanning_tree_complete_graph_4
+        PASS [   0.014s] (16/36) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_different_seeds
+        PASS [   0.003s] (17/36) apas-verus::TestSpanTreeStEph test_spanning_tree_connected
+        PASS [   0.003s] (18/36) apas-verus::TestSpanTreeStEph test_spanning_tree_cycle
+        PASS [   0.003s] (19/36) apas-verus::TestSpanTreeStEph test_spanning_tree_disconnected_pair
+        PASS [   0.003s] (20/36) apas-verus::TestSpanTreeStEph test_spanning_tree_empty
+        PASS [   0.003s] (21/36) apas-verus::TestSpanTreeStEph test_spanning_tree_double_cycle
+        PASS [   0.003s] (22/36) apas-verus::TestSpanTreeStEph test_spanning_tree_grid_2x3
+        PASS [   0.003s] (23/36) apas-verus::TestSpanTreeStEph test_spanning_tree_large_cycle
+        PASS [   0.003s] (24/36) apas-verus::TestSpanTreeStEph test_spanning_tree_path_graph
+        PASS [   0.003s] (25/36) apas-verus::TestSpanTreeStEph test_spanning_tree_large_path
+        PASS [   0.003s] (26/36) apas-verus::TestSpanTreeStEph test_spanning_tree_petersen_like
+        PASS [   0.003s] (27/36) apas-verus::TestSpanTreeStEph test_spanning_tree_single_vertex
+        PASS [   0.003s] (28/36) apas-verus::TestSpanTreeStEph test_spanning_tree_star_graph
+        PASS [   0.003s] (29/36) apas-verus::TestSpanTreeStEph test_spanning_tree_three_isolated
+        PASS [   0.002s] (30/36) apas-verus::TestSpanTreeStEph test_spanning_tree_two_vertices
+        PASS [   0.002s] (31/36) apas-verus::TestSpanTreeStEph test_spanning_tree_triangle
+        PASS [   0.003s] (32/36) apas-verus::TestSpanTreeStEph test_spanning_tree_wheel_graph
+        PASS [   0.003s] (33/36) apas-verus::TestSpanTreeStEph test_verify_spanning_tree_empty_tree_on_connected
+        PASS [   0.003s] (34/36) apas-verus::TestSpanTreeStEph test_verify_spanning_tree
+        PASS [   0.003s] (35/36) apas-verus::TestSpanTreeStEph test_verify_spanning_tree_too_many_edges
+        PASS [   0.003s] (36/36) apas-verus::TestSpanTreeStEph test_verify_spanning_tree_wrong_edge
+────────────
+     Summary [   0.027s] 36 tests run: 36 passed, 4332 skipped
+Elapsed: 8s

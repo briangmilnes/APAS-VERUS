@@ -1,0 +1,52 @@
+    Finished `release` profile [optimized] target(s) in 0.12s
+────────────
+ Nextest run ID b7007c59-b2e3-499d-9e91-217c2c7ef28d with nextest profile: default
+    Starting 45 tests across 263 binaries (4326 tests skipped)
+        PASS [   0.004s] ( 1/45) apas-verus::TestConnectivityMtEph test_connected_components_mt_two_disconnected
+        PASS [   0.004s] ( 2/45) apas-verus::TestConnectivityMtEph test_connected_components_hof_mt_isolated
+        PASS [   0.006s] ( 3/45) apas-verus::TestConnectivityMtEph test_connected_components_mt_complete
+        PASS [   0.006s] ( 4/45) apas-verus::TestConnectivityMtEph test_connected_components_mt_single
+        PASS [   0.007s] ( 5/45) apas-verus::TestConnectivityMtEph test_connected_components_mt_multiple
+        PASS [   0.004s] ( 6/45) apas-verus::TestConnectivityMtEph test_count_components_mt_empty
+        PASS [   0.010s] ( 7/45) apas-verus::TestConnectivityMtEph test_connected_components_hof_mt
+        PASS [   0.004s] ( 8/45) apas-verus::TestConnectivityMtEph test_count_components_mt_isolated
+        PASS [   0.008s] ( 9/45) apas-verus::TestConnectivityMtEph test_count_components_hof_mt
+        PASS [   0.007s] (10/45) apas-verus::TestConnectivityMtEph test_count_components_hof_mt_star
+        PASS [   0.002s] (11/45) apas-verus::TestConnectivityMtEph test_count_components_mt_single_vertex
+        PASS [   0.006s] (12/45) apas-verus::TestConnectivityMtEph test_count_components_mt_multiple
+        PASS [   0.005s] (13/45) apas-verus::TestConnectivityMtEph test_count_components_mt_single
+        PASS [   0.007s] (14/45) apas-verus::TestConnectivityMtEph test_count_components_mt_path
+        PASS [   0.003s] (15/45) apas-verus::TestConnectivityStEph test_connected_components_hof
+        PASS [   0.004s] (16/45) apas-verus::TestConnectivityMtEph test_count_components_mt_two_triangles
+        PASS [   0.006s] (17/45) apas-verus::TestConnectivityMtEph test_count_components_mt_star
+        PASS [   0.005s] (18/45) apas-verus::TestConnectivityStEph test_connected_components_complete_graph
+        PASS [   0.004s] (19/45) apas-verus::TestConnectivityStEph test_connected_components_hof_isolated
+        PASS [   0.004s] (20/45) apas-verus::TestConnectivityStEph test_connected_components_hof_single
+        PASS [   0.004s] (21/45) apas-verus::TestConnectivityStEph test_connected_components_isolated_vertices
+        PASS [   0.004s] (22/45) apas-verus::TestConnectivityStEph test_connected_components_multiple
+        PASS [   0.005s] (23/45) apas-verus::TestConnectivityStEph test_connected_components_single
+        PASS [   0.003s] (24/45) apas-verus::TestConnectivityStEph test_count_components_grid_connected
+        PASS [   0.004s] (25/45) apas-verus::TestConnectivityStEph test_count_components_empty
+        PASS [   0.005s] (26/45) apas-verus::TestConnectivityStEph test_connected_components_star_graph
+        PASS [   0.003s] (27/45) apas-verus::TestConnectivityStEph test_count_components_hof
+        PASS [   0.004s] (28/45) apas-verus::TestConnectivityStEph test_count_components_hof_empty
+        PASS [   0.004s] (29/45) apas-verus::TestConnectivityStEph test_count_components_hof_single
+        PASS [   0.004s] (30/45) apas-verus::TestConnectivityStEph test_count_components_isolated_vertices
+        PASS [   0.004s] (31/45) apas-verus::TestConnectivityStEph test_count_components_large_cycle
+        PASS [   0.004s] (32/45) apas-verus::TestConnectivityStEph test_count_components_many_singletons
+        PASS [   0.004s] (33/45) apas-verus::TestConnectivityStEph test_count_components_multiple
+        PASS [   0.004s] (34/45) apas-verus::TestConnectivityStEph test_count_components_path_graph
+        PASS [   0.004s] (35/45) apas-verus::TestConnectivityStEph test_count_components_single_vertex
+        PASS [   0.004s] (36/45) apas-verus::TestConnectivityStEph test_count_components_star_graph
+        PASS [   0.004s] (37/45) apas-verus::TestConnectivityStEph test_count_components_single
+        PASS [   0.004s] (38/45) apas-verus::TestConnectivityStEph test_count_components_two_vertices_connected
+        PASS [   0.004s] (39/45) apas-verus::TestConnectivityStEph test_count_components_two_triangles
+        PASS [   0.004s] (40/45) apas-verus::TestConnectivityStEph test_count_components_two_vertices_disconnected
+        PASS [   0.004s] (41/45) apas-verus::TestTopoSortStPer test_disconnected_components
+        PASS [   0.004s] (42/45) apas-verus::TestTopoSortStEph test_disconnected_components
+        PASS [   0.004s] (43/45) apas-verus::TestUnDirGraphMtEph test_disconnected_components
+        PASS [   0.004s] (44/45) apas-verus::TestUnionFindPCStEph test_multiple_components
+        PASS [   2.109s] (45/45) apas-verus::TestConnectivityMtEph test_count_components_hof_mt_seed_sweep
+────────────
+     Summary [   2.115s] 45 tests run: 45 passed, 4326 skipped
+Elapsed: 3s

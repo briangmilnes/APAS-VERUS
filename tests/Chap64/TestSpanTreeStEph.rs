@@ -404,3 +404,121 @@ fn test_spanning_tree_barbell() {
     assert_eq!(tree.size(), 5);
     assert!(verify_spanning_tree(&graph, &tree));
 }
+
+// Graph sweep (r224): small graphs of 2-8 vertices. StEph takes no seed, so each graph runs once.
+
+/// Graph families for the sweep: (name, vertex count, edge list).
+fn sweep_graphs() -> Vec<(String, usize, Vec<(usize, usize)>)> {
+    let mut graphs = Vec::new();
+    for n in 2..=8usize {
+        graphs.push((format!("path{n}"), n, (0..n - 1).map(|i| (i, i + 1)).collect()));
+        graphs.push((format!("star{n}"), n, (1..n).map(|i| (0, i)).collect()));
+        if n >= 3 {
+            graphs.push((format!("cycle{n}"), n, (0..n).map(|i| (i, (i + 1) % n)).collect()));
+        }
+        let mut complete = Vec::new();
+        for u in 0..n {
+            for w in u + 1..n {
+                complete.push((u, w));
+            }
+        }
+        graphs.push((format!("complete{n}"), n, complete));
+        // Two paths and, for odd n, one isolated vertex.
+        let half = n / 2;
+        let mut split = Vec::new();
+        for i in 0..half.saturating_sub(1) {
+            split.push((i, i + 1));
+        }
+        for i in half..(2 * half).saturating_sub(1) {
+            split.push((i, i + 1));
+        }
+        graphs.push((format!("disconnected{n}"), n, split));
+        graphs.push((format!("empty{n}"), n, Vec::new()));
+        // A path with a self-loop at every vertex.
+        let mut looped: Vec<(usize, usize)> = (0..n - 1).map(|i| (i, i + 1)).collect();
+        for i in 0..n {
+            looped.push((i, i));
+        }
+        graphs.push((format!("looped_path{n}"), n, looped));
+    }
+    graphs
+}
+
+fn uf_find(parent: &mut Vec<usize>, x: usize) -> usize {
+    let mut r = x;
+    while parent[r] != r {
+        r = parent[r];
+    }
+    let mut y = x;
+    while parent[y] != r {
+        let next = parent[y];
+        parent[y] = r;
+        y = next;
+    }
+    r
+}
+
+/// Components of the graph, by union-find over its edges.
+fn component_labels(n: usize, edges: &[(usize, usize)]) -> Vec<usize> {
+    let mut parent: Vec<usize> = (0..n).collect();
+    for &(u, w) in edges {
+        let (ru, rw) = (uf_find(&mut parent, u), uf_find(&mut parent, w));
+        if ru != rw {
+            parent[ru] = rw;
+        }
+    }
+    (0..n).map(|v| uf_find(&mut parent, v)).collect()
+}
+
+/// Checks that `tree` is a spanning forest of the graph: every tree edge is a
+/// graph edge, no tree edge closes a cycle, and the tree connects exactly the
+/// graph's components. Hence |tree| = |V| - (number of components).
+fn check_spanning_forest(name: &str, seed: u64, n: usize, edges: &[(usize, usize)], tree: &[(usize, usize)]) {
+    let graph_labels = component_labels(n, edges);
+    let mut roots: Vec<usize> = graph_labels.clone();
+    roots.sort();
+    roots.dedup();
+    let components = roots.len();
+    assert_eq!(tree.len(), n - components, "{name} seed {seed}: |tree| = {} but |V| - components = {}", tree.len(), n - components);
+    let mut parent: Vec<usize> = (0..n).collect();
+    for &(u, w) in tree {
+        assert!(edges.contains(&(u, w)) || edges.contains(&(w, u)), "{name} seed {seed}: tree edge ({u}, {w}) is not a graph edge");
+        let (ru, rw) = (uf_find(&mut parent, u), uf_find(&mut parent, w));
+        assert_ne!(ru, rw, "{name} seed {seed}: tree edge ({u}, {w}) closes a cycle");
+        parent[ru] = rw;
+    }
+    for u in 0..n {
+        for w in 0..n {
+            let same_graph = graph_labels[u] == graph_labels[w];
+            let same_tree = uf_find(&mut parent, u) == uf_find(&mut parent, w);
+            assert_eq!(same_graph, same_tree, "{name} seed {seed}: vertices {u}, {w} connectivity differs");
+        }
+    }
+}
+
+fn build_st_graph(n: usize, edges: &[(usize, usize)]) -> UnDirGraphStEph<usize> {
+    let mut vertices = SetLit![];
+    for i in 0..n {
+        let _ = vertices.insert(i);
+    }
+    let mut edge_set = SetLit![];
+    for &(u, w) in edges {
+        let _ = edge_set.insert(Edge(u, w));
+    }
+    <UnDirGraphStEph<usize> as UnDirGraphStEphTrait<usize>>::from_sets(vertices, edge_set)
+}
+
+#[test]
+fn test_spanning_tree_graph_sweep() {
+    for (name, n, edges) in sweep_graphs() {
+        let graph = build_st_graph(n, &edges);
+        let labels = component_labels(n, &edges);
+        let connected = labels.iter().all(|&l| l == labels[0]);
+        let tree = spanning_tree_star_contraction(&graph);
+        let tree_vec: Vec<(usize, usize)> = tree.iter().map(|e| (e.0, e.1)).collect();
+        check_spanning_forest(&name, 0, n, &edges, &tree_vec);
+        if connected {
+            assert!(verify_spanning_tree(&graph, &tree), "{name}: verify_spanning_tree rejected");
+        }
+    }
+}

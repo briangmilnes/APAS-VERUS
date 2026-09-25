@@ -1,0 +1,124 @@
+    Finished `release` profile [optimized] target(s) in 0.13s
+────────────
+ Nextest run ID ccb92b12-b29f-4ab5-99b6-ee9fc0e5f8be with nextest profile: default
+    Starting 118 tests across 8 binaries (255 binaries skipped)
+        PASS [   0.004s] (  1/118) apas-verus::TestConnectivityMtEph test_connected_components_mt_two_disconnected
+        PASS [   0.004s] (  2/118) apas-verus::TestConnectivityMtEph test_connected_components_hof_mt_isolated
+        PASS [   0.006s] (  3/118) apas-verus::TestConnectivityMtEph test_connected_components_mt_complete
+        PASS [   0.006s] (  4/118) apas-verus::TestConnectivityMtEph test_connected_components_mt_single
+        PASS [   0.008s] (  5/118) apas-verus::TestConnectivityMtEph test_connected_components_mt_multiple
+        PASS [   0.008s] (  6/118) apas-verus::TestConnectivityMtEph test_connected_components_hof_mt
+        PASS [   0.004s] (  7/118) apas-verus::TestConnectivityMtEph test_count_components_mt_empty
+        PASS [   0.003s] (  8/118) apas-verus::TestConnectivityMtEph test_count_components_mt_isolated
+        PASS [   0.007s] (  9/118) apas-verus::TestConnectivityMtEph test_count_components_hof_mt
+        PASS [   0.006s] ( 10/118) apas-verus::TestConnectivityMtEph test_count_components_hof_mt_star
+        PASS [   0.006s] ( 11/118) apas-verus::TestConnectivityMtEph test_count_components_mt_multiple
+        PASS [   0.004s] ( 12/118) apas-verus::TestConnectivityMtEph test_count_components_mt_single_vertex
+        PASS [   0.006s] ( 13/118) apas-verus::TestConnectivityMtEph test_count_components_mt_single
+        PASS [   0.005s] ( 14/118) apas-verus::TestConnectivityMtEph test_count_components_mt_star
+        PASS [   0.009s] ( 15/118) apas-verus::TestConnectivityMtEph test_count_components_mt_path
+        PASS [   0.004s] ( 16/118) apas-verus::TestConnectivityStEph test_connected_components_complete_graph
+        PASS [   0.003s] ( 17/118) apas-verus::TestConnectivityStEph test_connected_components_hof_isolated
+        PASS [   0.005s] ( 18/118) apas-verus::TestConnectivityMtEph test_count_components_mt_two_triangles
+        PASS [   0.004s] ( 19/118) apas-verus::TestConnectivityStEph test_connected_components_hof
+        PASS [   0.004s] ( 20/118) apas-verus::TestConnectivityStEph test_connected_components_hof_single
+        PASS [   0.004s] ( 21/118) apas-verus::TestConnectivityStEph test_connected_components_multiple
+        PASS [   0.004s] ( 22/118) apas-verus::TestConnectivityStEph test_connected_components_isolated_vertices
+        PASS [   0.004s] ( 23/118) apas-verus::TestConnectivityStEph test_connected_components_single
+        PASS [   0.004s] ( 24/118) apas-verus::TestConnectivityStEph test_connected_components_star_graph
+        PASS [   0.004s] ( 25/118) apas-verus::TestConnectivityStEph test_count_components_grid_connected
+        PASS [   0.004s] ( 26/118) apas-verus::TestConnectivityStEph test_count_components_empty
+        PASS [   0.004s] ( 27/118) apas-verus::TestConnectivityStEph test_count_components_hof
+        PASS [   0.004s] ( 28/118) apas-verus::TestConnectivityStEph test_count_components_hof_empty
+        PASS [   0.004s] ( 29/118) apas-verus::TestConnectivityStEph test_count_components_hof_single
+        PASS [   0.004s] ( 30/118) apas-verus::TestConnectivityStEph test_count_components_many_singletons
+        PASS [   0.004s] ( 31/118) apas-verus::TestConnectivityStEph test_count_components_isolated_vertices
+        PASS [   0.004s] ( 32/118) apas-verus::TestConnectivityStEph test_count_components_large_cycle
+        PASS [   0.004s] ( 33/118) apas-verus::TestConnectivityStEph test_count_components_multiple
+        PASS [   0.004s] ( 34/118) apas-verus::TestConnectivityStEph test_count_components_path_graph
+        PASS [   0.004s] ( 35/118) apas-verus::TestConnectivityStEph test_count_components_star_graph
+        PASS [   0.004s] ( 36/118) apas-verus::TestConnectivityStEph test_count_components_single_vertex
+        PASS [   0.004s] ( 37/118) apas-verus::TestConnectivityStEph test_count_components_single
+        PASS [   0.004s] ( 38/118) apas-verus::TestConnectivityStEph test_count_components_two_triangles
+        PASS [   0.004s] ( 39/118) apas-verus::TestConnectivityStEph test_count_components_two_vertices_connected
+        PASS [   0.004s] ( 40/118) apas-verus::TestConnectivityStEph test_count_components_two_vertices_disconnected
+        PASS [   0.005s] ( 41/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_complete_4
+        PASS [   0.006s] ( 42/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_cycle
+        PASS [   0.004s] ( 43/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_disconnected_pair
+        PASS [   0.005s] ( 44/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_empty
+        PASS [   0.007s] ( 45/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_larger
+        PASS [   0.007s] ( 46/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_path
+        PASS [   0.012s] ( 47/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_large_cycle
+        PASS [   0.004s] ( 48/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_single_vertex
+        PASS [   0.019s] ( 49/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_different_seeds
+        PASS [   0.007s] ( 50/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_star
+        PASS [   0.005s] ( 51/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_two_vertices
+        PASS [   0.006s] ( 52/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_wheel
+        PASS [   0.005s] ( 53/118) apas-verus::TestSpanTreeStEph test_spanning_tree_barbell
+        PASS [   0.004s] ( 54/118) apas-verus::TestSpanTreeStEph test_spanning_tree_binary_tree_topology
+        PASS [   0.004s] ( 55/118) apas-verus::TestSpanTreeStEph test_spanning_tree_complete_5
+        PASS [   0.004s] ( 56/118) apas-verus::TestSpanTreeStEph test_spanning_tree_complete_graph_4
+        PASS [   0.004s] ( 57/118) apas-verus::TestSpanTreeStEph test_spanning_tree_connected
+        PASS [   0.004s] ( 58/118) apas-verus::TestSpanTreeStEph test_spanning_tree_cycle
+        PASS [   0.004s] ( 59/118) apas-verus::TestSpanTreeStEph test_spanning_tree_disconnected_pair
+        PASS [   0.004s] ( 60/118) apas-verus::TestSpanTreeStEph test_spanning_tree_double_cycle
+        PASS [   0.003s] ( 61/118) apas-verus::TestSpanTreeStEph test_spanning_tree_empty
+        PASS [   0.004s] ( 62/118) apas-verus::TestSpanTreeStEph test_spanning_tree_grid_2x3
+        PASS [   0.004s] ( 63/118) apas-verus::TestSpanTreeStEph test_spanning_tree_graph_sweep
+        PASS [   0.004s] ( 64/118) apas-verus::TestSpanTreeStEph test_spanning_tree_large_path
+        PASS [   0.005s] ( 65/118) apas-verus::TestSpanTreeStEph test_spanning_tree_large_cycle
+        PASS [   0.004s] ( 66/118) apas-verus::TestSpanTreeStEph test_spanning_tree_path_graph
+        PASS [   0.004s] ( 67/118) apas-verus::TestSpanTreeStEph test_spanning_tree_petersen_like
+        PASS [   0.003s] ( 68/118) apas-verus::TestSpanTreeStEph test_spanning_tree_star_graph
+        PASS [   0.004s] ( 69/118) apas-verus::TestSpanTreeStEph test_spanning_tree_single_vertex
+        PASS [   0.004s] ( 70/118) apas-verus::TestSpanTreeStEph test_spanning_tree_three_isolated
+        PASS [   0.004s] ( 71/118) apas-verus::TestSpanTreeStEph test_spanning_tree_triangle
+        PASS [   0.004s] ( 72/118) apas-verus::TestSpanTreeStEph test_spanning_tree_two_vertices
+        PASS [   0.004s] ( 73/118) apas-verus::TestSpanTreeStEph test_spanning_tree_wheel_graph
+        PASS [   0.004s] ( 74/118) apas-verus::TestSpanTreeStEph test_verify_spanning_tree
+        PASS [   0.004s] ( 75/118) apas-verus::TestSpanTreeStEph test_verify_spanning_tree_empty_tree_on_connected
+        PASS [   0.004s] ( 76/118) apas-verus::TestSpanTreeStEph test_verify_spanning_tree_too_many_edges
+        PASS [   0.004s] ( 77/118) apas-verus::TestSpanTreeStEph test_verify_spanning_tree_wrong_edge
+        PASS [   0.006s] ( 78/118) apas-verus::TestStarContractionMtEph test_complete_graph_mt
+        PASS [   0.006s] ( 79/118) apas-verus::TestStarContractionMtEph test_contract_to_vertices_mt_cycle
+        PASS [   0.003s] ( 80/118) apas-verus::TestStarContractionMtEph test_empty_graph_contraction_mt
+        PASS [   0.004s] ( 81/118) apas-verus::TestStarContractionMtEph test_single_edge_mt
+        PASS [   0.009s] ( 82/118) apas-verus::TestStarContractionMtEph test_determinism_mt
+        PASS [   0.007s] ( 83/118) apas-verus::TestStarContractionMtEph test_path_graph_mt
+        PASS [   0.005s] ( 84/118) apas-verus::TestStarContractionMtEph test_single_vertex_mt
+        PASS [   0.005s] ( 85/118) apas-verus::TestStarContractionMtEph test_triangle_mt
+        PASS [   0.005s] ( 86/118) apas-verus::TestStarContractionStEph test_complete_graph_contraction
+        PASS [   0.005s] ( 87/118) apas-verus::TestStarContractionStEph test_contract_to_vertices_cycle
+        PASS [   0.005s] ( 88/118) apas-verus::TestStarContractionStEph test_contract_with_base_expand
+        PASS [   0.005s] ( 89/118) apas-verus::TestStarContractionStEph test_disconnected_contraction
+        PASS [   0.018s] ( 90/118) apas-verus::TestStarContractionMtEph test_large_cycle_mt
+        PASS [   0.004s] ( 91/118) apas-verus::TestStarContractionStEph test_empty_graph_contraction
+        PASS [   0.004s] ( 92/118) apas-verus::TestStarContractionStEph test_large_cycle_contraction
+        PASS [   0.004s] ( 93/118) apas-verus::TestStarContractionStEph test_path_contraction
+        PASS [   0.004s] ( 94/118) apas-verus::TestStarContractionStEph test_single_edge_contraction
+        PASS [   0.004s] ( 95/118) apas-verus::TestStarContractionStEph test_star_graph_contraction
+        PASS [   0.004s] ( 96/118) apas-verus::TestStarContractionStEph test_single_vertex_contraction
+        PASS [   0.004s] ( 97/118) apas-verus::TestStarContractionStEph test_triangle_contraction
+        PASS [   0.005s] ( 98/118) apas-verus::TestStarPartitionMtEph test_complete_graph_mt
+        PASS [   0.004s] ( 99/118) apas-verus::TestStarPartitionMtEph test_empty_graph_mt
+        PASS [   0.006s] (100/118) apas-verus::TestStarPartitionMtEph test_determinism
+        PASS [   0.005s] (101/118) apas-verus::TestStarPartitionMtEph test_parallel_star_partition_cycle
+        PASS [   0.004s] (102/118) apas-verus::TestStarPartitionMtEph test_parallel_star_partition_star
+        PASS [   0.006s] (103/118) apas-verus::TestStarPartitionMtEph test_partition_validity
+        PASS [   0.005s] (104/118) apas-verus::TestStarPartitionMtEph test_single_vertex_mt
+        PASS [   0.004s] (105/118) apas-verus::TestStarPartitionStEph test_complete_graph
+        PASS [   0.004s] (106/118) apas-verus::TestStarPartitionStEph test_empty_graph
+        PASS [   0.004s] (107/118) apas-verus::TestStarPartitionStEph test_large_cycle
+        PASS [   0.004s] (108/118) apas-verus::TestStarPartitionStEph test_partition_properties
+        PASS [   0.004s] (109/118) apas-verus::TestStarPartitionStEph test_path_graph
+        PASS [   0.004s] (110/118) apas-verus::TestStarPartitionStEph test_sequential_star_partition_cycle
+        PASS [   0.004s] (111/118) apas-verus::TestStarPartitionStEph test_single_vertex
+        PASS [   0.004s] (112/118) apas-verus::TestStarPartitionStEph test_sequential_star_partition_star
+        PASS [   0.004s] (113/118) apas-verus::TestStarPartitionStEph test_three_isolated
+        PASS [   0.004s] (114/118) apas-verus::TestStarPartitionStEph test_two_vertices_connected
+        PASS [   0.004s] (115/118) apas-verus::TestStarPartitionStEph test_two_vertices_disconnected
+        PASS [   0.004s] (116/118) apas-verus::TestStarPartitionStEph test_wheel_graph
+        PASS [   2.443s] (117/118) apas-verus::TestConnectivityMtEph test_count_components_hof_mt_seed_sweep
+        PASS [   7.447s] (118/118) apas-verus::TestSpanTreeMtEph test_spanning_tree_mt_seed_sweep
+────────────
+     Summary [   7.492s] 118 tests run: 118 passed, 0 skipped
