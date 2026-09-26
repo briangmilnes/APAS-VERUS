@@ -93,6 +93,7 @@ verus!
 
     /// - Alg Analysis: APAS (Ch11 Ex 11.1): Work O(φⁿ), Span O(φⁿ)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(φⁿ), Span O(φⁿ); sequential, work = span
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(φⁿ), Span O(φⁿ) — matches textbook
     pub fn fib_seq(n: u64) -> (fibonacci: u64)
         requires n <= 46,
         ensures fibonacci == spec_fib(n as nat),
@@ -109,6 +110,7 @@ verus!
 
     /// - Alg Analysis: APAS (Ch11 Ex 11.1): Work O(φⁿ), Span O(n) — both branches recurse in parallel
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(φⁿ), Span O(n); recursive fib_par through join()
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(φⁿ), Span O(n) — matches textbook
     pub fn fib_par(n: u64) -> (fibonacci: u64)
         requires n <= 46,
         ensures fibonacci == spec_fib(n as nat),

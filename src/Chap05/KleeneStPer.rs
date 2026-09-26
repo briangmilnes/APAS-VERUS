@@ -180,24 +180,28 @@ verus!
 
         /// Construct from an alphabet Σ.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — stores alphabet, O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(alphabet: SetStEph<T>) -> (kleene: Self)
             requires Self::spec_valid_key_type()
             ensures kleene.spec_kleenestper_wf(), kleene@ == alphabet@;
 
         /// Membership in Σ*: is every element of s in the alphabet?
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — linear scan, sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s|), Span O(|s|) — no textbook cost
         fn mem_star(&self, s: &[T]) -> (member: bool)
             requires self.spec_kleenestper_wf()
             ensures member == in_star(self@, viewed(s@));
 
         /// Membership in Σ+: non-empty and every element in the alphabet?
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — length check + linear scan.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s|), Span O(|s|) — no textbook cost
         fn mem_plus(&self, s: &[T]) -> (member: bool)
             requires self.spec_kleenestper_wf()
             ensures member == in_plus(self@, viewed(s@));
 
         /// Read-only access to the underlying alphabet.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — reference return, O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn alphabet(&self) -> (alpha: &SetStEph<T>)
             requires self.spec_kleenestper_wf()
             ensures alpha@ == self@;
@@ -217,10 +221,12 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(alphabet: SetStEph<T>) -> (kleene: Self) {
             KleeneStPer { alphabet }
         }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — iterates slice, O(1) hash lookup per element.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s|) expected, Span O(|s|) — no textbook cost
         fn mem_star(&self, s: &[T]) -> (member: bool) {
             let mut i: usize = 0;
             while i < s.len()
@@ -245,6 +251,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — length check + delegates to mem_star.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s|) expected, Span O(|s|) — no textbook cost
         fn mem_plus(&self, s: &[T]) -> (member: bool) {
             if s.len() == 0 {
                 false
@@ -255,6 +262,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn alphabet(&self) -> (alpha: &SetStEph<T>) {
             &self.alphabet
         }

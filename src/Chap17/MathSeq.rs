@@ -121,12 +121,14 @@ pub mod MathSeq {
             spec fn spec_seq(&self) -> Seq<T>;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — Vec allocation + clone fill.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn new(length: usize, init_value: T) -> (new_seq: Self)
                 ensures
                     new_seq.spec_len() == length,
                     forall|i: int| #![trigger new_seq.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, new_seq.spec_seq()[i]);
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — direct index write.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn set(&mut self, index: usize, value: T) -> (success: bool)
                 ensures
                     success ==> index < old(self).spec_len()
@@ -136,25 +138,30 @@ pub mod MathSeq {
                     !success ==> index >= old(self).spec_len() && self@ == old(self)@;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn length(&self) -> (len: usize)
                 ensures len == self.spec_len();
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — direct index read.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn nth(&self, index: usize) -> (elem: &T)
                 requires index < self.spec_len()
                 ensures elem@ == self@[index as int];
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn empty() -> (empty_seq: Self)
                 ensures empty_seq.spec_len() == 0;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn singleton(item: T) -> (singleton: Self)
                 ensures
                     singleton.spec_len() == 1,
                     singleton@[0] == item@;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1) — Vec::push.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) amortized, Span O(1) amortized — no textbook cost
             fn add_last(&mut self, value: T)
                 ensures
                     self.spec_len() == old(self).spec_len() + 1,
@@ -162,6 +169,7 @@ pub mod MathSeq {
                     forall|i: int| 0 <= i < old(self).spec_len() ==> self@[i] == old(self)@[i];
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — Vec::pop.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn delete_last(&mut self) -> (shortened: Option<T>)
                 ensures
                     old(self).spec_len() == 0 ==> shortened is None && self@ == old(self)@,
@@ -171,24 +179,29 @@ pub mod MathSeq {
                         && forall|i: int| 0 <= i < self.spec_len() ==> self@[i] == old(self)@[i];
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_empty(&self) -> (emptiness: bool)
                 ensures emptiness == self.spec_is_empty();
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_singleton(&self) -> (singularity: bool)
                 ensures singularity == self.spec_is_singleton();
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — move, no copy.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn from_vec(data: Vec<T>) -> (seq: Self)
                 ensures seq.spec_seq() == data@;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — delegates to new.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn with_len(length: usize, init_value: T) -> (seq_of_len_value: Self)
                 ensures
                     seq_of_len_value.spec_len() == length,
                     forall|i: int| #![trigger seq_of_len_value.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, seq_of_len_value.spec_seq()[i]);
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns slice reference.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn subseq(&self, start: usize, length: usize) -> (subseq: &[T])
                 ensures
                     subseq@.len() <= length,
@@ -199,6 +212,7 @@ pub mod MathSeq {
                 });
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(length) — copies subrange.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
             fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) where T: Copy
                 requires
                     start as int + length as int <= self.spec_seq().len(),
@@ -207,12 +221,14 @@ pub mod MathSeq {
                     subseq.spec_seq() == self.spec_seq().subrange(start as int, (start + length) as int);
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — builds index vector.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn domain(&self) -> (domain: Vec<usize>)
                 ensures
                     domain@.len() == self.spec_len(),
                     forall|i: int| 0 <= i < domain@.len() ==> domain@[i] == i as usize;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) expected — hash set dedup.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) — no textbook cost
             fn range(&self) -> (range: Vec<T>)
                 requires valid_key_type::<T>()
                 ensures
@@ -220,6 +236,7 @@ pub mod MathSeq {
                     range@.no_duplicates();
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) expected — hash map counting, two passes.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) — no textbook cost
             fn multiset_range(&self) -> (range: Vec<(usize, T)>)
                 requires
                     valid_key_type::<T>(),
@@ -229,6 +246,7 @@ pub mod MathSeq {
 
             /// Borrow iterator over the sequence elements.
             /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn iter(&self) -> (it: Iter<'_, T>)
                 ensures
                     IteratorSpec::remaining(&it) == self.spec_seq().as_ref(),
@@ -262,6 +280,7 @@ pub mod MathSeq {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills Vec of length n.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn new(length: usize, init_value: T) -> (new_seq: Self)
             {
                 let v = vec![init_value; length];
@@ -269,6 +288,7 @@ pub mod MathSeq {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn set(&mut self, index: usize, value: T) -> (success: bool)
             {
                 if index < self.data.len() {
@@ -280,66 +300,77 @@ pub mod MathSeq {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec len.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn length(&self) -> (len: usize)
             {
                 self.data.len()
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn nth(&self, index: usize) -> (elem: &T)
             {
                 &self.data[index]
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty Vec allocation.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn empty() -> (empty_seq: Self)
             {
                 MathSeqS { data: Vec::new() }
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element Vec.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn singleton(item: T) -> (singleton: Self)
             {
                 MathSeqS { data: vec![item] }
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — Vec push.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) amortized, Span O(1) amortized — no textbook cost
             fn add_last(&mut self, value: T)
             {
                 self.data.push(value);
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec pop.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn delete_last(&mut self) -> (shortened: Option<T>)
             {
                 self.data.pop()
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length check.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_empty(&self) -> (emptiness: bool)
             {
                 self.data.len() == 0
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length check.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_singleton(&self) -> (singularity: bool)
             {
                 self.data.len() == 1
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn from_vec(data: Vec<T>) -> (seq: Self)
             {
                 MathSeqS { data }
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to new().
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn with_len(length: usize, init_value: T) -> (seq_of_len_value: Self)
             {
                 Self::new(length, init_value)
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — slice_subrange returns a view, no copy.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn subseq(&self, start: usize, length: usize) -> (subseq: &[T])
             {
                 let n = self.data.len();
@@ -350,6 +381,7 @@ pub mod MathSeq {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — copies k = length elements from slice.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
             fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) where T: Copy
             {
                 let _n = self.data.len();
@@ -360,6 +392,7 @@ pub mod MathSeq {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — builds Vec of indices 0..n.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn domain(&self) -> (domain: Vec<usize>)
             {
                 let mut v = Vec::new();
@@ -379,6 +412,7 @@ pub mod MathSeq {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass deduplicating with HashSet.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) — no textbook cost
             fn range(&self) -> (range: Vec<T>)
             {
                 let mut seen: HashSet<T> = HashSet::new();
@@ -433,6 +467,7 @@ pub mod MathSeq {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass counting with HashMap + second pass emitting pairs.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) — no textbook cost
             // Veracity: NEEDED proof block
             fn multiset_range(&self) -> (range: Vec<(usize, T)>)
             {
@@ -616,6 +651,7 @@ pub mod MathSeq {
     impl<T: StT + Hash> MathSeqS<T> {
         /// Mutable borrow iterator. Must stay outside verus! (returns &mut).
         /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         pub fn iter_mut(&mut self) -> IterMut<'_, T> {
             self.data.iter_mut()
         }

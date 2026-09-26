@@ -69,11 +69,13 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
 
     /// Create a new empty stack.
     /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn new() -> (stack: Self)
         ensures stack.wf();
 
     /// Push a value onto the stack. Always succeeds (may spin under contention).
     /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1), worst-case unbounded (CAS retries). Lock-free.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + r), Span O(1 + r), r = failed CAS retries (0 uncontended, unbounded under contention) — no textbook cost
     fn push(&self, value: T)
         requires self.wf();
 
@@ -81,12 +83,14 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
     /// Returns Some(v) where v was the top element at the linearization point,
     /// or None if the stack was empty at that point.
     /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1), worst-case unbounded (CAS retries). Lock-free.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + r), Span O(1 + r), r = failed CAS retries (0 uncontended, unbounded under contention) — no textbook cost
     fn pop(&self) -> (possible_top: Option<T>)
         requires self.wf();
 
     /// Check if the stack is empty at this instant.
     /// Note: Result may be stale by the time caller acts on it.
     /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — single atomic load.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn is_empty(&self) -> (empty: bool)
         requires self.wf();
 
@@ -94,6 +98,7 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
     /// Elements are returned in LIFO order (most recently pushed first).
     /// Note: Concurrent pushes during drain may or may not be included.
     /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — sequential pop loop.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + r), Span O(n + r), r = total failed CAS retries in the pops — no textbook cost
     fn drain(&self) -> (items: Vec<T>)
         requires self.wf();
 }
@@ -104,6 +109,7 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
 impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single atomic pointer store.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     #[verifier::external_body] // accept hole
     fn new() -> (stack: Self) {
         ConcurrentStackMt {
@@ -112,6 +118,7 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — CAS retry loop; O(contention) worst case.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + r), Span O(1 + r), r = failed CAS retries (0 uncontended, unbounded under contention) — no textbook cost
     #[verifier::external_body] // accept hole
     fn push(&self, value: T) {
         let mut new_node = Box::new(Node { value, next: null_mut() });
@@ -127,6 +134,7 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — CAS retry loop; O(contention) worst case.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + r), Span O(1 + r), r = failed CAS retries (0 uncontended, unbounded under contention) — no textbook cost
     #[verifier::external_body] // accept hole
     fn pop(&self) -> (possible_top: Option<T>) {
         loop {
@@ -143,12 +151,14 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single atomic load.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     #[verifier::external_body] // accept hole
     fn is_empty(&self) -> (empty: bool) {
         self.head.load(Ordering::Acquire).is_null()
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — pops all n elements sequentially.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + r), Span O(n + r), r = total failed CAS retries in the pops — no textbook cost
     #[verifier::external_body] // accept hole
     fn drain(&self) -> (items: Vec<T>) {
         let mut items = Vec::new();

@@ -109,6 +109,7 @@ tokenized_state_machine!{
 /// only O(n) total work instead of exponential.
 /// - Alg Analysis: APAS (Ch11 Ex 11.10): Work O(φⁿ), Span O(n) — the recursive parallel version
 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: iterative implementation, not Ex 11.10 recursive parallel; O(n) is strictly better than O(φⁿ)
+/// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: two threads each run the iterative FibonacciStEph::fib, so Work O(n) instead of O(φⁿ); the span O(n) equals the textbook's
 pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     requires n >= 2 && n <= 46
     ensures fibonacci == spec_fib(n as nat)

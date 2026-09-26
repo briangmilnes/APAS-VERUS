@@ -98,24 +98,28 @@ verus!
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             requires Self::spec_valid_key_type()
             ensures empty.spec_relationsteph_wf(), empty@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|pairs|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|pairs|), Span O(|pairs|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: moves the given set into the struct, no copy; APAS Work O(|pairs|); does not match old analysis: O(|pairs|) vs O(1); impl is a move
         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
             requires Self::spec_valid_key_type()
             ensures relation.spec_relationsteph_wf(), relation@ == pairs@;
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|pairs|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|pairs|), Span O(|pairs|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|pairs|), Span O(|pairs|) — does not match textbook: SetStEph::from_vec is a sequential insert loop; APAS Span O(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (relation: Self)
             requires Self::spec_valid_key_type()
             ensures relation.spec_relationsteph_wf(), relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (size: usize)
             requires self.spec_relationsteph_wf()
             ensures size == self@.len();
@@ -123,6 +127,7 @@ verus!
         /// - The domain is the relation's first projection: `{x | (x, y) in R}`.
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|R|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|R|), Span O(|R|) — does not match textbook: sequential insert loop; APAS Span O(1)
         fn domain(&self) -> (domain: SetStEph<X>)
             requires self.spec_relationsteph_wf()
             ensures domain@ == self@.map(|p: (X::V, Y::V)| p.0);
@@ -130,24 +135,28 @@ verus!
         /// - The range is the relation's second projection: `{y | (x, y) in R}`.
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|R|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|R|), Span O(|R|) — does not match textbook: sequential insert loop; APAS Span O(1)
         fn range(&self) -> (range: SetStEph<Y>)
             requires self.spec_relationsteph_wf()
             ensures range@ == self@.map(|p: (X::V, Y::V)| p.1);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains() on the pair.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) — matches textbook
         fn mem(&self, a: &X, b: &Y) -> (contains: bool)
             requires self.spec_relationsteph_wf()
             ensures contains == self@.contains((a@, b@));
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Delegates to set mem.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) — matches textbook
         fn relates(&self, p: &Pair<X, Y>) -> (contains: bool)
             requires self.spec_relationsteph_wf()
             ensures contains == self@.contains(p@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, Pair<X, Y>>)
             requires self.spec_relationsteph_wf()
             ensures
@@ -173,19 +182,24 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> RelationStEph<X, Y> { RelationStEph { pairs: SetStEph::empty() }}
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: moves the given set into the struct, no copy; APAS Work O(|pairs|)
         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> { RelationStEph { pairs } }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — delegates to SetStEph::from_vec which iterates vec.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|v|), Span O(|v|) — does not match textbook: SetStEph::from_vec is a sequential insert loop; APAS Span O(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> RelationStEph<X, Y> {
             RelationStEph { pairs: SetStEph::from_vec(v), } }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to set size().
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> usize { self.pairs.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — iterates pairs, inserts each first element.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|R|), Span O(|R|) — does not match textbook: sequential insert loop; APAS Span O(1)
         fn domain(&self) -> SetStEph<X> {
             let mut out = SetStEph::<X>::empty();
             let it = self.iter();
@@ -213,6 +227,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — iterates pairs, inserts each second element.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|R|), Span O(|R|) — does not match textbook: sequential insert loop; APAS Span O(1)
         fn range(&self) -> SetStEph<Y> {
             let mut out = SetStEph::<Y>::empty();
             let it = self.iter();
@@ -239,6 +254,7 @@ verus!
             out
         }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set lookup via clone + mem.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) — matches textbook
         fn mem(&self, a: &X, b: &Y) -> bool {
             let a_clone = a.clone_plus();
             let b_clone = b.clone_plus();
@@ -246,11 +262,13 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to mem.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) — matches textbook
         fn relates(&self, p: &Pair<X, Y>) -> bool {
             self.mem(&p.0, &p.1)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator handle.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> {
             self.pairs.iter()
         }

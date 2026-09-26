@@ -36,6 +36,7 @@ pub trait FetchAddCasTrait {
     /// Implements fetch_add using compare_exchange_weak (CAS loop).
     /// Returns the previous value, atomically adding delta to target.
     /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1), worst-case unbounded (CAS retries under contention).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + r), Span O(1 + r), r = failed CAS retries (0 uncontended, unbounded under contention) — no textbook cost
     fn fetch_add_cas(&self, delta: usize) -> (previous: usize);
 }
 
@@ -47,6 +48,7 @@ impl FetchAddCasTrait for AtomicUsize {
     /// methods but without value postconditions, so we cannot prove functional
     /// correctness. The implementation is verified to be well-formed.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — CAS retry loop; O(contention) worst case.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + r), Span O(1 + r), r = failed CAS retries (0 uncontended, unbounded under contention) — no textbook cost
     #[verifier::exec_allows_no_decreases_clause]
     fn fetch_add_cas(&self, delta: usize) -> (previous: usize)
     {

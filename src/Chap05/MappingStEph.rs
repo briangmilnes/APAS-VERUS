@@ -184,36 +184,42 @@ verus!
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|^2), Span O(|v|^2). For each element calls is_functional_vec_at which is O(|v|).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|v|²), Span O(|v|²) — no textbook cost
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_seq(v@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|). Scans vec for duplicate domain key at p.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|v|), Span O(|v|) — no textbook cost
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_seq_at(v@, p@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|). Iterates set, checks domain key at p.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s|), Span O(|s|) — no textbook cost
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_set_at(s@, p@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|²), Span O(|s|²). Iterates set and for each pair calls is_functional_SetStEph_at which is O(|s|).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s|²), Span O(|s|²) — no textbook cost
         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_set(s@);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): definitional predicate, no cost specified.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|²), Span O(|r|²). Delegates to is_functional_SetStEph which is O(|s|²).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|r|²), Span O(|r|²) — no textbook cost
         fn is_functional_RelationStEph(r: &RelationStEph<X, Y>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_relation(*r);
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             requires Self::spec_valid_key_type()
             ensures
@@ -222,6 +228,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|v|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|v|), Span O(|v|) — does not match textbook: SetStEph::from_vec is a sequential insert loop; APAS Span O(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (mapping: Self)
             requires Self::spec_valid_key_type(), is_functional_seq(v@)
             ensures
@@ -231,6 +238,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|r|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|r|), Span O(|r|) — does not match textbook: hash-set clone copies sequentially; APAS Span O(1)
         fn from_relation(r: &RelationStEph<X, Y>) -> (mapping: Self)
             requires Self::spec_valid_key_type(), is_functional_relation(*r)
             ensures
@@ -240,12 +248,14 @@ verus!
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (size: usize)
             requires self.spec_mappingsteph_wf()
             ensures size == self@.dom().len();
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|m|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|m|), Span O(|m|) — does not match textbook: RelationStEph::domain is a sequential insert loop; APAS Span O(1)
         fn domain(&self) -> (domain: SetStEph<X>)
             requires self.spec_mappingsteph_wf()
             ensures domain@ == self@.dom();
@@ -253,6 +263,7 @@ verus!
         /// - The range `{y | exists x. m(x) = y}` is vstd's `Map::values()`.
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|m|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — agrees on work. Iterates pairs, inserts each value.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|m|), Span O(|m|) — does not match textbook: RelationStEph::range is a sequential insert loop; APAS Span O(1)
         /// - Matches vstd Map::values() from map_lib.
         fn range(&self) -> (range: SetStEph<Y>)
             requires self.spec_mappingsteph_wf()
@@ -261,6 +272,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains() on the pair.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) — matches textbook
         /// - Matches vstd Map::contains_pair() from map_lib.
         fn mem(&self, p: &Pair<X, Y>) -> (contains: bool)
             requires self.spec_mappingsteph_wf()
@@ -271,6 +283,7 @@ verus!
         /// - The iterator's pairs are the map's key-value pairs, vstd's `Map::kv_pairs()`.
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn iter<'a>(&'a self) -> (it: std::collections::hash_set::Iter<'a, Pair<X, Y>>)
             requires self.spec_mappingsteph_wf()
             ensures
@@ -302,6 +315,7 @@ verus!
 
         #[verifier::loop_isolation(false)]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — linear scan checking each element against p.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|v|), Span O(|v|) — no textbook cost
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
             let n = v.len();
             for i in 0..n
@@ -318,6 +332,7 @@ verus!
             true
         }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|^2), Span O(|v|^2) — for each element calls is_functional_vec_at which is O(|v|).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|v|²), Span O(|v|²) — no textbook cost
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool) {
             let n = v.len();
             for i in 0..n
@@ -349,6 +364,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — iterates set, compares each element's key against p.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s|), Span O(|s|) — no textbook cost
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
             let s_iter = s.iter();
             let ghost the_seq = into_iter_hash_keys(s_iter);
@@ -392,6 +408,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|^2), Span O(|s|^2) — for each element calls is_functional_SetStEph_at which is O(|s|).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s|²), Span O(|s|²) — no textbook cost
         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool) {
             let s_iter = s.iter();
             let ghost the_seq = into_iter_hash_keys(s_iter);
@@ -447,11 +464,13 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|^2), Span O(|r|^2) — delegates to is_functional_SetStEph.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|r|²), Span O(|r|²) — no textbook cost
         fn is_functional_RelationStEph(r: &RelationStEph<X, Y>) -> (functional: bool) {
             Self::is_functional_SetStEph(&r.pairs)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> MappingStEph<X, Y> {
             let result = MappingStEph { mapping: RelationStEph::empty() };
             // Veracity: NEEDED proof block
@@ -463,6 +482,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — delegates to SetStEph::from_vec + RelationStEph::from_set.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|v|), Span O(|v|) — does not match textbook: SetStEph::from_vec is a sequential insert loop; APAS Span O(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
             let ghost v_seq = v@;
             let pairs = SetStEph::from_vec(v);
@@ -485,6 +505,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — clones the relation.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|r|), Span O(|r|) — does not match textbook: hash-set clone copies sequentially; APAS Span O(1)
         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
             let result = MappingStEph { mapping: r.clone() };
             // Veracity: NEEDED proof block
@@ -500,6 +521,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to relation size().
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (size: usize) {
             let size = self.mapping.size();
             // Veracity: NEEDED proof block
@@ -521,6 +543,7 @@ verus!
             size
         }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to relation relates().
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) — matches textbook
         fn mem(&self, p: &Pair<X, Y>) -> bool {
             let contains = self.mapping.relates(p);
             // Veracity: NEEDED proof block
@@ -531,9 +554,11 @@ verus!
             contains
         }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — delegates to relation domain().
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|m|), Span O(|m|) — does not match textbook: RelationStEph::domain is a sequential insert loop; APAS Span O(1)
         fn domain(&self) -> SetStEph<X> { self.mapping.domain() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — delegates to relation range().
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|m|), Span O(|m|) — does not match textbook: RelationStEph::range is a sequential insert loop; APAS Span O(1)
         fn range(&self) -> SetStEph<Y> {
             let result = self.mapping.range();
             // Veracity: NEEDED proof block
@@ -556,6 +581,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator handle.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn iter(&self) -> std::collections::hash_set::Iter<'_, Pair<X, Y>> {
             proof { lemma_view_kv_pairs(self); }
             self.mapping.iter()

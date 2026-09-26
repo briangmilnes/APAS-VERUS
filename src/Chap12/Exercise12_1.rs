@@ -53,22 +53,26 @@ verus!
 
         /// Create a new unlocked spin lock.
         /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (lock: Self)
             ensures !lock.spec_locked();
 
         /// Acquire the lock (spins until acquired).
         /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1), worst-case unbounded (spin). Ticket lock guarantees FIFO fairness.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + w), Span O(1 + w), w = busy-wait time until all earlier tickets release — no textbook cost; does not match old analysis: amortized O(1) vs O(1 + w); the spin burns work for the whole wait, which amortization does not remove
         fn lock(&self)
             ensures self.spec_locked();
 
         /// Release the lock.
         /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — single fetch_add.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn unlock(&self)
             requires self.spec_locked()
             ensures !self.spec_locked();
 
         /// Execute action while holding the lock.
         /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) + cost of action.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + w + W(action)), Span O(1 + w + S(action)), w = lock busy-wait — no textbook cost
         /// Note: requires/ensures omitted because Verus cannot express "result
         /// equals action()" for a generic FnOnce — the closure's spec is opaque.
         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T;
@@ -81,6 +85,7 @@ verus!
         uninterp spec fn spec_locked(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two atomic stores.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn new() -> (lock: Self) {
             SpinLock {
@@ -90,6 +95,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — spin-wait on ticket; O(contention) worst case.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + w), Span O(1 + w), w = busy-wait time until all earlier tickets release — no textbook cost; does not match old analysis: O(1) amortized vs O(1 + w); the spin burns work for the whole wait, which amortization does not remove
         #[verifier::external_body] // accept hole
         fn lock(&self) {
             let my_ticket = self.ticket.fetch_add(1, Ordering::Relaxed);
@@ -99,12 +105,14 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single atomic increment.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn unlock(&self) {
             self.turn.fetch_add(1, Ordering::Release);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) + Work(action), Span O(1) + Span(action) — lock + action + unlock.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + w + W(action)), Span O(1 + w + S(action)), w = lock busy-wait — no textbook cost
         #[verifier::external_body] // accept hole
         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
             self.lock();
@@ -116,6 +124,7 @@ verus!
 
     /// Run 4 threads, each incrementing a shared counter `iterations` times.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(iterations), Span O(iterations) — 4-way parallel, bounded by lock contention.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(iterations) plus spin, Span O(iterations) — no textbook cost; the lock serializes all 4 × iterations critical sections, so the 4 threads give no speedup
     #[verifier::external_body] // accept hole
     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
         ensures incremented == 4 * iterations

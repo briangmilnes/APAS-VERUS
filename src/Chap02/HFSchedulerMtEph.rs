@@ -43,6 +43,7 @@ pub mod HFSchedulerMtEph {
     static PARALLELISM: RwLock<Option<usize>> = RwLock::new(None);
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — reads config, creates mutex/condvar.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn init_pool() -> PoolState {
         let n = PARALLELISM.read().unwrap();
         let threads = n.unwrap_or_else(|| {
@@ -60,6 +61,7 @@ pub mod HFSchedulerMtEph {
     static POOL: LazyLock<PoolState> = LazyLock::new(init_pool);
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — lock, check, unlock.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn try_acquire() -> bool {
         let mut available = POOL.available_tasks.lock().unwrap();
         if *available > 0 {
@@ -71,6 +73,7 @@ pub mod HFSchedulerMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — waits on condvar.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) plus blocking time until another task releases — no textbook cost; does not match old analysis: O(1) amortized vs new; the wait is unbounded, not amortized
     fn acquire() {
         let mut available = POOL.available_tasks.lock().unwrap();
         while *available == 0 {
@@ -80,6 +83,7 @@ pub mod HFSchedulerMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — lock, increment, notify, unlock.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn release() {
         let mut available = POOL.available_tasks.lock().unwrap();
         *available += 1;
@@ -106,6 +110,7 @@ pub mod HFSchedulerMtEph {
 
     /// Set parallelism level. Must be called before any parallel operations.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     #[verifier::external_body] // accept hole
     pub fn set_parallelism(n: usize) {
         *PARALLELISM.write().unwrap() = Some(n);
@@ -115,6 +120,7 @@ pub mod HFSchedulerMtEph {
     /// - If no capacity, runs both closures sequentially (help-first strategy).
     /// - Prevents deadlock from nested joins.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_fa + W_fb), Span O(max(S_fa, S_fb)) when parallel; else O(W_fa + W_fb)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(W_fa + W_fb), Span O(max(S_fa, S_fb)) when a pool slot is free, else Span O(S_fa + S_fb) — no textbook cost; does not match old analysis: sequential-path Span O(W_fa + W_fb) vs O(S_fa + S_fb); nested joins inside fa and fb still fork when slots free up
     #[verifier::external_body] // accept hole
     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
     where
@@ -141,6 +147,7 @@ pub mod HFSchedulerMtEph {
     /// - Unconditional fork-join: always spawns fb in a new thread.
     /// - Runs fa in the current thread, waits for fb to complete, returns both results.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_fa + W_fb), Span O(max(S_fa, S_fb))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(W_fa + W_fb), Span O(max(S_fa, S_fb)) — no textbook cost
     #[verifier::external_body] // accept hole
     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
     where
@@ -171,6 +178,7 @@ pub mod HFSchedulerMtEph {
     /// - If no capacity, runs locally (help-first) and returns completed state.
     /// - Never blocks, never deadlocks.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_f), Span O(S_f)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(W_f), Span O(1) when a pool slot is free (f runs in a new thread), else Span O(S_f) — no textbook cost
     #[verifier::external_body] // accept hole
     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
     where
@@ -192,6 +200,7 @@ pub mod HFSchedulerMtEph {
 
     /// Wait for a spawned task to complete. Releases capacity.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(S_task) — blocks until task completes
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(S_task) — no textbook cost
     #[verifier::external_body] // accept hole
     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
         ensures
