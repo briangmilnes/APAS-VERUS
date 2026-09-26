@@ -247,6 +247,7 @@ pub mod BSTSplayMtEph {
     pub trait BSTSplayMtNodeFns<T: StTInMtT + Ord + TotalOrder>: Sized {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new_node(key: T) -> (node: Node<T>)
             requires link_spec_size::<T>(None) + 1 <= usize::MAX as nat,
             ensures
@@ -257,12 +258,14 @@ pub mod BSTSplayMtEph {
 
         // veracity: no_requires
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size_link(link: &Link<T>) -> (size: usize)
             ensures size as nat == link_spec_size(*link);
 
         // veracity: no_requires
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; recomputes the cached size from the children (the CS 22.2 citation is for stseq update)
         fn update(node: &mut Node<T>)
             ensures
                 node.left == old(node).left,
@@ -272,6 +275,7 @@ pub mod BSTSplayMtEph {
                     ==> node.size as nat == 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost; O(lg n) amortized
         fn splay(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
             requires spec_is_bst_link(Some(root)),
             ensures
@@ -279,6 +283,7 @@ pub mod BSTSplayMtEph {
                 forall|x: T| link_contains(Some(splayed), x) <==> link_contains(Some(root), x);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
             requires spec_is_bst_link(*old(link)),
             ensures
@@ -288,6 +293,7 @@ pub mod BSTSplayMtEph {
                 forall|x: T| link_contains(*link, x) ==> (link_contains(*old(link), x) || x == value);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) amortized, Span O(lg n) amortized — matches textbook; O(h(T)) worst case per call
         fn insert_link(link: &mut Link<T>, value: T) -> (inserted: bool)
             requires spec_is_bst_link(*old(link)),
             ensures
@@ -297,6 +303,7 @@ pub mod BSTSplayMtEph {
                 forall|x: T| link_contains(*link, x) ==> (link_contains(*old(link), x) || x == value);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — does not match textbook: find does not splay, so no amortized bound applies and h(T) reaches n; CS 38.11 find O(lg n) amortized for splay trees
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             requires spec_is_bst_link(*link),
             ensures
@@ -304,6 +311,7 @@ pub mod BSTSplayMtEph {
                 found.is_some() ==> *found.unwrap() == *target;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn min_link(link: &Link<T>) -> (min: Option<&T>)
             requires spec_is_bst_link(*link),
             ensures
@@ -312,6 +320,7 @@ pub mod BSTSplayMtEph {
                 min.is_some() ==> forall|x: T| #[trigger] link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn max_link(link: &Link<T>) -> (max: Option<&T>)
             requires spec_is_bst_link(*link),
             ensures
@@ -320,31 +329,37 @@ pub mod BSTSplayMtEph {
                 max.is_some() ==> forall|x: T| #[trigger] link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap());
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
             requires link_spec_size(*link) <= usize::MAX as nat,
             ensures true;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn pre_order_collect(link: &Link<T>, out: &mut Vec<T>)
             requires link_spec_size(*link) <= usize::MAX as nat,
             ensures true;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; sequential despite the name (calls in_order_collect)
         fn in_order_parallel(link: &Link<T>) -> (elements: Vec<T>)
             requires link_spec_size(*link) <= usize::MAX as nat,
             ensures true;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(log n) vs O(n); sequential despite the name (calls pre_order_collect)
         fn pre_order_parallel(link: &Link<T>) -> (elements: Vec<T>)
             requires link_spec_size(*link) <= usize::MAX as nat,
             ensures true;
 
         // veracity: no_requires
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn clone_link(link: &Link<T>) -> (c: Link<T>)
             ensures c == *link;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; the two sub-builds run sequentially
         fn build_balanced(values: &[T]) -> (link: Link<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -359,6 +374,7 @@ pub mod BSTSplayMtEph {
                     exists|i: int| 0 <= i < values@.len() && values@[i] == x;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(log^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost; does not match old analysis: O(n log n), O(log^2 n) vs O(n·h(T)); sequential recursion despite the name, and each node Vec-appends its right result
         fn filter_parallel<F>(link: &Link<T>, predicate: &Arc<F>) -> (filtered: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync
@@ -368,6 +384,7 @@ pub mod BSTSplayMtEph {
             ensures true;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(log n) vs O(n); sequential recursion despite the name
         fn reduce_parallel<F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync
@@ -377,11 +394,13 @@ pub mod BSTSplayMtEph {
             ensures true;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height_rec(link: &Link<T>) -> (h: usize)
             requires link_height(*link) <= usize::MAX as nat,
             ensures h as nat == link_height(*link);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: O(n) vs O(1); reads the cached root size
         fn compute_link_spec_size(link: &Link<T>) -> (n: usize)
             requires link_spec_size(*link) <= usize::MAX,
             ensures n as nat == link_spec_size(*link);
@@ -395,6 +414,7 @@ pub mod BSTSplayMtEph {
     // Verified splay tree algorithms (Layer 1).
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn new_node(key: T) -> (node: Node<T>)
     {
         Node {
@@ -407,6 +427,7 @@ pub mod BSTSplayMtEph {
 
     // veracity: no_requires
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
     fn size_link(link: &Link<T>) -> (size: usize)
     {
 // Veracity: UNNEEDED proof block         proof { reveal(link_spec_size); }
@@ -419,6 +440,7 @@ pub mod BSTSplayMtEph {
     // veracity: no_requires
     /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; recomputes the cached size from the children (the CS 22.2 citation is for stseq update)
     fn update(node: &mut Node<T>)
     {
         let ls = Self::size_link(&node.left);
@@ -432,6 +454,7 @@ pub mod BSTSplayMtEph {
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost; O(lg n) amortized
     fn splay(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
         decreases root,
     {
@@ -1199,6 +1222,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
     fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
         decreases *old(link),
     {
@@ -1335,6 +1359,7 @@ pub mod BSTSplayMtEph {
 
     // Veracity: NEEDED proof block
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) amortized, Span O(lg n) amortized — matches textbook; O(h(T)) worst case per call
     fn insert_link(link: &mut Link<T>, value: T) -> (inserted: bool)
     {
         let v = value.clone();
@@ -1348,6 +1373,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — does not match textbook: find does not splay, so no amortized bound applies and h(T) reaches n; CS 38.11 find O(lg n) amortized for splay trees
     fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
         decreases *link,
     {
@@ -1386,6 +1412,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
     fn min_link(link: &Link<T>) -> (min: Option<&T>)
         decreases *link,
     {
@@ -1435,6 +1462,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
     fn max_link(link: &Link<T>) -> (max: Option<&T>)
         decreases *link,
     {
@@ -1482,6 +1510,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
         decreases *link,
     {
@@ -1493,6 +1522,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     fn pre_order_collect(link: &Link<T>, out: &mut Vec<T>)
         decreases *link,
     {
@@ -1505,6 +1535,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; sequential despite the name (calls in_order_collect)
     fn in_order_parallel(link: &Link<T>) -> (elements: Vec<T>)
     {
         let mut out = Vec::new();
@@ -1513,6 +1544,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(log n) vs O(n); sequential despite the name (calls pre_order_collect)
     fn pre_order_parallel(link: &Link<T>) -> (elements: Vec<T>)
     {
         let mut out = Vec::new();
@@ -1524,6 +1556,7 @@ pub mod BSTSplayMtEph {
     /// Recursive deep clone of a Link, bypassing derived Clone for Box/Option.
     // veracity: no_requires
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     fn clone_link(link: &Link<T>) -> (c: Link<T>)
         decreases *link,
     {
@@ -1549,6 +1582,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; the two sub-builds run sequentially
     fn build_balanced(values: &[T]) -> (link: Link<T>)
         decreases values.len(),
     {
@@ -1664,6 +1698,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(log^2 n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost; does not match old analysis: O(n log n), O(log^2 n) vs O(n·h(T)); sequential recursion despite the name, and each node Vec-appends its right result
     fn filter_parallel<F>(link: &Link<T>, predicate: &Arc<F>) -> (filtered: Vec<T>)
     where
         F: Fn(&T) -> bool + Send + Sync
@@ -1689,6 +1724,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(log n) vs O(n); sequential recursion despite the name
     fn reduce_parallel<F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (reduced: T)
     where
         F: Fn(T, T) -> T + Send + Sync
@@ -1710,6 +1746,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     fn height_rec(link: &Link<T>) -> (h: usize)
         decreases *link,
     {
@@ -1725,6 +1762,7 @@ pub mod BSTSplayMtEph {
 
     /// Exec mirror of link_spec_size for runtime size guards.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: O(n) vs O(1); reads the cached root size
     fn compute_link_spec_size(link: &Link<T>) -> (n: usize)
     {
         match link {
@@ -1773,6 +1811,7 @@ pub mod BSTSplayMtEph {
         spec fn spec_pre_order(&self) -> Seq<T>;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> (tree: Self)
             ensures tree.spec_bstsplaymteph_wf(),
                     tree@ is None,
@@ -1780,6 +1819,7 @@ pub mod BSTSplayMtEph {
                     forall|x: T| !link_contains(tree@, x);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn from_sorted_slice(values: &[T]) -> (tree: Self)
             requires
                 obeys_feq_clone::<T>(),
@@ -1789,6 +1829,7 @@ pub mod BSTSplayMtEph {
             ensures tree.spec_bstsplaymteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) amortized, Span O(lg n) amortized — matches textbook; does not match old analysis: O(n) vs O(lg n) amortized; compute_link_spec_size reads the cached size in O(1)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstsplaymteph_wf(),
             ensures self.spec_bstsplaymteph_wf(),
@@ -1803,33 +1844,39 @@ pub mod BSTSplayMtEph {
                     };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — does not match textbook: find does not splay, so no amortized bound applies and h(T) reaches n; CS 38.11 find O(lg n) amortized for splay trees
         fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstsplaymteph_wf(),
             ensures found == link_contains(self@, *target);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (n: usize)
             requires self.spec_bstsplaymteph_wf(),
             ensures n as nat == link_spec_size(self@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsplaymteph_wf(),
             ensures b == (self@ is None);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height(&self) -> (h: usize)
             requires self.spec_bstsplaymteph_wf(),
             ensures h as nat == link_height(self@);
 
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — does not match textbook: find does not splay, so no amortized bound applies and h(T) reaches n; CS 38.11 find O(lg n) amortized for splay trees
         fn find(&self, target: &T) -> (found: Option<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures
                 found.is_some() <==> link_contains(self@, *target),
                 found.is_some() ==> found.unwrap() == *target;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn minimum(&self) -> (min: Option<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures
@@ -1838,6 +1885,7 @@ pub mod BSTSplayMtEph {
                 min.is_some() ==> forall|x: T| link_contains(self@, x) ==>
                     #[trigger] TotalOrder::le(min.unwrap(), x);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn maximum(&self) -> (max: Option<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures
@@ -1846,14 +1894,17 @@ pub mod BSTSplayMtEph {
                 max.is_some() ==> forall|x: T| link_contains(self@, x) ==>
                     #[trigger] TotalOrder::le(x, max.unwrap());
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost
         fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
         where
             F: Fn(&T) -> bool + Send + Sync
@@ -1862,6 +1913,7 @@ pub mod BSTSplayMtEph {
                 forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
             F: Fn(T, T) -> T + Send + Sync
@@ -1900,6 +1952,7 @@ pub mod BSTSplayMtEph {
         open spec fn spec_pre_order(&self) -> Seq<T> { spec_pre_order_link(self@) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> Self {
             BSTSplayMtEph {
                 root: RwLock::new(None, Ghost(BSTSplayMtEphInv)),
@@ -1909,6 +1962,7 @@ pub mod BSTSplayMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn from_sorted_slice(values: &[T]) -> Self {
             let vlen = values.len();
             let link = Node::<T>::build_balanced(values);
@@ -1922,6 +1976,7 @@ pub mod BSTSplayMtEph {
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) amortized, Span O(lg n) amortized — matches textbook; does not match old analysis: O(n) vs O(lg n) amortized; compute_link_spec_size reads the cached size in O(1)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == current); }
@@ -1947,6 +2002,7 @@ pub mod BSTSplayMtEph {
 
         // Reader: assume return value matches ghost.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — does not match textbook: find does not splay, so no amortized bound applies and h(T) reaches n; CS 38.11 find O(lg n) amortized for splay trees
         fn contains(&self, target: &T) -> (found: bool) {
             let handle = self.root.acquire_read();
             let found = Node::<T>::find_link(handle.borrow(), target).is_some();
@@ -1958,6 +2014,7 @@ pub mod BSTSplayMtEph {
 
         // Reader: assume return value matches ghost.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (n: usize) {
             let handle = self.root.acquire_read();
             let n = Node::<T>::size_link(handle.borrow());
@@ -1969,6 +2026,7 @@ pub mod BSTSplayMtEph {
 
         // Predicate: assume return predicate matches spec predicate.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (b: bool) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
@@ -1979,6 +2037,7 @@ pub mod BSTSplayMtEph {
 
         // Reader: height bounded by node count from lock predicate.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
@@ -1992,6 +2051,7 @@ pub mod BSTSplayMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — does not match textbook: find does not splay, so no amortized bound applies and h(T) reaches n; CS 38.11 find O(lg n) amortized for splay trees
         fn find(&self, target: &T) -> (found: Option<T>) {
             let handle = self.root.acquire_read();
             let found = Node::<T>::find_link(handle.borrow(), target).cloned();
@@ -2004,6 +2064,7 @@ pub mod BSTSplayMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn minimum(&self) -> (min: Option<T>) {
             let handle = self.root.acquire_read();
             let min = Node::<T>::min_link(handle.borrow()).cloned();
@@ -2018,6 +2079,7 @@ pub mod BSTSplayMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn maximum(&self) -> (max: Option<T>) {
             let handle = self.root.acquire_read();
             let max = Node::<T>::max_link(handle.borrow()).cloned();
@@ -2032,6 +2094,7 @@ pub mod BSTSplayMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let out = Node::<T>::in_order_parallel(handle.borrow());
@@ -2040,6 +2103,7 @@ pub mod BSTSplayMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             // Veracity: NEEDED proof block
             let handle = self.root.acquire_read();
@@ -2049,6 +2113,7 @@ pub mod BSTSplayMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost
         fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
         where
             F: Fn(&T) -> bool + Send + Sync,
@@ -2062,6 +2127,7 @@ pub mod BSTSplayMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
             F: Fn(T, T) -> T + Send + Sync,

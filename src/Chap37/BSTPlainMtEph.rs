@@ -56,6 +56,7 @@ pub mod BSTPlainMtEph {
     /// Exec BST operations on BalBinTree nodes (Layer 1, Mt variant).
     pub trait BSTPlainMtNodeFns<T: TotalOrder>: Sized + BSTSpecFns<T> + BalBinTreeTrait<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn insert_node(self, value: T) -> (inserted: Self)
             requires self.tree_is_bst(),
             ensures
@@ -67,11 +68,13 @@ pub mod BSTPlainMtEph {
                 inserted.spec_height() <= self.spec_height() + 1,
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn contains_node(&self, target: &T) -> (found: bool)
             requires (*self).tree_is_bst(),
             ensures found == (*self).tree_contains(*target),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn find_node(&self, target: &T) -> (found: Option<&T>)
             requires (*self).tree_is_bst(),
             ensures
@@ -79,6 +82,7 @@ pub mod BSTPlainMtEph {
                 found.is_some() ==> *found.unwrap() == *target,
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn min_node(&self) -> (min: Option<&T>)
             requires (*self).tree_is_bst(),
             ensures
@@ -87,6 +91,7 @@ pub mod BSTPlainMtEph {
                 min.is_some() ==> (*self).tree_contains(*min.unwrap()),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn max_node(&self) -> (max: Option<&T>)
             requires (*self).tree_is_bst(),
             ensures
@@ -96,6 +101,7 @@ pub mod BSTPlainMtEph {
             ;
         /// Remove and return the minimum element from a non-empty BST subtree.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn delete_min_node(self) -> (pair: (Self, T))
             requires
                 self.spec_size() > 0,
@@ -112,6 +118,7 @@ pub mod BSTPlainMtEph {
             ;
         /// Delete a key from the BST, returning the modified tree.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn delete_node(self, target: &T) -> (deleted: Self)
             requires self.tree_is_bst(),
             ensures
@@ -491,6 +498,7 @@ pub mod BSTPlainMtEph {
         spec fn spec_bstplainmteph_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> (tree: Self)
             ensures tree.spec_bstplainmteph_wf(),
                     tree@.spec_is_leaf(),
@@ -498,6 +506,7 @@ pub mod BSTPlainMtEph {
                     forall|x: T| !tree@.tree_contains(x);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: capacity check recounts size() and height(), O(n), before the O(h(T)) insert
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstplainmteph_wf(),
             ensures self.spec_bstplainmteph_wf(),
@@ -509,6 +518,7 @@ pub mod BSTPlainMtEph {
                     };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn delete(&mut self, target: &T) -> (removed: Result<(), ()>)
             requires old(self).spec_bstplainmteph_wf(),
             ensures self.spec_bstplainmteph_wf(),
@@ -520,33 +530,39 @@ pub mod BSTPlainMtEph {
                     };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstplainmteph_wf(),
             ensures found == self@.tree_contains(*target);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: no stored size, recursive count; Ch38 size O(1)
         fn size(&self) -> (n: usize)
             requires self.spec_bstplainmteph_wf(),
             ensures n as nat == self@.spec_size();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstplainmteph_wf(),
             ensures b == (self@ is Leaf);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height(&self) -> (h: usize)
             requires self.spec_bstplainmteph_wf(),
             ensures h as nat == self@.spec_height();
 
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq
             requires self.spec_bstplainmteph_wf(),
             ensures
                 found.is_some() == self@.tree_contains(*target),
                 found.is_some() ==> found.unwrap() == *target;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn minimum(&self) -> (min: Option<T>) where T: Clone + Eq
             requires self.spec_bstplainmteph_wf(),
             ensures
@@ -554,6 +570,7 @@ pub mod BSTPlainMtEph {
                 self@.spec_size() > 0 ==> min.is_some(),
                 min.is_some() ==> self@.tree_contains(min.unwrap());
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq
             requires self.spec_bstplainmteph_wf(),
             ensures
@@ -561,14 +578,17 @@ pub mod BSTPlainMtEph {
                 self@.spec_size() > 0 ==> max.is_some(),
                 max.is_some() ==> self@.tree_contains(max.unwrap());
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost; does not match old analysis: O(n) vs O(n·h(T)); Chap23 in_order Vec::append copies the right result at every node
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
             requires self.spec_bstplainmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost; does not match old analysis: O(n) vs O(n·h(T)); Chap23 pre_order Vec::append copies child results at every node
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
             requires self.spec_bstplainmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost; does not match old analysis: O(n) vs O(n·h(T)); calls in_order
         fn iter(&self) -> (it: std::vec::IntoIter<T>) where T: Clone + Eq
             requires self.spec_bstplainmteph_wf(), obeys_feq_clone::<T>()
             ensures
@@ -600,6 +620,7 @@ pub mod BSTPlainMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> (tree: Self) {
             // Veracity: NEEDED proof block
             BSTPlainMtEph {
@@ -614,6 +635,7 @@ pub mod BSTPlainMtEph {
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: capacity check recounts size() and height(), O(n), before the O(h(T)) insert
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == tree); }
@@ -636,6 +658,7 @@ pub mod BSTPlainMtEph {
 
         // Writer: assume ghost == inner, delete always succeeds (no capacity check needed).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         // Veracity: NEEDED proof block
         fn delete(&mut self, target: &T) -> (removed: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
@@ -650,6 +673,7 @@ pub mod BSTPlainMtEph {
         // Veracity: NEEDED proof block (speed hint)
         // Reader: assume return value matches ghost.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn contains(&self, target: &T) -> (found: bool) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -661,6 +685,7 @@ pub mod BSTPlainMtEph {
 // Veracity: UNNEEDED proof block 
         // Reader: assume return value matches ghost.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: no stored size, recursive count; Ch38 size O(1)
         fn size(&self) -> (n: usize) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -673,6 +698,7 @@ pub mod BSTPlainMtEph {
 
         // Predicate: assume return predicate matches spec predicate.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (b: bool) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -685,6 +711,7 @@ pub mod BSTPlainMtEph {
 
         // Reader: assume return value matches ghost.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height(&self) -> (h: usize) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -696,6 +723,7 @@ pub mod BSTPlainMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — matches textbook
         fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -710,6 +738,7 @@ pub mod BSTPlainMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn minimum(&self) -> (min: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -724,6 +753,7 @@ pub mod BSTPlainMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(h(T)), Span O(h(T)) — no textbook cost
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -738,6 +768,7 @@ pub mod BSTPlainMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost; does not match old analysis: O(n) vs O(n·h(T)); Chap23 in_order Vec::append copies the right result at every node
         fn in_order(&self) -> ArraySeqStPerS<T> where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -747,6 +778,7 @@ pub mod BSTPlainMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost; does not match old analysis: O(n) vs O(n·h(T)); Chap23 pre_order Vec::append copies child results at every node
         fn pre_order(&self) -> ArraySeqStPerS<T> where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -756,6 +788,7 @@ pub mod BSTPlainMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h(T)), Span O(n·h(T)) — no textbook cost; does not match old analysis: O(n) vs O(n·h(T)); calls in_order
         fn iter(&self) -> std::vec::IntoIter<T> where T: Clone + Eq {
             let seq = self.in_order();
             seq.seq.into_iter()

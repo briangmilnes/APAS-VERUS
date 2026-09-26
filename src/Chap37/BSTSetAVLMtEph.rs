@@ -57,87 +57,107 @@ pub mod BSTSetAVLMtEph {
         spec fn spec_bstsetavlmteph_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (set: Self)
             requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(value: T) -> (set: Self)
             requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: no stored size, recursive count; Ch38 size O(1)
         fn size(&self) -> (n: usize)
             requires self.spec_bstsetavlmteph_wf()
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsetavlmteph_wf()
             ensures true;
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn find(&self, value: &T) -> (found: Option<T>)
             requires self.spec_bstsetavlmteph_wf()
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn contains(&self, value: &T) -> (found: bool)
             requires self.spec_bstsetavlmteph_wf()
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn minimum(&self) -> (min: Option<T>)
             requires self.spec_bstsetavlmteph_wf()
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn maximum(&self) -> (max: Option<T>)
             requires self.spec_bstsetavlmteph_wf()
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: BSTAVLMtEph::insert recounts size() and height() and rebalance recomputes subtree heights; CS 38.11 insert O(lg n); does not match old analysis: O(lg n) vs O(n)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstsetavlmteph_wf()
             ensures self.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: rebuilds the tree from in_order by n sorted inserts, each O(n); CS 38.11 delete O(lg n); does not match old analysis: O(lg n) vs O(n²)
         fn delete(&mut self, target: &T)
             requires old(self).spec_bstsetavlmteph_wf()
             ensures self.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³), Span O(n³) — does not match textbook: pivot is a minimum, so recursion peels one key per level and every level's split and join rebuild by sorted inserts, O(n²) sequential; CS 38.11 O(m·lg(n/m+1)), O(lg n); does not match old analysis: O(n²) vs O(n³); n = |t1|+|t2|
         fn union(&self, other: &Self) -> (combined: Self)
             requires self.spec_bstsetavlmteph_wf(), other.spec_bstsetavlmteph_wf()
             ensures combined.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³), Span O(n³) — does not match textbook: pivot is a minimum, so recursion peels one key per level and every level's split and join rebuild by sorted inserts, O(n²) sequential; CS 38.11 O(m·lg(n/m+1)), O(lg n); does not match old analysis: O(n²) vs O(n³); n = |t1|+|t2|
         fn intersection(&self, other: &Self) -> (common: Self)
             requires self.spec_bstsetavlmteph_wf(), other.spec_bstsetavlmteph_wf()
             ensures common.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³), Span O(n³) — does not match textbook: pivot is a minimum, so recursion peels one key per level and every level's split and join rebuild by sorted inserts, O(n²) sequential; CS 38.11 O(m·lg(n/m+1)), O(lg n); does not match old analysis: O(n²) vs O(n³); n = |t1|+|t2|
         fn difference(&self, other: &Self) -> (diff: Self)
             requires self.spec_bstsetavlmteph_wf(), other.spec_bstsetavlmteph_wf()
             ensures diff.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: in_order scan then build_from_vec rebuilds each side by sorted inserts, O(n) each; CS 38.11 split O(lg n)
         fn split(&self, pivot: &T) -> (parts: (Self, bool, Self))
             requires self.spec_bstsetavlmteph_wf()
             ensures parts.0.spec_bstsetavlmteph_wf(), parts.2.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: flattens both trees and rebuilds by sorted inserts, O(n) each; CS 38.11 join O(lg n)
         fn join_pair(left: Self, right: Self) -> (joined: Self)
             requires left.spec_bstsetavlmteph_wf(), right.spec_bstsetavlmteph_wf()
             ensures joined.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: flattens both trees and rebuilds by sorted inserts, O(n) each; CS 38.11 join O(lg n)
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
             requires left.spec_bstsetavlmteph_wf(), right.spec_bstsetavlmteph_wf()
             ensures joined.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; sequential in_order scan, then build_from_vec rebuild by sorted inserts
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
             requires
                 self.spec_bstsetavlmteph_wf(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures filtered.spec_bstsetavlmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); in_order costs O(n lg n), then a sequential fold
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
             requires
                 self.spec_bstsetavlmteph_wf(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(1) vs O(n lg n); builds the whole in_order sequence
         fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsetavlmteph_wf()
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn as_tree(&self) -> (tree: &BSTAVLMtEph<T>)
             requires self.spec_bstsetavlmteph_wf()
             ensures true;
@@ -147,6 +167,7 @@ pub mod BSTSetAVLMtEph {
                 vstd::std_specs::vec::into_iter_elts(it) == IteratorSpec::remaining(&it),
                 IteratorSpec::decrease(&it) is Some;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n) vs O(n²); build_from_vec rebuilds by n sorted inserts, each O(n)
         fn copy_set(&self) -> (out: Self)
             requires self.spec_bstsetavlmteph_wf()
             ensures out.spec_bstsetavlmteph_wf();
@@ -156,6 +177,7 @@ pub mod BSTSetAVLMtEph {
 
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); tree.in_order costs O(n lg n) before the O(n) copy loop
     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
         requires tree.spec_bstavlmteph_wf(), obeys_feq_clone::<T>(),
         ensures true,
@@ -178,6 +200,7 @@ pub mod BSTSetAVLMtEph {
 
     // veracity: no_requires
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n) vs O(n²); n sequential inserts, each O(n)
     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
         ensures tree.spec_bstavlmteph_wf(),
     {
@@ -198,6 +221,7 @@ pub mod BSTSetAVLMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n) vs O(n²); rebuild_from_vec does n sequential inserts, each O(n)
     fn build_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (set: BSTSetAVLMtEph<T>)
         requires obeys_feq_clone::<T>(),
         ensures set.spec_bstsetavlmteph_wf(),
@@ -211,6 +235,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> Self {
             Self {
                 tree: BSTAVLMtEph::new(),
@@ -218,6 +243,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(value: T) -> Self {
             let mut tree = BSTAVLMtEph::new();
             let _ = tree.insert(value);
@@ -225,27 +251,35 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: no stored size, recursive count; Ch38 size O(1)
         fn size(&self) -> usize { self.tree.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> bool { self.tree.is_empty() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn find(&self, value: &T) -> Option<T> { self.tree.find(value) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn contains(&self, value: &T) -> bool { self.tree.contains(value) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn minimum(&self) -> Option<T> { self.tree.minimum() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn maximum(&self) -> Option<T> { self.tree.maximum() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: BSTAVLMtEph::insert recounts size() and height() and rebalance recomputes subtree heights; CS 38.11 insert O(lg n); does not match old analysis: O(lg n) vs O(n)
         fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) { self.tree.insert(value) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: rebuilds the tree from in_order by n sorted inserts, each O(n); CS 38.11 delete O(lg n); does not match old analysis: O(lg n) vs O(n²)
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
                 return;
@@ -271,6 +305,7 @@ pub mod BSTSetAVLMtEph {
 
         #[verifier::exec_allows_no_decreases_clause]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³), Span O(n³) — does not match textbook: pivot is a minimum, so recursion peels one key per level and every level's split and join rebuild by sorted inserts, O(n²) sequential; CS 38.11 O(m·lg(n/m+1)), O(lg n); does not match old analysis: O(n²) vs O(n³); n = |t1|+|t2|
         fn union(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return other.copy_set();
@@ -312,6 +347,7 @@ pub mod BSTSetAVLMtEph {
 
         #[verifier::exec_allows_no_decreases_clause]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³), Span O(n³) — does not match textbook: pivot is a minimum, so recursion peels one key per level and every level's split and join rebuild by sorted inserts, O(n²) sequential; CS 38.11 O(m·lg(n/m+1)), O(lg n); does not match old analysis: O(n²) vs O(n³); n = |t1|+|t2|
         fn intersection(&self, other: &Self) -> Self {
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
@@ -350,6 +386,7 @@ pub mod BSTSetAVLMtEph {
 
         #[verifier::exec_allows_no_decreases_clause]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³), Span O(n³) — does not match textbook: pivot is a minimum, so recursion peels one key per level and every level's split and join rebuild by sorted inserts, O(n²) sequential; CS 38.11 O(m·lg(n/m+1)), O(lg n); does not match old analysis: O(n²) vs O(n³); n = |t1|+|t2|
         fn difference(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return Self::empty();
@@ -383,6 +420,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: in_order scan then build_from_vec rebuilds each side by sorted inserts, O(n) each; CS 38.11 split O(lg n)
         fn split(&self, pivot: &T) -> (Self, bool, Self) {
             let sorted = self.tree.in_order();
             let n = sorted.length();
@@ -410,6 +448,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: flattens both trees and rebuilds by sorted inserts, O(n) each; CS 38.11 join O(lg n)
         fn join_pair(left: Self, right: Self) -> Self {
             let left_sorted = left.tree.in_order();
             let right_sorted = right.tree.in_order();
@@ -442,6 +481,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: flattens both trees and rebuilds by sorted inserts, O(n) each; CS 38.11 join O(lg n)
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
             let left_sorted = left.tree.in_order();
             let right_sorted = right.tree.in_order();
@@ -475,6 +515,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; sequential in_order scan, then build_from_vec rebuild by sorted inserts
         fn filter<F>(&self, mut predicate: F) -> Self
         where
             F: FnMut(&T) -> bool,
@@ -500,6 +541,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); in_order costs O(n lg n), then a sequential fold
         fn reduce<F>(&self, mut op: F, base: T) -> T
         where
             F: FnMut(T, T) -> T,
@@ -522,11 +564,13 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(1) vs O(n lg n); builds the whole in_order sequence
         fn iter_in_order(&self) -> ArraySeqStPerS<T> {
             self.tree.in_order()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn as_tree(&self) -> &BSTAVLMtEph<T> { &self.tree }
 
         fn iter(&self) -> std::vec::IntoIter<T> {
@@ -535,6 +579,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n) vs O(n²); build_from_vec rebuilds by n sorted inserts, each O(n)
         fn copy_set(&self) -> (out: Self) {
             build_from_vec(values_vec(&self.tree))
         }

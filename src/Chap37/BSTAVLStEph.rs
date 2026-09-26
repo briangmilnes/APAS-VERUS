@@ -88,28 +88,33 @@ pub mod BSTAVLStEph {
         spec fn spec_bstavlsteph_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> (tree: Self)
             ensures
                 tree.spec_bstavlsteph_wf(),
                 tree_is_avl::<T>(tree.spec_root()),
                 forall|x: T| !tree.spec_root().tree_contains(x);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: no stored size, recursive count; Ch38 size O(1)
         fn size(&self) -> (n: usize)
             requires
                 self.spec_bstavlsteph_wf(),
                 self.spec_root().spec_size() <= usize::MAX,
             ensures n == self.spec_root().spec_size();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstavlsteph_wf(),
             ensures b == (self.spec_root().spec_size() == 0);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height(&self) -> (h: usize)
             requires
                 self.spec_bstavlsteph_wf(),
                 self.spec_root().spec_height() <= usize::MAX,
             ensures h == self.spec_root().spec_height();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: insert_node's rebalance recomputes subtree heights by recursive walks (no stored height), O(n) total; CS 38.11 insert O(lg n); does not match old analysis: O(lg n) vs O(n)
         fn insert(self, value: T) -> (inserted: Self)
             requires
                 self.spec_bstavlsteph_wf(),
@@ -122,6 +127,7 @@ pub mod BSTAVLStEph {
                 forall|x: T| (#[trigger] inserted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) || x == value);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn contains(&self, target: &T) -> (found: bool)
             requires
                 self.spec_bstavlsteph_wf(),
@@ -129,6 +135,7 @@ pub mod BSTAVLStEph {
             ensures found == self.spec_root().tree_contains(*target);
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires
                 self.spec_bstavlsteph_wf(),
@@ -147,6 +154,7 @@ pub mod BSTAVLStEph {
         spec fn spec_right(self) -> Self;
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn rotate_right(self) -> (rotated: Self)
             requires
                 self.tree_is_bst(),
@@ -181,6 +189,7 @@ pub mod BSTAVLStEph {
                 }),
             ;
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn rotate_left(self) -> (rotated: Self)
             requires
                 self.tree_is_bst(),
@@ -215,6 +224,7 @@ pub mod BSTAVLStEph {
                 }),
             ;
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: calls BalBinTree::height on children and grandchildren, a recursive O(subtree size) walk (no stored height); n = subtree size
         fn rebalance(self) -> (balanced: Self)
             requires
                 self.tree_is_bst(),
@@ -239,6 +249,7 @@ pub mod BSTAVLStEph {
                 },
             ;
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: rebalance at every path node recomputes subtree heights, and the subtree sizes along the path sum to O(n); CS 38.11 insert O(lg n)
         fn insert_node(self, value: T) -> (inserted: Self)
             requires
                 self.tree_is_avl_spec(),
@@ -252,11 +263,13 @@ pub mod BSTAVLStEph {
                     (self.tree_contains(x) || x == value),
             ;
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn contains_node(&self, target: &T) -> (found: bool)
             requires (*self).tree_is_bst(),
             ensures found == (*self).tree_contains(*target),
             ;
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn find_node(&self, target: &T) -> (found: Option<&T>)
             requires (*self).tree_is_bst(),
             ensures
@@ -524,6 +537,7 @@ pub mod BSTAVLStEph {
     //   (balance=-2) tree, result has |h(left)-h(right)| <= 1 at every node
     /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-number of rotations.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: calls BalBinTree::height on children and grandchildren, a recursive O(subtree size) walk (no stored height); n = subtree size; does not match old analysis: O(1) vs O(n); old counted rotations only
     fn rebalance(self) -> (balanced: Self)
     {
         let ghost tree_ghost = self;
@@ -903,39 +917,46 @@ pub mod BSTAVLStEph {
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> (tree: Self) {
             BSTAVLStEph { root: BalBinTree::Leaf }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to BalBinTree::size.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: no stored size, recursive count; Ch38 size O(1)
         fn size(&self) -> (n: usize) {
             self.root.size()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — leaf check.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (b: bool) {
             self.root.is_leaf()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to BalBinTree::height.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height(&self) -> (h: usize) {
             self.root.height()
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS; AVL guarantees h = O(lg n).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: insert_node's rebalance recomputes subtree heights by recursive walks (no stored height), O(n) total; CS 38.11 insert O(lg n); does not match old analysis: O(lg n) vs O(n)
         fn insert(self, value: T) -> (inserted: Self) {
             BSTAVLStEph { root: self.root.insert_node(value) }
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS; AVL guarantees h = O(lg n).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn contains(&self, target: &T) -> (found: bool) {
             self.root.contains_node(target)
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS; AVL guarantees h = O(lg n).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
         fn find(&self, target: &T) -> (found: Option<&T>) {
             self.root.find_node(target)
         }
@@ -970,6 +991,7 @@ pub mod BSTAVLStEph {
     impl<T: TotalOrder> BSTAVLStEph<T> {
         /// Returns a snapshot iterator over the tree elements in ascending key order.
         /// - Alg Analysis: Code review (Claude Sonnet 4.6): Work O(n), Span O(n) — in-order traversal.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); Chap23 in_order Vec::append copies the right result at every node
         pub fn iter(&self) -> (it: std::vec::IntoIter<T>) where T: Clone + Eq
             requires
                 self.spec_bstavlsteph_wf(),

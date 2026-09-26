@@ -122,6 +122,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (tree: Self) {
                       // Veracity: NEEDED assert
                       assert(obeys_feq_full_trigger::<T>());
@@ -129,11 +130,13 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (tree: Self) {
             Self::empty()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn length(&self) -> (len: usize) {
             // Veracity: NEEDED proof block
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
@@ -141,6 +144,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — does not match textbook: tree descent, CS 22.2 stseq nth O(1); CS 20.6 tree-sequence nth is O(lg n)
         // Veracity: NEEDED proof block
         fn nth(&self, index: usize) -> (elem: &T) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
@@ -148,12 +152,14 @@ pub mod AVLTreeSeqStEph {
         }
 
 // Veracity: UNNEEDED proof block         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn set(&mut self, index: usize, item: T) -> (outcome: Result<(), &'static str>) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             self.root.set_link(index, item)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(item: T) -> (tree: Self) {
                       // Veracity: NEEDED assert
                       assert(obeys_feq_full_trigger::<T>());
@@ -165,16 +171,19 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn isEmpty(&self) -> (empty: bool) {
             self.length() == 0
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn isSingleton(&self) -> (single: bool) {
             self.length() == 1
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m lg n), Span O(m lg n) — does not match textbook: m nth calls then from_vec by m inserts; CS 20.6 subseq O(lg n); m = copied length
         fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self) {
             assert(self.spec_avltreeseqsteph_wf());
             let n = self.length();
@@ -216,17 +225,20 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new_root() -> (tree: Self) {
             Self::empty()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — does not match textbook: tree descent, CS 22.2 stseq update O(1)
         fn update(&mut self, index: usize, item: T) {
             assert(self.spec_avltreeseqsteph_wf());
             let _ = self.set(index, item);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>) {
             broadcast use Seq::<_>::lemma_push_map_commute;
             let length = values.len();
@@ -266,6 +278,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
         fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>) {
             assert(self.spec_avltreeseqsteph_wf());
             let n = self.length();
@@ -314,6 +327,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn push_back(&mut self, value: T) {
             assert(self.spec_avltreeseqsteph_wf());
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
@@ -326,6 +340,7 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
         fn contains_value(&self, target: &T) -> (found: bool) {
             assert(self.spec_avltreeseqsteph_wf());
             let n = self.length();
@@ -352,12 +367,14 @@ pub mod AVLTreeSeqStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn insert_value(&mut self, value: T) {
             assert(self.spec_avltreeseqsteph_wf());
             self.push_back(value);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
         fn delete_value(&mut self, target: &T) -> (deleted: bool) {
             assert(self.spec_avltreeseqsteph_wf());
             let len = self.length();
@@ -445,6 +462,7 @@ pub mod AVLTreeSeqStEph {
 
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
     // veracity: no_requires
     fn push_left_iter<'a, T: StT>(it: &mut AVLTreeSeqIterStEph<'a, T>, link: &'a Link<T>)
         ensures
@@ -713,6 +731,7 @@ pub mod AVLTreeSeqStEph {
     /// Exec operations on non-empty AVL tree nodes (Box<AVLTreeNode>).
     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized + AVLTreeSeqStEphNodeSpec<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn update_meta(&mut self)
             requires
                 old(self).node_left().link_wf(),
@@ -728,6 +747,7 @@ pub mod AVLTreeSeqStEph {
                 self.node_index() == old(self).node_index(),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_right_fn(self) -> (rotated: Self)
             requires
                 self.node_wf(),
@@ -738,6 +758,7 @@ pub mod AVLTreeSeqStEph {
                 rotated.node_cached_size() == self.node_cached_size(),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_left_fn(self) -> (rotated: Self)
             requires
                 self.node_wf(),
@@ -748,6 +769,7 @@ pub mod AVLTreeSeqStEph {
                 rotated.node_cached_size() == self.node_cached_size(),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; reads cached heights
         fn rebalance_fn(self) -> (balanced: Self)
             requires
                 self.node_left().link_wf(),
@@ -774,16 +796,19 @@ pub mod AVLTreeSeqStEph {
     /// Exec operations on AVL tree links (Option<Box<AVLTreeNode>>).
     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized + AVLTreeSeqStEphLinkSpec<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn h_fn(&self) -> (height: usize)
             requires (*self).link_cached_height() <= usize::MAX as nat,
             ensures height as nat == (*self).link_cached_height(),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn size_link_fn(&self) -> (size: usize)
             requires (*self).link_wf(),
             ensures size as nat == (*self).link_cached_size(),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn insert_at_link(self, index: usize, value: T, next_key: &mut usize) -> (inserted: Self)
             requires
                 self.link_wf(),
@@ -797,11 +822,13 @@ pub mod AVLTreeSeqStEph {
                 *next_key == *old(next_key) + 1,
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn nth_link(&self, index: usize) -> (elem: &T)
             requires (*self).link_wf(), (index as int) < (*self).link_inorder().len(),
             ensures elem@ == (*self).link_inorder()[index as int],
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn set_link(&mut self, index: usize, value: T) -> (outcome: Result<(), &'static str>)
             requires
                 old(self).link_wf(),
@@ -814,6 +841,7 @@ pub mod AVLTreeSeqStEph {
                 (*self).link_inorder() =~= old(self).link_inorder().update(index as int, value@),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
         fn compare_trees(&self, other: &Self) -> (equal: bool)
             requires
                 (*self).link_wf(),
@@ -822,6 +850,7 @@ pub mod AVLTreeSeqStEph {
             ensures equal == ((*self).link_inorder() =~= (*other).link_inorder()),
             ;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         // veracity: no_requires
         fn clone_link(&self) -> (copy: Self)
             ensures
@@ -837,25 +866,30 @@ pub mod AVLTreeSeqStEph {
         spec fn spec_avltreeseqsteph_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (tree: Self)
             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (tree: Self)
             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn length(&self) -> (len: usize)
             requires self.spec_avltreeseqsteph_wf(),
             ensures len as nat == self.spec_seq().len();
 
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — ACCEPTED DIFFERENCE: tree traversal to indexed node
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — does not match textbook: tree descent, CS 22.2 stseq nth O(1); CS 20.6 tree-sequence nth is O(lg n)
         fn nth(&self, index: usize) -> (elem: &T)
             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn set(&mut self, index: usize, item: T) -> (outcome: Result<(), &'static str>)
             requires old(self).spec_avltreeseqsteph_wf(), (index as int) < old(self).spec_seq().len(),
             ensures
@@ -864,6 +898,7 @@ pub mod AVLTreeSeqStEph {
                 self.spec_seq() =~= old(self).spec_seq().update(index as int, item@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(item: T) -> (tree: Self)
             ensures
                 tree.spec_seq().len() == 1,
@@ -871,26 +906,31 @@ pub mod AVLTreeSeqStEph {
                 tree.spec_avltreeseqsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn isEmpty(&self) -> (empty: bool)
             requires self.spec_avltreeseqsteph_wf(),
             ensures empty == (self.spec_seq().len() == 0);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn isSingleton(&self) -> (single: bool)
             requires self.spec_avltreeseqsteph_wf(),
             ensures single == (self.spec_seq().len() == 1);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m lg n), Span O(m lg n) — does not match textbook: m nth calls then from_vec by m inserts; CS 20.6 subseq O(lg n); does not match old analysis: O(n) vs O(m lg n); m = copied length
         fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self)
             requires self.spec_avltreeseqsteph_wf(),self.spec_seq().len() < usize::MAX,
             ensures sub.spec_seq() =~= spec_subseq(self.spec_seq(), start as nat, length as nat);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new_root() -> (tree: Self)
             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — ACCEPTED DIFFERENCE: tree traversal + path reconstruction
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — does not match textbook: tree descent, CS 22.2 stseq update O(1)
         fn update(&mut self, index: usize, item: T)
             requires
                 old(self).spec_avltreeseqsteph_wf(),
@@ -900,6 +940,7 @@ pub mod AVLTreeSeqStEph {
                 self.spec_seq() =~= old(self).spec_seq().update(index as int, item@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); n sequential insert_at_link calls, O(lg n) each
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>)
             requires
                 obeys_feq_full::<T>(),
@@ -910,6 +951,7 @@ pub mod AVLTreeSeqStEph {
                 spec_inorder(tree.root) =~= values@.map_values(|t: T| t@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); n nth calls, O(lg n) each
         fn to_arrayseq(&self) -> (seq: ArraySeqStEphS<T>)
             requires self.spec_avltreeseqsteph_wf(),
             ensures
@@ -928,6 +970,7 @@ pub mod AVLTreeSeqStEph {
                 IteratorSpec::decrease(&it) is Some;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn push_back(&mut self, value: T)
             requires
                 old(self).spec_avltreeseqsteph_wf(),
@@ -937,12 +980,14 @@ pub mod AVLTreeSeqStEph {
                 self.spec_avltreeseqsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
         fn contains_value(&self, target: &T) -> (found: bool)
             requires self.spec_avltreeseqsteph_wf(),
             ensures found == exists|j: int| 0 <= j < self.spec_seq().len()
                 && self.spec_seq()[j] == target@;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn insert_value(&mut self, value: T)
             requires
                 old(self).spec_avltreeseqsteph_wf(),
@@ -952,6 +997,7 @@ pub mod AVLTreeSeqStEph {
                 self.spec_avltreeseqsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
         fn delete_value(&mut self, target: &T) -> (deleted: bool)
             requires old(self).spec_avltreeseqsteph_wf(),
             ensures
@@ -991,6 +1037,7 @@ pub mod AVLTreeSeqStEph {
     impl<T: StT> AVLTreeSeqStEphNodeFns<T> for Box<AVLTreeNode<T>> {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn update_meta(&mut self)
     {
         self.left_size = self.left.size_link_fn();
@@ -1008,6 +1055,7 @@ pub mod AVLTreeSeqStEph {
 
     // Veracity: NEEDED proof block
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn rotate_right_fn(self) -> (rotated: Self)
     {
         let ghost node = self;
@@ -1047,6 +1095,7 @@ pub mod AVLTreeSeqStEph {
 
     // Veracity: NEEDED proof block
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn rotate_left_fn(self) -> (rotated: Self)
     {
         let ghost node = self;
@@ -1085,6 +1134,7 @@ pub mod AVLTreeSeqStEph {
 
     // Veracity: NEEDED proof block
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; reads cached heights
     fn rebalance_fn(self) -> (balanced: Self)
     {
         let ghost node = self;
@@ -1131,6 +1181,7 @@ pub mod AVLTreeSeqStEph {
     impl<T: StT> AVLTreeSeqStEphLinkFns<T> for Link<T> {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn h_fn(&self) -> (height: usize)
     {
         match self {
@@ -1140,6 +1191,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // Veracity: NEEDED proof block
     fn size_link_fn(&self) -> (size: usize)
     {
@@ -1153,6 +1205,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
     fn insert_at_link(self, index: usize, value: T, next_key: &mut usize) -> (inserted: Self)
         decreases self,
     {
@@ -1207,6 +1260,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
     fn nth_link(&self, index: usize) -> (elem: &T)
         decreases *self,
     {
@@ -1226,6 +1280,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
     fn set_link(&mut self, index: usize, value: T) -> (outcome: Result<(), &'static str>)
         decreases *old(self),
     {
@@ -1255,6 +1310,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
     fn compare_trees(&self, other: &Self) -> (equal: bool)
     {
         proof { lemma_size_eq_inorder_len::<T>(self); }
@@ -1292,6 +1348,7 @@ pub mod AVLTreeSeqStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     // veracity: no_requires
     fn clone_link(&self) -> (copy: Self)
         decreases *self,
