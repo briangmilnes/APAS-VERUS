@@ -127,11 +127,13 @@ broadcast use {
         // Base set operations (ADT 41.1) - ephemeral semantics
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             requires self.spec_orderedsetsteph_wf(),
             ensures count == self@.len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -141,6 +143,7 @@ broadcast use {
                 empty.spec_orderedsetsteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(x: T) -> (tree: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -150,11 +153,13 @@ broadcast use {
                 tree.spec_orderedsetsteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: AVLTreeSetStEph find on ParamBST, whose expose deep-copies subtrees and whose join_mid never rebalances; does not match old analysis: O(log n) vs O(n h)
         fn find(&self, x: &T) -> (found: bool)
             requires self.spec_orderedsetsteph_wf(),
             ensures found == self@.contains(x@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: AVLTreeSetStEph insert on ParamBST (deep-copy expose per split level, no rebalancing); does not match old analysis: O(log n) vs O(n h)
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_orderedsetsteph_wf(),
@@ -164,6 +169,7 @@ broadcast use {
                 self.spec_orderedsetsteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: AVLTreeSetStEph delete on ParamBST (deep-copy expose per level, no rebalancing); does not match old analysis: O(log n) vs O(n h)
         fn delete(&mut self, x: &T)
             requires old(self).spec_orderedsetsteph_wf(),
             ensures
@@ -171,6 +177,7 @@ broadcast use {
                 self.spec_orderedsetsteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2 + Σ W(f)), Span O(n h^2 + Σ S(f)) — does not match textbook: CS 41.4 Work O(Σ W(f)), Span O(lg n + max S(f)); callee defect (sequential ParamBST filter with deep-copy exposes); does not match old analysis: O(n) vs O(n h^2 + Σ W(f))
         fn filter<F: PredSt<T>>(
             &mut self,
             f: F,
@@ -190,6 +197,7 @@ broadcast use {
                     ==> #[trigger] self@.contains(v);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); callee defect only: AVLTreeSetStEph intersection on ParamBST (deep-copy expose, O(n h) split per node, no rebalancing); does not match old analysis: O(m log(n/m + 1)) vs O(n h^2)
         fn intersection(&mut self, other: &Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
             ensures
@@ -197,6 +205,7 @@ broadcast use {
                 self.spec_orderedsetsteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); callee defect only: AVLTreeSetStEph union on ParamBST (deep-copy expose, O(n h) split per node, no rebalancing); does not match old analysis: O(m log(n/m + 1)) vs O(n h^2)
         fn union(&mut self, other: &Self)
             requires
                 old(self).spec_orderedsetsteph_wf(),
@@ -207,6 +216,7 @@ broadcast use {
                 self.spec_orderedsetsteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); callee defect only: AVLTreeSetStEph difference on ParamBST (deep-copy expose, O(n h) split per node, no rebalancing); does not match old analysis: O(m log(n/m + 1)) vs O(n h^2)
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
             ensures
@@ -214,6 +224,7 @@ broadcast use {
                 self.spec_orderedsetsteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 41.4 Work O(|a|), Span O(lg |a|); ParamBST collect_in_order pays a deep-copy expose per node (callee defect), then an O(n) from_vec, all sequential; does not match old analysis: O(n) vs O(n h)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -222,6 +233,7 @@ broadcast use {
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 h), Span O(n^2 h) — does not match textbook: Ex 41.3 Work O(n lg n), Span O(lg^2 n); a sequential loop of n nth + ParamBST inserts, insert i costs O(i h) (callee defect); does not match old analysis: O(n log n) vs O(n^2 h)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             requires
                 seq.spec_avltreeseqstper_wf(),
@@ -234,6 +246,7 @@ broadcast use {
         // Ordering operations (ADT 43.1) — postconditions in cmp_spec style.
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: ParamBST min_key deep-copies the subtrees at each left-spine node; does not match old analysis: O(lg n) vs O(n h)
         fn first(&self) -> (first: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -243,6 +256,7 @@ broadcast use {
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: tree_max_key exposes (deep-copies) each right-spine node; does not match old analysis: O(lg n) vs O(n h)
         fn last(&self) -> (last: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -252,6 +266,7 @@ broadcast use {
                     t.cmp_spec(&v) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: ParamBST split + tree_max_key, each deep-copying subtrees along a path; does not match old analysis: O(lg n) vs O(n h)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -262,6 +277,7 @@ broadcast use {
                     t.cmp_spec(&v) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: ParamBST split + min_key, each deep-copying subtrees along a path; does not match old analysis: O(lg n) vs O(n h)
         fn next(&self, k: &T) -> (successor: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -272,6 +288,7 @@ broadcast use {
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: ParamBST split deep-copies subtrees at each level; does not match old analysis: O(lg n) vs O(n h)
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
@@ -287,6 +304,7 @@ broadcast use {
                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: CS 43.2 O(lg n), n = |self| + |other|; join calls union instead of a BST join (O(n h^2) on ParamBST); does not match old analysis: O(lg n) vs O(n h^2)
         fn join(&mut self, other: Self)
             requires
                 old(self).spec_orderedsetsteph_wf(),
@@ -295,6 +313,7 @@ broadcast use {
             ensures self@ == old(self)@.union(other@), self.spec_orderedsetsteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: two ParamBST splits and up to two inserts, each deep-copying along a path; does not match old analysis: O(lg n) vs O(n h)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             requires
                 self.spec_orderedsetsteph_wf(),
@@ -303,12 +322,14 @@ broadcast use {
                 range@.subset_of(self@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: a ParamBST split (deep-copy per level) then an O(1) size; does not match old analysis: O(lg n) vs O(n h)
         fn rank(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 rank <= self@.len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: tree_select exposes (deep-copies) each node on the search path; does not match old analysis: O(lg n) vs O(n h)
         fn select(&self, i: usize) -> (selected: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -316,6 +337,7 @@ broadcast use {
                 selected matches Some(v) ==> self@.contains(v@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only: tree_select + ParamBST split + insert, each deep-copying along a path; does not match old analysis: O(lg n) vs O(n h)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires
@@ -328,6 +350,7 @@ broadcast use {
                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
         /// Iterative alternative to `first`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST min_key traversal
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 first O(lg n); callee defect only (ParamBST min_key: deep-copy expose per spine node); does not match old analysis: O(log n) vs O(n h)
         fn first_iter(&self) -> (first: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -337,6 +360,7 @@ broadcast use {
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// Iterative alternative to `last`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST max_key traversal
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 last O(lg n); callee defect only (tree_max_key: deep-copy expose per spine node); does not match old analysis: O(log n) vs O(n h)
         fn last_iter(&self) -> (last: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -346,6 +370,7 @@ broadcast use {
                     t.cmp_spec(&v) == Less || v@ == t@;
         /// Iterative alternative to `previous`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + max_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 previous O(lg n); callee defect only (ParamBST split + tree_max_key, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -356,6 +381,7 @@ broadcast use {
                     t.cmp_spec(&v) == Less || v@ == t@;
         /// Iterative alternative to `next`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + min_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 next O(lg n); callee defect only (ParamBST split + min_key, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn next_iter(&self, k: &T) -> (successor: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -366,6 +392,7 @@ broadcast use {
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// Iterative alternative to `split`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 split O(lg n); callee defect only (ParamBST split, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn split_iter(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
@@ -381,6 +408,7 @@ broadcast use {
                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
         /// Iterative alternative to `get_range`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- two BST splits + conditional inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 getRange O(lg n); callee defect only (two ParamBST splits + up to two inserts, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
             requires
                 self.spec_orderedsetsteph_wf(),
@@ -389,12 +417,14 @@ broadcast use {
                 range@.subset_of(self@);
         /// Iterative alternative to `rank`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + size
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 rank O(lg n); callee defect only (ParamBST split, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn rank_iter(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 rank <= self@.len();
         /// Iterative alternative to `split_rank`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- tree_select + BST split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 splitRank O(lg n); callee defect only (tree_select + ParamBST split + insert, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn split_rank_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires
@@ -412,6 +442,7 @@ broadcast use {
 
     /// Maximum key in a ParamBST via right-spine walk.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST traversal to rightmost node
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — no textbook cost; does not match old analysis: O(log n) vs O(n h); each right-spine expose deep-copies both subtrees (Chap38 callee defect)
     fn tree_max_key<T: StT + Ord + TotalOrder>(tree: &ParamBST<T>) -> (maximum: Option<T>)
         requires
             vstd::laws_cmp::obeys_cmp::<T>(),
@@ -470,6 +501,7 @@ broadcast use {
 
     /// Recursive select: find the i-th element in the BST (0-indexed, in sorted order).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- augmented BST traversal by rank
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — no textbook cost; does not match old analysis: O(log n) vs O(n h); size is O(1) but each expose on the search path deep-copies both subtrees (Chap38 callee defect)
     fn tree_select<T: StT + Ord + TotalOrder>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
         requires
             vstd::laws_cmp::obeys_cmp::<T>(),
@@ -525,38 +557,45 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
         { self.base_set.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
         {
             OrderedSetStEph { base_set: AVLTreeSetStEph::empty() }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(x: T) -> (tree: Self)
         {
             OrderedSetStEph { base_set: AVLTreeSetStEph::singleton(x) }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST search
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (AVLTreeSetStEph find on ParamBST: deep-copy expose per level, no rebalancing); does not match old analysis: O(log n) vs O(n h)
         fn find(&self, x: &T) -> (found: bool)
         { self.base_set.find(x) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- treap split + join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (ParamBST split + join_m, not a treap: deep-copy expose per level, no rebalancing); does not match old analysis: O(log n) vs O(n h)
         fn insert(&mut self, x: T)
         {
             self.base_set.insert(x);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- treap split + join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (ParamBST split + join_pair, not a treap: deep-copy expose per level, no rebalancing); does not match old analysis: O(log n) vs O(n h)
         fn delete(&mut self, x: &T)
         {
             self.base_set.delete(x);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- recursive BST filter + join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2 + Σ W(f)), Span O(n h^2 + Σ S(f)) — does not match textbook: CS 41.4 Work O(Σ W(f)), Span O(lg n + max S(f)); callee defect (sequential ParamBST filter, deep-copy expose per node, join_pair per rejected key); does not match old analysis: O(n log n) vs O(n h^2 + Σ W(f))
         fn filter<F: PredSt<T>>(
             &mut self,
             f: F,
@@ -568,6 +607,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- BST split-based intersection
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); callee defect only (ParamBST intersect: deep-copy expose + O(n h) split per node); does not match old analysis: O(n log n) vs O(n h^2)
         fn intersection(&mut self, other: &Self)
         {
             let found = self.base_set.intersection(&other.base_set);
@@ -575,6 +615,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- BST split-based union
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); callee defect only (ParamBST union: deep-copy expose + O(n h) split per node); does not match old analysis: O(n log n) vs O(n h^2)
         fn union(&mut self, other: &Self)
         {
             let found = self.base_set.union(&other.base_set);
@@ -582,6 +623,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- BST split-based difference
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); callee defect only (ParamBST difference: deep-copy expose + O(n h) split per node); does not match old analysis: O(n log n) vs O(n h^2)
         fn difference(&mut self, other: &Self)
         {
             let found = self.base_set.difference(&other.base_set);
@@ -590,6 +632,7 @@ broadcast use {
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 41.4 Work O(|a|), Span O(lg |a|); ParamBST collect_in_order pays a deep-copy expose per node (callee defect), then O(n) from_vec, sequential; does not match old analysis: O(n) vs O(n h)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
         {
             // Veracity: NEEDED proof block
@@ -626,6 +669,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n treap inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 h), Span O(n^2 h) — does not match textbook: Ex 41.3 Work O(n lg n), Span O(lg^2 n); sequential loop of O(lg n) nth + ParamBST insert, insert i costs O(i h) (callee defect; not a treap); does not match old analysis: O(n log n) vs O(n^2 h)
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
             let mut constructed = Self::empty();
@@ -650,6 +694,7 @@ broadcast use {
 
         /// First element (minimum) via BST min_key.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST min_key traversal
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 first O(lg n); callee defect only (ParamBST min_key: deep-copy expose per spine node); does not match old analysis: O(log n) vs O(n h)
         fn first_iter(&self) -> (first: Option<T>)
         {
             self.base_set.tree.min_key()
@@ -657,11 +702,13 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to first_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (first_iter → ParamBST min_key); does not match old analysis: O(log n) vs O(n h)
         fn first(&self) -> (first: Option<T>)
         { self.first_iter() }
 
         /// Last element (maximum) via tree_max_key.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST max_key traversal
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 last O(lg n); callee defect only (tree_max_key: deep-copy expose per spine node); does not match old analysis: O(log n) vs O(n h)
         fn last_iter(&self) -> (last: Option<T>)
         {
             tree_max_key(&self.base_set.tree)
@@ -669,12 +716,14 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to last_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (last_iter → tree_max_key); does not match old analysis: O(log n) vs O(n h)
         fn last(&self) -> (last: Option<T>)
         { self.last_iter() }
 // Veracity: NEEDED proof block
 
         /// Predecessor via split + max_key on left subtree.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + max_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 previous O(lg n); callee defect only (ParamBST split + tree_max_key, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
         {
             let (left, _found, _right) = self.base_set.tree.split(k);
@@ -712,12 +761,14 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to previous_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (previous_iter → ParamBST split + tree_max_key); does not match old analysis: O(log n) vs O(n h)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
         // Veracity: NEEDED proof block
         { self.previous_iter(k) }
 
         /// Successor via split + min_key on right subtree.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + min_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 next O(lg n); callee defect only (ParamBST split + min_key, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn next_iter(&self, k: &T) -> (successor: Option<T>)
         {
             let (_left, _found, right) = self.base_set.tree.split(k);
@@ -755,6 +806,7 @@ broadcast use {
 
         /// Split via BST split.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 split O(lg n); callee defect only (ParamBST split, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn split_iter(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
         {
@@ -798,17 +850,20 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to split_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (split_iter → ParamBST split); does not match old analysis: O(log n) vs O(n h)
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
         { self.split_iter(k) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to union
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: CS 43.2 O(lg n), n = |self| + |other|; calls union instead of a BST join, plus the ParamBST callee defect; does not match old analysis: O(n log n) vs O(n h^2)
         // Veracity: NEEDED proof block
         fn join(&mut self, other: Self)
         { self.union(&other); }
 
         /// Range query via two splits.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- two BST splits + conditional inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 getRange O(lg n); callee defect only (two ParamBST splits + up to two inserts, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
         {
             let (_lt_k1, found_k1, right1) = self.base_set.tree.split(k1);
@@ -857,11 +912,13 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to get_range_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (get_range_iter); does not match old analysis: O(log n) vs O(n h)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
         { self.get_range_iter(k1, k2) }
 
         /// Rank via split + size.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + size
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 rank O(lg n); callee defect only (ParamBST split, deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn rank_iter(&self, k: &T) -> (rank: usize)
         {
             let (left, _found, _right) = self.base_set.tree.split(k);
@@ -880,11 +937,13 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to rank_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (rank_iter → ParamBST split); does not match old analysis: O(log n) vs O(n h)
         fn rank(&self, k: &T) -> (rank: usize)
         { self.rank_iter(k) }
 
         /// Select the i-th element using tree_select.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- augmented BST traversal
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (tree_select: deep-copy expose per level); does not match old analysis: O(log n) vs O(n h)
         fn select(&self, i: usize) -> (selected: Option<T>)
         {
             let sz = self.size();
@@ -898,6 +957,7 @@ broadcast use {
         /// Split by rank: first i elements go left, rest go right.
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- tree_select + BST split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 splitRank O(lg n); callee defect only (tree_select + ParamBST split + insert; the i >= size branch clones, O(n)); does not match old analysis: O(log n) vs O(n h)
         fn split_rank_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
@@ -933,6 +993,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to split_rank_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (split_rank_iter); does not match old analysis: O(log n) vs O(n h)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         { self.split_rank_iter(i) }
@@ -955,6 +1016,7 @@ broadcast use {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- from_vec O(n) + n treap inserts
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — no textbook cost; does not match old analysis: O(n log n) vs O(n^2); from_vec O(n), then from_seq inserts in key order: each insert's split deep-copies the root's left subtree, O(i), and the tree becomes a path (callee defect)
     pub fn from_sorted_elements<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
         requires
             elements@.len() < usize::MAX,

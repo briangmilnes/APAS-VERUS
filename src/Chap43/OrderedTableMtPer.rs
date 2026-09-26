@@ -69,6 +69,7 @@ pub mod OrderedTableMtPer {
 
     /// Construct Mt wrapper from an St table.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn from_st_table<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static>(
         inner: OrderedTableStPer<K, V>,
     ) -> (s: OrderedTableMtPer<K, V>)
@@ -114,6 +115,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StPer.size
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablemtper_wf(),
             ensures count == self@.dom().len();
@@ -121,6 +123,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- constructs empty StPer + RwLock
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<Pair<K, V>>(),
@@ -133,6 +136,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- wraps StPer.singleton + RwLock
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(k: K, v: V) -> (tree: Self)
             requires
                 obeys_feq_clone::<Pair<K, V>>(),
@@ -146,6 +150,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.find (linear scan)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (StPer find → OrdKeyMap find, a tree search with a deep-copy expose per level, not a linear scan); does not match old analysis: Θ(n) vs O(n h)
         fn find(&self, k: &K) -> (found: Option<V>)
             ensures
                 match found {
@@ -156,6 +161,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.insert (linear dup check)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); StPer insert: O(n) tree clone + OrdKeyMap insert O(n h) (callee defect); does not match old analysis: Θ(n) vs O(n h)
         fn insert(&self, k: K, v: V) -> (updated: Self)
             requires self@.dom().len() + 1 < usize::MAX as nat,
             ensures
@@ -164,6 +170,7 @@ pub mod OrderedTableMtPer {
 
         /// Like insert, but additionally ensures the inserted value mapping.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to StPer insert_wf
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 insert O(lg n); StPer insert_wf → insert (O(n) clone + OrdKeyMap insert, callee defect); does not match old analysis: O(n) vs O(n h)
         fn insert_wf(&self, k: K, v: V) -> (updated: Self)
             requires self@.dom().len() + 1 < usize::MAX as nat,
             ensures
@@ -175,6 +182,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.delete (linear scan)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); StPer delete: O(n) tree clone + OrdKeyMap delete O(n h) (callee defect); does not match old analysis: Θ(n) vs O(n h)
         fn delete(&self, k: &K) -> (updated: Self)
             ensures
                 updated@ == self@.remove(k@),
@@ -182,6 +190,7 @@ pub mod OrderedTableMtPer {
 
         /// Like delete, but additionally ensures value preservation for remaining keys.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to StPer delete_wf
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 delete O(lg n); StPer delete_wf → delete (O(n) clone + OrdKeyMap delete, callee defect); does not match old analysis: O(n) vs O(n h)
         fn delete_wf(&self, k: &K) -> (updated: Self)
             ensures
                 updated@ == self@.remove(k@),
@@ -191,12 +200,14 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.domain
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: CS 42.5 Work O(|a|), Span O(lg |a|); the impl does not call StPer domain: StPer collect O(n h), then n sequential key-order inserts into an OrderedSetMtEph (ParamBST, O(i) each, path-shaped); does not match old analysis: Θ(n) vs O(n^2)
         fn domain(&self) -> (domain: OrderedSetMtEph<K>)
             requires self.spec_orderedtablemtper_wf(), obeys_feq_clone::<K>();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.map
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + Σ W(f)), Span O(n^2 + Σ S(f)) — does not match textbook: CS 42.5 Work O(Σ W(f)), Span O(lg n + max S(f)); sequential StPer map (in_order + sorted inserts into a fresh ParamBST, O(i) each); does not match old analysis: Θ(n) vs O(n^2 + Σ W(f))
         fn map<G: Fn(&V) -> V + Send + Sync + 'static>(
             &self, f: G, Ghost(f_spec): Ghost<spec_fn(V::V) -> V::V>,
         ) -> (mapped: Self)
@@ -211,12 +222,14 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StPer.filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + Σ W(f)), Span O(n^2 + Σ S(f)) — does not match textbook: CS 42.5 Work O(Σ W(f)), Span O(lg n + max S(f)); the impl does not call StPer filter: StPer collect O(n h), then a sequential loop of persistent StPer inserts in key order, each an O(i) clone plus O(i) path insert; does not match old analysis: Θ(n) vs O(n^2 + Σ W(f))
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self)
             requires forall|p: &Pair<K, V>| f.requires((p,));
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + first)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StPer first_key → OrdKeyMap first_key, not collect + first); does not match old analysis: Θ(n log n) vs O(n h)
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
@@ -228,6 +241,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + last)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StPer last_key → OrdKeyMap last_key, not collect + last); does not match old analysis: Θ(n log n) vs O(n h)
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
@@ -239,6 +253,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StPer previous_key → OrdKeyMap prev_key, not collect + scan); does not match old analysis: Θ(n log n) vs O(n h)
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
@@ -250,6 +265,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StPer next_key → OrdKeyMap next_key, not collect + scan); does not match old analysis: Θ(n log n) vs O(n h)
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
@@ -261,6 +277,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StPer split_key → OrdKeyMap split, not collect + partition); does not match old analysis: Θ(n log n) vs O(n h)
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>();
@@ -268,6 +285,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- acquires lock, delegates to StPer.join_key (union)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m)^2 h), Span O((n + m)^2 h) — does not match textbook: CS 43.2 join O(lg(n + m)); StPer join_key calls union (OrdKeyMap union_with) instead of a BST join; does not match old analysis: Θ(n + m) vs O((n + m)^2 h)
         fn join_key(&self, other: &Self) -> (joined: Self)
             requires
                 self.spec_orderedtablemtper_wf(),
@@ -279,12 +297,14 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + filter)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StPer get_key_range → OrdKeyMap get_key_range, not collect + filter); does not match old analysis: Θ(n log n) vs O(n h)
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + count)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StPer rank_key → OrdKeyMap rank_key, not collect + count); does not match old analysis: Θ(n log n) vs O(n h)
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
@@ -295,6 +315,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + index)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StPer select_key → OrdKeyMap select_key, not collect + index); does not match old analysis: Θ(n log n) vs O(n h)
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
@@ -306,11 +327,13 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + partition)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); StPer split_rank_key: O(n) clone + OrdKeyMap split_rank_key (in_order walk + split, callee defect); does not match old analysis: Θ(n log n) vs O(n h)
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires self.spec_orderedtablemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- acquires read lock, calls StPer iter, releases lock
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — no textbook cost; does not match old analysis: O(n log n) vs O(n h); StPer iter is a ParamBST in_order (deep-copy expose per node, callee defect)
         fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>)
             requires self.spec_orderedtablemtper_wf()
             ensures
@@ -339,6 +362,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         // Veracity: NEEDED proof block
         fn size(&self) -> (count: usize) {
             proof { use_type_invariant(self); }
@@ -358,12 +382,14 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self) {
             let inner = OrderedTableStPer::empty();
             from_st_table(inner)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(k: K, v: V) -> (tree: Self) {
             let inner = OrderedTableStPer::singleton(k, v);
             from_st_table(inner)
@@ -371,6 +397,7 @@ pub mod OrderedTableMtPer {
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- RwLock wrapper, delegates to StPer find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (OrdKeyMap find, deep-copy expose per level); does not match old analysis: O(lg n) vs O(n h)
         fn find(&self, k: &K) -> (found: Option<V>) {
             proof {
                 use_type_invariant(self);
@@ -387,6 +414,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer insert
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); O(n) clone of the whole tree for persistence + OrdKeyMap insert O(n h) (callee defect); does not match old analysis: O(n) vs O(n h)
         fn insert(&self, k: K, v: V) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
@@ -405,6 +433,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer insert_wf
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 insert O(lg n); O(n) clone of the whole tree for persistence + OrdKeyMap insert O(n h) (callee defect); does not match old analysis: O(n) vs O(n h)
         fn insert_wf(&self, k: K, v: V) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
@@ -421,6 +450,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer delete
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); O(n) clone of the whole tree for persistence + OrdKeyMap delete O(n h) (callee defect); does not match old analysis: O(n) vs O(n h)
         fn delete(&self, k: &K) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
@@ -437,6 +467,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer delete_wf
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 delete O(lg n); O(n) clone of the whole tree for persistence + OrdKeyMap delete O(n h) (callee defect); does not match old analysis: O(n) vs O(n h)
         // Veracity: NEEDED proof block
         fn delete_wf(&self, k: &K) -> (updated: Self) {
             proof {
@@ -456,6 +487,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- collect O(n) + n OrderedSet inserts O(log n) each
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: CS 42.5 Work O(|a|), Span O(lg |a|); collect O(n h), then n sequential key-order inserts into OrderedSetMtEph (ParamBST insert O(i) each, never rebalanced, path-shaped); does not match old analysis: O(n log n) vs O(n^2)
         fn domain(&self) -> (domain: OrderedSetMtEph<K>) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
@@ -494,6 +526,7 @@ pub mod OrderedTableMtPer {
 
         // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer map
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + Σ W(f)), Span O(n^2 + Σ S(f)) — does not match textbook: CS 42.5 Work O(Σ W(f)), Span O(lg n + max S(f)); sequential StPer map rebuilds by sorted inserts into a fresh ParamBST (O(i) each, path-shaped); does not match old analysis: O(n log n) vs O(n^2 + Σ W(f))
         fn map<G: Fn(&V) -> V + Send + Sync + 'static>(
             // Veracity: NEEDED proof block
             &self, f: G, Ghost(f_spec): Ghost<spec_fn(V::V) -> V::V>,
@@ -539,6 +572,7 @@ pub mod OrderedTableMtPer {
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) -- collect O(n) + n StPer inserts each O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + Σ W(f)), Span O(n^2 + Σ S(f)) — does not match textbook: CS 42.5 Work O(Σ W(f)), Span O(lg n + max S(f)); collect O(n h), then sequential persistent StPer inserts in key order (O(i) clone + O(i) path insert each); sequential under the read lock
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self) {
             proof {
                 // Veracity: NEEDED assert
@@ -584,6 +618,7 @@ pub mod OrderedTableMtPer {
 // Veracity: NEEDED proof block (speed hint)
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer first_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap first_key, deep-copy expose per level); does not match old analysis: O(n) vs O(n h)
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         // Veracity: NEEDED proof block
@@ -599,6 +634,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer last_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap last_key, deep-copy expose per level); does not match old analysis: O(n) vs O(n h)
         fn last_key(&self) -> (last: Option<K>)
             // Veracity: NEEDED proof block (speed hint)
             where K: TotalOrder
@@ -614,6 +650,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer previous_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap prev_key, deep-copy expose per level); does not match old analysis: O(n) vs O(n h)
         // Veracity: NEEDED proof block
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
@@ -630,6 +667,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer next_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap next_key, deep-copy expose per level); does not match old analysis: O(n) vs O(n h)
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
@@ -646,6 +684,7 @@ pub mod OrderedTableMtPer {
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer split_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap split, deep-copy expose per level); does not match old analysis: O(n log n) vs O(n h)
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self)) {
             // Veracity: NEEDED assert (speed hint)
             proof { assert(obeys_view_eq_trigger::<K>()); }
@@ -658,6 +697,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StPer join_key (union)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m)^2 h), Span O((n + m)^2 h) — does not match textbook: CS 43.2 join O(lg(n + m)); calls union instead of a BST join (OrdKeyMap union_with); does not match old analysis: O(n * m) vs O((n + m)^2 h)
         fn join_key(&self, other: &Self) -> (joined: Self) {
             proof {
                 // Veracity: NEEDED assert (speed hint)
@@ -685,6 +725,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer get_key_range
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap get_key_range, two splits with deep-copy expose); does not match old analysis: O(n log n) vs O(n h)
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self) {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -697,6 +738,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer rank_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap rank_key, deep-copy expose per level); does not match old analysis: O(n) vs O(n h)
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
@@ -715,6 +757,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer select_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap select_key, deep-copy expose per level); does not match old analysis: O(n) vs O(n h)
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
@@ -731,6 +774,7 @@ pub mod OrderedTableMtPer {
         }
 // Veracity: UNNEEDED proof block 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer split_rank_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); O(n) clone of the whole tree + OrdKeyMap split_rank_key O(n h) (callee defect); does not match old analysis: O(n log n) vs O(n h)
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self)) {
             // Veracity: NEEDED proof block
             let read_handle = self.locked_table.acquire_read();
@@ -742,6 +786,7 @@ pub mod OrderedTableMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- acquires read lock, snapshots via StPer iter, releases lock
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — no textbook cost; does not match old analysis: O(n log n) vs O(n h); StPer iter is a ParamBST in_order (deep-copy expose per node, callee defect)
         fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();

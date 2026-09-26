@@ -73,6 +73,7 @@ pub mod OrderedSetMtEph {
 
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn from_st<T: MtKey + TotalOrder + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
         requires inner.spec_orderedsetsteph_wf()
         ensures s@ == inner@, s.spec_orderedsetmteph_wf()
@@ -114,12 +115,14 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- acquires read lock, delegates to StEph.size
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             requires self.spec_orderedsetmteph_wf(),
             ensures count == self@.len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- constructs empty StEph + RwLock
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -128,6 +131,7 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- wraps StEph.singleton + RwLock
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(x: T) -> (tree: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -136,23 +140,27 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.find (BST search)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph find on ParamBST: deep-copy expose per level, no rebalancing); does not match old analysis: Θ(log n) vs O(n h)
         fn find(&self, x: &T) -> (found: bool)
             requires self.spec_orderedsetmteph_wf(),
             ensures found == self@.contains(x@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.insert (BST insert)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph insert on ParamBST: deep-copy expose per level, no rebalancing); does not match old analysis: Θ(log n) vs O(n h)
         fn insert(&mut self, x: T)
             requires old(self)@.len() + 1 < usize::MAX as nat,
             ensures self@ == old(self)@.insert(x@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- acquires lock, delegates to StEph.delete (BST delete)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph delete on ParamBST: deep-copy expose per level, no rebalancing); does not match old analysis: Θ(log n) vs O(n h)
         fn delete(&mut self, x: &T)
             ensures self@ == old(self)@.remove(x@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph.filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2 + Σ W(f)), Span O(n h^2 + Σ S(f)) — does not match textbook: CS 41.4 Work O(Σ W(f)), Span O(lg n + max S(f)); sequential StEph filter under the lock (ParamBST filter, deep-copy exposes); does not match old analysis: Θ(n) vs O(n h^2 + Σ W(f))
         fn filter<F: Pred<T>>(
             &mut self,
             f: F,
@@ -166,12 +174,14 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.intersection (sequential)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); sequential StEph intersection under the lock, plus the ParamBST callee defect; does not match old analysis: Θ(m log(n/m + 1)) vs O(n h^2)
         fn intersection(&mut self, other: &Self)
             requires old(self).spec_orderedsetmteph_wf(), other.spec_orderedsetmteph_wf(),
             ensures self@ == old(self)@.intersect(other@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.union (sequential)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); sequential StEph union under the lock, plus the ParamBST callee defect; does not match old analysis: Θ(m log(n/m + 1)) vs O(n h^2)
         fn union(&mut self, other: &Self)
             requires
                 old(self).spec_orderedsetmteph_wf(),
@@ -181,12 +191,14 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.difference (sequential)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); sequential StEph difference under the lock, plus the ParamBST callee defect; does not match old analysis: Θ(m log(n/m + 1)) vs O(n h^2)
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedsetmteph_wf(), other.spec_orderedsetmteph_wf(),
             ensures self@ == old(self)@.difference(other@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph.to_seq
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 41.4 Work O(|a|), Span O(lg |a|); StEph to_seq O(n h) (callee defect) then a sequential copy loop of n O(lg n) nth calls; does not match old analysis: Θ(n) vs O(n h)
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -195,6 +207,7 @@ pub mod OrderedSetMtEph {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- delegates to StEph.from_seq (n inserts)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 h), Span O(n^2 h) — does not match textbook: Ex 41.3 Work O(n lg n), Span O(lg^2 n); a sequential loop of n StEph inserts, insert i costs O(i h) (callee defect); does not match old analysis: Θ(n log n) vs O(n^2 h)
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self)
             requires
                 seq.spec_len() < usize::MAX as int,
@@ -204,6 +217,7 @@ pub mod OrderedSetMtEph {
         // Ordering operations (ADT 43.1)
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph first → ParamBST min_key, deep-copy expose per spine node); does not match old analysis: O(lg n) vs O(n h)
         fn first(&self) -> (first: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -213,6 +227,7 @@ pub mod OrderedSetMtEph {
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph last → tree_max_key, deep-copy expose per spine node); does not match old analysis: O(lg n) vs O(n h)
         fn last(&self) -> (last: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -222,6 +237,7 @@ pub mod OrderedSetMtEph {
                     t.cmp_spec(&v) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph previous → ParamBST split + tree_max_key); does not match old analysis: O(lg n) vs O(n h)
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -232,6 +248,7 @@ pub mod OrderedSetMtEph {
                     t.cmp_spec(&v) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph next → ParamBST split + min_key); does not match old analysis: O(lg n) vs O(n h)
         fn next(&self, k: &T) -> (successor: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -242,6 +259,7 @@ pub mod OrderedSetMtEph {
                     v.cmp_spec(&t) == Less || v@ == t@;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph split → ParamBST split, deep-copy expose per level); does not match old analysis: O(lg n) vs O(n h)
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
@@ -249,6 +267,7 @@ pub mod OrderedSetMtEph {
                 old(self)@.len() + 1 < usize::MAX as nat,;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: CS 43.2 O(lg n), n = |self| + |other|; StEph join calls union instead of a BST join, plus the ParamBST callee defect; does not match old analysis: O(lg n) vs O(n h^2)
         fn join(&mut self, other: Self)
             requires
                 old(self).spec_orderedsetmteph_wf(),
@@ -256,6 +275,7 @@ pub mod OrderedSetMtEph {
                 old(self)@.len() + other@.len() < usize::MAX as nat,;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph get_range: two ParamBST splits + up to two inserts); does not match old analysis: O(lg n) vs O(n h)
         fn get_range(&self, k1: &T, k2: &T) -> (range: Result<Self, ()>)
             requires
                 self.spec_orderedsetmteph_wf(),
@@ -263,12 +283,14 @@ pub mod OrderedSetMtEph {
                 range matches Ok(r) ==> r.spec_orderedsetmteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph rank → ParamBST split); does not match old analysis: O(lg n) vs O(n h)
         fn rank(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetmteph_wf(),
             ensures
                 rank <= self@.len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph select → tree_select, deep-copy expose per level); does not match old analysis: O(lg n) vs O(n h)
         fn select(&self, i: usize) -> (selected: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -276,12 +298,14 @@ pub mod OrderedSetMtEph {
                 selected matches Some(v) ==> self@.contains(v@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph split_rank: tree_select + ParamBST split + insert); does not match old analysis: O(lg n) vs O(n h)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires
                 old(self).spec_orderedsetmteph_wf(),
                 old(self)@.len() + 1 < usize::MAX as nat,;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — no textbook cost; does not match old analysis: O(n) vs O(n h); calls to_seq, whose StEph in-order collect pays a deep-copy expose per node (callee defect)
         fn iter(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_orderedsetmteph_wf()
             ensures
@@ -310,6 +334,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize) {
             // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block (speed hint)
@@ -325,6 +350,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self) {
             let inner = OrderedSetStEph::empty();
             let ghost view = inner@;
@@ -335,6 +361,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(x: T) -> (tree: Self) {
             let inner = OrderedSetStEph::singleton(x);
             let ghost view = inner@;
@@ -345,6 +372,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST search
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph find on ParamBST: deep-copy expose per level, no rebalancing); does not match old analysis: O(log n) vs O(n h)
         // Veracity: NEEDED proof block
         fn find(&self, x: &T) -> (found: bool) {
             // Veracity: NEEDED proof block
@@ -361,6 +389,7 @@ pub mod OrderedSetMtEph {
 // Veracity: NEEDED proof block (speed hint)
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, treap insert
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph insert → ParamBST split + join_m, not a treap); does not match old analysis: O(log n) vs O(n h)
         fn insert(&mut self, x: T) {
             // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
@@ -377,6 +406,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, treap delete
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph delete → ParamBST split + join_pair, not a treap); does not match old analysis: O(log n) vs O(n h)
         fn delete(&mut self, x: &T) {
             // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
@@ -389,6 +419,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2 + Σ W(f)), Span O(n h^2 + Σ S(f)) — does not match textbook: CS 41.4 Work O(Σ W(f)), Span O(lg n + max S(f)); sequential StEph filter under the write lock (ParamBST filter, deep-copy exposes); does not match old analysis: O(n log n) vs O(n h^2 + Σ W(f))
         fn filter<F: Pred<T>>(
             &mut self,
             f: F,
@@ -402,6 +433,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST intersection
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); sequential StEph intersection under the locks, plus the ParamBST callee defect; does not match old analysis: O(n log n) vs O(n h^2)
         fn intersection(&mut self, other: &Self) {
             // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
@@ -417,6 +449,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST union
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); sequential StEph union under the locks, plus the ParamBST callee defect; does not match old analysis: O(n log n) vs O(n h^2)
         fn union(&mut self, other: &Self) {
             // Veracity: NEEDED proof block
 // Veracity: UNNEEDED proof block             proof { use_type_invariant(&*self); use_type_invariant(other); }
@@ -434,6 +467,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST difference
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |self| + |other|; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); sequential StEph difference under the locks, plus the ParamBST callee defect; does not match old analysis: O(n log n) vs O(n h^2)
         fn difference(&mut self, other: &Self) {
             // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
@@ -489,6 +523,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n treap inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 h), Span O(n^2 h) — does not match textbook: Ex 41.3 Work O(n lg n), Span O(lg^2 n); a sequential loop of n StEph inserts (O(1) nth), insert i costs O(i h) (callee defect; not a treap); does not match old analysis: O(n log n) vs O(n^2 h)
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self) {
             let len = seq.length();
             let mut inner = OrderedSetStEph::empty();
@@ -512,6 +547,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST min_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph first → ParamBST min_key); does not match old analysis: O(log n) vs O(n h)
         fn first(&self) -> (first: Option<T>)
 
         {
@@ -527,6 +563,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST max_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph last → tree_max_key); does not match old analysis: O(log n) vs O(n h)
         fn last(&self) -> (last: Option<T>)
 
         {
@@ -542,6 +579,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split + max_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph previous → ParamBST split + tree_max_key); does not match old analysis: O(log n) vs O(n h)
         // Veracity: NEEDED proof block
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
 
@@ -571,6 +609,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph split → ParamBST split); does not match old analysis: O(log n) vs O(n h)
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
@@ -588,6 +627,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST union
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: CS 43.2 O(lg n), n = |self| + |other|; StEph join calls union instead of a BST join, plus the ParamBST callee defect; does not match old analysis: O(n log n) vs O(n h^2)
         fn join(&mut self, other: Self) {
             // Use acquire_write on other to get inv-guaranteed wf (no clone needed).
             let (other_inner, other_write) = other.locked_set.acquire_write();
@@ -605,6 +645,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST splits
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph get_range: two ParamBST splits + up to two inserts); does not match old analysis: O(log n) vs O(n h)
         // Veracity: NEEDED proof block
         fn get_range(&self, k1: &T, k2: &T) -> (range: Result<Self, ()>) {
             proof { use_type_invariant(self); }
@@ -623,6 +664,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split + size
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph rank → ParamBST split); does not match old analysis: O(log n) vs O(n h)
         fn rank(&self, k: &T) -> (rank: usize)
 
         {
@@ -638,6 +680,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, augmented BST
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph select → tree_select); does not match old analysis: O(log n) vs O(n h)
         fn select(&self, i: usize) -> (selected: Option<T>)
 
         {
@@ -652,6 +695,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, select + BST split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (StEph split_rank: tree_select + ParamBST split + insert); does not match old analysis: O(log n) vs O(n h)
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
@@ -668,6 +712,7 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — no textbook cost; does not match old analysis: O(n) vs O(n h); calls to_seq (StEph in-order collect with a deep-copy expose per node, callee defect)
         fn iter(&self) -> std::vec::IntoIter<T> {
             let seq = self.to_seq();
             seq.seq.into_iter()

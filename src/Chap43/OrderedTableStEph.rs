@@ -91,12 +91,14 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- agrees with APAS
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablesteph_wf(),
             ensures count == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- agrees with APAS
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             requires
                 obeys_feq_fulls::<K, V>(),
@@ -112,6 +114,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- agrees with APAS
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(k: K, v: V) -> (tree: Self)
             requires
                 obeys_feq_clone::<Pair<K, V>>(),
@@ -124,6 +127,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST descent
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (OrdKeyMap find: deep-copy ParamBST expose per level, no rebalancing); does not match old analysis: Θ(log n) vs O(n h)
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -134,6 +138,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- delegates to find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (find → OrdKeyMap find); does not match old analysis: Θ(log n) vs O(n h)
         fn lookup(&self, k: &K) -> (value: Option<V>)
             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -144,12 +149,14 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- agrees with APAS
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_orderedtablesteph_wf(),
             ensures is_empty == self@.dom().is_empty();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST insert
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (a find then OrdKeyMap insert, each a deep-copy expose per level on a never-rebalanced tree); does not match old analysis: Θ(log n) vs O(n h)
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -167,6 +174,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST delete
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (a find then OrdKeyMap delete, each a deep-copy expose per level); does not match old analysis: Θ(log n) vs O(n h)
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -176,12 +184,14 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- collects keys from in_order
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: CS 42.5 Work O(|a|), Span O(lg |a|); OrdKeyMap domain inserts each key into an unsorted ArraySetStEph (O(i) scan each), after an O(n h) in_order; does not match old analysis: Θ(n) vs O(n^2)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires self.spec_orderedtablesteph_wf(), obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- inserts keys one by one
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 h + Σ W(f)), Span O(n^2 h + Σ S(f)) — does not match textbook: APAS line Work O(n log n), Span O(n) (CS 42.5 has no tabulate row); n = |keys|, OrdKeyMap tabulate does n sequential inserts into a never-rebalanced tree, O(i h) each; does not match old analysis: Θ(n log n) vs O(n^2 h + Σ W(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires
                 keys.spec_arraysetsteph_wf(),
@@ -205,6 +215,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects, maps, rebuilds
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + Σ W(f)), Span O(n^2 + Σ S(f)) — does not match textbook: CS 42.5 Work O(Σ W(f)), Span O(lg n + max S(f)); OrdKeyMap map_values re-inserts in key order into a fresh never-rebalanced tree, O(i) each, leaving a path of height n; does not match old analysis: Θ(n log n) vs O(n^2 + Σ W(f))
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
             requires
                 self.spec_orderedtablesteph_wf(),
@@ -214,6 +225,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects, filters, rebuilds
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2 + Σ W(f)), Span O(n h^2 + Σ S(f)) — does not match textbook: CS 42.5 Work O(Σ W(f)), Span O(lg n + max S(f)); callee defect (OrdKeyMap filter → sequential ParamBST filter, deep-copy expose per node, join_pair per rejected entry); does not match old analysis: Θ(n log n) vs O(n h^2 + Σ W(f))
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -233,11 +245,13 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- iterates all entries
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h + Σ W(f)), Span O(n h + Σ S(f)) — does not match textbook: APAS line O(n); ParamBST in_order pays a deep-copy expose per node (callee defect), then a sequential fold; does not match old analysis: Θ(n) vs O(n h + Σ W(f))
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
             requires self.spec_orderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v));
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- iterative merge
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n h + Σ W(f)), Span O(n m h + n h + Σ S(f)) — does not match textbook: n = |self|, m = |other|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); OrdKeyMap intersect_with finds each of n keys in other (O(m h) each) and re-inserts sequentially; does not match old analysis: Θ(n + m) vs O(n m h)
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -256,6 +270,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- iterative merge
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m)^2 h + Σ W(f)), Span O((n + m)^2 h + Σ S(f)) — does not match textbook: n = |self|, m = |other|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); OrdKeyMap union_with does n + m cross finds and n + m sequential inserts into a never-rebalanced result tree; does not match old analysis: Θ(n + m) vs O((n + m)^2 h)
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -279,6 +294,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- iterative difference
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n^2), Span O(n m h + n^2) — does not match textbook: n = |self|, m = |other|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); OrdKeyMap difference finds each key in other (O(m h)) and re-inserts in key order, O(i) each; does not match old analysis: Θ(n + m) vs O(n m h + n^2)
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedtablesteph_wf(), other.spec_orderedtablesteph_wf(),obeys_view_eq::<K>()
             ensures
@@ -288,6 +304,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n * m), Span Θ(n * m) -- iterative restrict
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + n m), Span O(n^2 + n m) — does not match textbook: n = |self|, m = |keys|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); in_order O(n h), an O(m) ArraySetStEph find per entry, and sorted inserts into a fresh never-rebalanced ParamBST, O(i) each; does not match old analysis: Θ(n * m) vs O(n^2 + n m)
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires old(self).spec_orderedtablesteph_wf()
             ensures
@@ -297,6 +314,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n * m), Span Θ(n * m) -- iterative subtract
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + n m), Span O(n^2 + n m) — does not match textbook: n = |self|, m = |keys|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); in_order O(n h), an O(m) ArraySetStEph find per entry, and sorted inserts into a fresh never-rebalanced ParamBST, O(i) each; does not match old analysis: Θ(n * m) vs O(n^2 + n m)
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires old(self).spec_orderedtablesteph_wf()
             ensures
@@ -306,12 +324,14 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- collects from in_order
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: APAS line O(n log n); OrdKeyMap collect (in_order with a deep-copy expose per node, callee defect) then O(n) from_vec; does not match old analysis: Θ(n) vs O(n h)
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             requires self.spec_orderedtablesteph_wf()
             ensures collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST min
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap first_key → ParamBST min_key); does not match old analysis: Θ(log n) vs O(n h)
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()
@@ -322,6 +342,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST max
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap last_key → ParamBST max_key); does not match old analysis: Θ(log n) vs O(n h)
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
@@ -331,6 +352,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST predecessor
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap prev_key: deep-copy expose per level + max_key); does not match old analysis: Θ(log n) vs O(n h)
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
@@ -340,6 +362,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST successor
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap next_key: deep-copy expose per level + min_key); does not match old analysis: Θ(log n) vs O(n h)
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
@@ -349,6 +372,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap split: deep-copy expose per level); does not match old analysis: Θ(log n) vs O(n h)
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             requires
@@ -368,6 +392,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to union
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m)^2 h), Span O((n + m)^2 h) — does not match textbook: CS 43.2 join O(lg(n + m)); join_key calls union (OrdKeyMap union_with) instead of a BST join; does not match old analysis: Θ(n + m) vs O((n + m)^2 h)
         fn join_key(&mut self, other: Self)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -381,6 +406,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m) where m = output size, Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST range
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap get_key_range: two splits, two finds, up to two inserts); does not match old analysis: Θ(log n) vs O(n h)
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires
                 self.spec_orderedtablesteph_wf(),
@@ -391,6 +417,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST rank
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap rank_key: deep-copy expose per level); does not match old analysis: Θ(log n) vs O(n h)
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires
@@ -402,6 +429,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST select
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap select_key: deep-copy expose per level); does not match old analysis: Θ(log n) vs O(n h)
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             requires
@@ -414,6 +442,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) -- recursive BST split by rank
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); OrdKeyMap split_rank_key walks in_order (O(n h)) to find the i-th key, then split + find + insert (callee defect); does not match old analysis: Θ(log n) vs O(n h)
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires
@@ -427,6 +456,7 @@ broadcast use {
                 split.1.spec_orderedtablesteph_wf();
         /// Iterative alternative to `find`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 find O(lg n); not iterative, calls find (OrdKeyMap find, callee defect); does not match old analysis: O(lg n) vs O(n h)
         fn find_iter(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -436,6 +466,7 @@ broadcast use {
                 };
         /// Iterative alternative to `insert`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 insert O(lg n); not iterative, calls insert (find + OrdKeyMap insert, callee defect); does not match old analysis: O(n) vs O(n h)
         fn insert_iter<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -452,6 +483,7 @@ broadcast use {
                 self.spec_orderedtablesteph_wf();
         /// Iterative alternative to `delete`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 delete O(lg n); not iterative, calls delete (find + OrdKeyMap delete, callee defect); does not match old analysis: O(n) vs O(n h)
         fn delete_iter(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -460,6 +492,7 @@ broadcast use {
             ensures self@ == old(self)@.remove(k@), self.spec_orderedtablesteph_wf();
         /// Iterative alternative to `first_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST min_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 first O(lg n); callee defect only (OrdKeyMap first_key → ParamBST min_key); does not match old analysis: O(lg n) vs O(n h)
         fn first_key_iter(&self) -> (first: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
@@ -468,6 +501,7 @@ broadcast use {
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// Iterative alternative to `last_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST max_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 last O(lg n); callee defect only (OrdKeyMap last_key → ParamBST max_key); does not match old analysis: O(lg n) vs O(n h)
         fn last_key_iter(&self) -> (last: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
@@ -476,6 +510,7 @@ broadcast use {
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// Iterative alternative to `previous_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST predecessor
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 previous O(lg n); callee defect only (OrdKeyMap prev_key); does not match old analysis: O(lg n) vs O(n h)
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
@@ -484,6 +519,7 @@ broadcast use {
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// Iterative alternative to `next_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST successor
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 next O(lg n); callee defect only (OrdKeyMap next_key); does not match old analysis: O(lg n) vs O(n h)
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
@@ -492,6 +528,7 @@ broadcast use {
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// Iterative alternative to `split_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST key-only split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 split O(lg n); callee defect only (OrdKeyMap split); does not match old analysis: O(lg n) vs O(n h)
         fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             requires
@@ -510,6 +547,7 @@ broadcast use {
                 split.2.spec_orderedtablesteph_wf();
         /// Iterative alternative to `get_key_range`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- two BST key-only splits
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 getRange O(lg n); callee defect only (OrdKeyMap get_key_range); does not match old analysis: O(lg n) vs O(n h)
         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
             requires
                 self.spec_orderedtablesteph_wf(),
@@ -519,6 +557,7 @@ broadcast use {
                 range.spec_orderedtablesteph_wf();
         /// Iterative alternative to `rank_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST rank
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 rank O(lg n); callee defect only (OrdKeyMap rank_key); does not match old analysis: O(lg n) vs O(n h)
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires
@@ -529,6 +568,7 @@ broadcast use {
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// Iterative alternative to `split_rank_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST size-based select + split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 splitRank O(lg n); OrdKeyMap split_rank_key walks in_order to the i-th key, then split + find + insert (callee defect); does not match old analysis: O(lg n) vs O(n h)
         fn split_rank_key_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires
@@ -559,6 +599,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len()
         {
@@ -566,6 +607,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty()
         {
@@ -573,6 +615,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree.spec_orderedtablesteph_wf()
         {
@@ -600,17 +643,20 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (OrdKeyMap find: deep-copy ParamBST expose per level, no rebalancing); does not match old analysis: O(lg n) vs O(n h)
         fn find(&self, k: &K) -> (found: Option<V>)
         {
             self.tree.find(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (find → OrdKeyMap find); does not match old analysis: O(lg n) vs O(n h)
         fn lookup(&self, k: &K) -> (value: Option<V>) {
             self.find(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty()
         {
@@ -618,6 +664,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 find O(lg n); not iterative, calls find (callee defect); does not match old analysis: O(lg n) vs O(n h)
         fn find_iter(&self, k: &K) -> (found: Option<V>)
         {
             // Delegate to recursive find for now.
@@ -625,6 +672,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 insert O(lg n); not iterative, calls insert (callee defect); does not match old analysis: O(n) vs O(n h)
         fn insert_iter<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
         {
             // Delegate to recursive insert for now.
@@ -632,6 +680,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::find + OrdKeyMap::insert
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (OrdKeyMap find + insert, deep-copy expose per level, no rebalancing); does not match old analysis: O(lg n) vs O(n h)
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
         {
             let existing = self.find(&k);
@@ -648,12 +697,14 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 delete O(lg n); not iterative, calls delete (callee defect); does not match old analysis: O(n) vs O(n h)
         fn delete_iter(&mut self, k: &K) -> (updated: Option<V>)
         {
             self.delete(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::delete
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 42.5 O(lg n); callee defect only (find + OrdKeyMap delete, deep-copy expose per level); does not match old analysis: O(lg n) vs O(n h)
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
         {
             let existing = self.find(k);
@@ -662,24 +713,28 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to OrdKeyMap::domain
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: CS 42.5 Work O(|a|), Span O(lg |a|); OrdKeyMap domain inserts each key into an unsorted ArraySetStEph (O(i) scan each); does not match old analysis: O(n) vs O(n^2)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
             self.tree.domain()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to OrdKeyMap::tabulate
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 h + Σ W(f)), Span O(n^2 h + Σ S(f)) — does not match textbook: APAS line Work O(n log n), Span O(n) (CS 42.5 has no tabulate row); n = |keys|, n sequential inserts into a never-rebalanced tree, O(i h) each; does not match old analysis: O(n log n) vs O(n^2 h + Σ W(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             OrderedTableStEph { tree: OrdKeyMap::tabulate(keys, &f) }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to OrdKeyMap::map_values
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + Σ W(f)), Span O(n^2 + Σ S(f)) — does not match textbook: CS 42.5 Work O(Σ W(f)), Span O(lg n + max S(f)); OrdKeyMap map_values re-inserts in key order into a fresh never-rebalanced tree, O(i) each, leaving a path; does not match old analysis: O(n log n) vs O(n^2 + Σ W(f))
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
         {
             OrderedTableStEph { tree: self.tree.map_values(f) }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to OrdKeyMap::filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2 + Σ W(f)), Span O(n h^2 + Σ S(f)) — does not match textbook: CS 42.5 Work O(Σ W(f)), Span O(lg n + max S(f)); callee defect (sequential ParamBST filter, deep-copy expose per node, join_pair per rejected entry); does not match old analysis: O(n log n) vs O(n h^2 + Σ W(f))
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -690,6 +745,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + fold
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h + Σ W(f)), Span O(n h + Σ S(f)) — does not match textbook: APAS line O(n); ParamBST in_order pays a deep-copy expose per node (callee defect), then a sequential fold; does not match old analysis: O(n) vs O(n h + Σ W(f))
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
         {
             let sorted = self.tree.inner.in_order();
@@ -712,6 +768,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::intersect_with
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n h + Σ W(f)), Span O(n m h + n h + Σ S(f)) — does not match textbook: n = |self|, m = |other|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); OrdKeyMap intersect_with: n finds in other at O(m h) each, then sequential re-inserts; does not match old analysis: O(n * m) vs O(n m h)
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
         // Veracity: NEEDED proof block
         {
@@ -721,6 +778,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::union_with
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m)^2 h + Σ W(f)), Span O((n + m)^2 h + Σ S(f)) — does not match textbook: n = |self|, m = |other|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); OrdKeyMap union_with: n + m cross finds and n + m sequential inserts into a never-rebalanced tree; does not match old analysis: O(n * m) vs O((n + m)^2 h)
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
         {
             // Veracity: NEEDED proof block
@@ -745,6 +803,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::difference
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n^2), Span O(n m h + n^2) — does not match textbook: n = |self|, m = |other|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); OrdKeyMap difference: n finds in other at O(m h) each, then sorted re-inserts O(i) each; does not match old analysis: O(n * m) vs O(n m h + n^2)
         fn difference(&mut self, other: &Self)
         {
             self.tree = self.tree.difference(&other.tree);
@@ -752,6 +811,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- filter by key set membership
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + n m), Span O(n^2 + n m) — does not match textbook: n = |self|, m = |keys|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); in_order O(n h), an O(m) ArraySetStEph find per entry, then sorted inserts into a fresh never-rebalanced ParamBST, O(i) each; does not match old analysis: O(n * m) vs O(n^2 + n m)
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
             let ghost old_tree = self.tree.inner@;
@@ -886,6 +946,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- filter by key set exclusion
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + n m), Span O(n^2 + n m) — does not match textbook: n = |self|, m = |keys|; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); in_order O(n h), an O(m) ArraySetStEph find per entry, then sorted inserts into a fresh never-rebalanced ParamBST, O(i) each; does not match old analysis: O(n * m) vs O(n^2 + n m)
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
             let ghost old_tree = self.tree.inner@;
@@ -1018,6 +1079,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to OrdKeyMap::collect + from_vec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: APAS line O(n log n); OrdKeyMap collect (in_order with a deep-copy expose per node, callee defect) then O(n) from_vec; does not match old analysis: O(n) vs O(n h)
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures
                 collected.spec_avltreeseqstper_wf(),
@@ -1032,6 +1094,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to first_key_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (first_key_iter → OrdKeyMap first_key); does not match old analysis: O(n) vs O(n h)
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
@@ -1039,6 +1102,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::first_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 first O(lg n); callee defect only (OrdKeyMap first_key → ParamBST min_key); does not match old analysis: O(lg n) vs O(n h)
         fn first_key_iter(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
@@ -1046,6 +1110,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to last_key_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (last_key_iter → OrdKeyMap last_key); does not match old analysis: O(n) vs O(n h)
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
@@ -1053,6 +1118,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::last_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 last O(lg n); callee defect only (OrdKeyMap last_key → ParamBST max_key); does not match old analysis: O(lg n) vs O(n h)
         fn last_key_iter(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
@@ -1060,6 +1126,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to previous_key_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (previous_key_iter → OrdKeyMap prev_key); does not match old analysis: O(lg n) vs O(n h)
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
@@ -1067,6 +1134,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::prev_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 previous O(lg n); callee defect only (OrdKeyMap prev_key: deep-copy expose per level + max_key); does not match old analysis: O(lg n) vs O(n h)
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -1078,6 +1146,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to next_key_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (next_key_iter → OrdKeyMap next_key); does not match old analysis: O(lg n) vs O(n h)
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
@@ -1085,6 +1154,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::next_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 next O(lg n); callee defect only (OrdKeyMap next_key: deep-copy expose per level + min_key); does not match old analysis: O(lg n) vs O(n h)
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
 // Veracity: UNNEEDED proof block             where K: TotalOrder
             ensures
@@ -1096,6 +1166,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to split_key_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (split_key_iter → OrdKeyMap split); does not match old analysis: O(lg n) vs O(n h)
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
@@ -1103,6 +1174,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST key-only split via expose + join_mid
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 split O(lg n); callee defect only (OrdKeyMap split: deep-copy expose per level); does not match old analysis: O(lg n) vs O(n h)
         fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
@@ -1114,18 +1186,21 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to union
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m)^2 h), Span O((n + m)^2 h) — does not match textbook: CS 43.2 join O(lg(n + m)); calls union (OrdKeyMap union_with) instead of a BST join; does not match old analysis: O(n * m) vs O((n + m)^2 h)
         fn join_key(&mut self, other: Self)
         {
             self.union(&other, |v1, _v2| v1.clone());
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to get_key_range_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (get_key_range_iter → OrdKeyMap get_key_range); does not match old analysis: O(lg n) vs O(n h)
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
         {
             self.get_key_range_iter(k1, k2)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- two BST key-only splits
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 getRange O(lg n); callee defect only (OrdKeyMap get_key_range: two splits, two finds, up to two inserts); does not match old analysis: O(lg n) vs O(n h)
         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
         {
             let range_map = self.tree.get_key_range(k1, k2);
@@ -1133,6 +1208,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to rank_key_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (rank_key_iter → OrdKeyMap rank_key); does not match old analysis: O(lg n) vs O(n h)
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
@@ -1140,6 +1216,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::rank_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 rank O(lg n); callee defect only (OrdKeyMap rank_key: deep-copy expose per level); does not match old analysis: O(lg n) vs O(n h)
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
@@ -1147,6 +1224,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::select_key
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); callee defect only (OrdKeyMap select_key: deep-copy expose per level); does not match old analysis: O(lg n) vs O(n h)
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
@@ -1154,6 +1232,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to split_rank_key_iter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 O(lg n); split_rank_key_iter → OrdKeyMap split_rank_key (in_order walk to the i-th key + split, callee defect); does not match old analysis: O(lg n) vs O(n h)
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
@@ -1161,6 +1240,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST size-based select + key-only split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h), Span O(n h) — does not match textbook: CS 43.2 splitRank O(lg n); OrdKeyMap split_rank_key walks in_order (O(n h)) to the i-th key rather than a size-guided select, then split + find + insert (callee defect); does not match old analysis: O(lg n) vs O(n h)
         fn split_rank_key_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
@@ -1189,6 +1269,7 @@ broadcast use {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts from sorted entries
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — no textbook cost; does not match old analysis: O(n log n) vs O(n^2); n sorted ParamBST inserts, each split exposing (copying) the root's left subtree, O(i), building a path (callee defect), plus n O(lg n) nth calls
     #[verifier::loop_isolation(false)]
     // Veracity: NEEDED proof block
     pub fn from_sorted_entries<K: StT + Ord + TotalOrder, V: StT + Ord>(
