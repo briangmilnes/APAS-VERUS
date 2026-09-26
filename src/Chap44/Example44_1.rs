@@ -18,6 +18,7 @@ pub mod Example44_1 {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) — builds 5-element sequence via macro
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(D^2), Span O(D^2) — no textbook cost; D = 5 fixed documents; the macro does D sequential ArraySeqStPer appends, each copying the prefix; does not match old analysis: Work Θ(n), Span Θ(n) vs new; append is not O(1)
     pub fn create_tweet_collection() -> DocumentCollection {
         DocumentCollectionLit![
             "jack" => "chess is fun",
@@ -30,6 +31,7 @@ pub mod Example44_1 {
 
     /// Creates the document index for the tweet collection.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — delegates to make_index
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(D^2 + N·(N + D·h^2)), Span same — no textbook cost; N = total tokens, D = documents, h = document-set height; dominated by make_index; does not match old analysis: Work Θ(n²), Span Θ(n²) vs new; make_index is O(N·(N + D·h^2))
     pub fn create_tweet_index() -> DocumentIndex {
         let tweets = create_tweet_collection();
         DocumentIndex::make_index(&tweets)
@@ -38,6 +40,7 @@ pub mod Example44_1 {
     /// Example 44.2: Staged computation pattern.
     /// fw : word -> docs = find (makeIndex T)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — builds index then returns closure
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(D^2 + N·(N + D·h^2)), Span same — no textbook cost; dominated by create_tweet_index; does not match old analysis: Work Θ(n²), Span Θ(n²) vs new; make_index is O(N·(N + D·h^2))
     pub fn create_tweet_finder() -> impl Fn(&Word) -> DocumentSet {
         let index = create_tweet_index();
         move |word: &Word| index.find(word)
@@ -56,6 +59,7 @@ pub mod Example44_1 {
 
     impl TweetQueryExamples {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — builds index via create_tweet_index
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(D^2 + N·(N + D·h^2)), Span same — no textbook cost; create_tweet_index plus a deep index clone O(w + M); does not match old analysis: Work Θ(n²), Span Θ(n²) vs new; make_index is O(N·(N + D·h^2))
         pub fn new() -> Self {
             let index = create_tweet_index();
             let index_clone = index.clone();
@@ -66,24 +70,29 @@ pub mod Example44_1 {
 
         /// Example query: searching for 'fun' should return {"jack", "mary", "peter"}.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) — single find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + d), Span O(w + d) — no textbook cost; one DocumentIndex find (linear table scan plus set clone); does not match old analysis: Work Θ(log n), Span Θ(log n) vs new; the table is an unsorted array
         pub fn search_fun(&self) -> DocumentSet { (self.fw)(&"fun".to_string()) }
 
         /// Example query: searching for 'club' should return {"mary"}.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) — single find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + d), Span O(w + d) — no textbook cost; one DocumentIndex find (linear table scan plus set clone); does not match old analysis: Work Θ(log n), Span Θ(log n) vs new; the table is an unsorted array
         pub fn search_club(&self) -> DocumentSet { (self.fw)(&"club".to_string()) }
 
         /// Example query: searching for 'food' should return {"nick", "peter"}.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) — single find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + d), Span O(w + d) — no textbook cost; one DocumentIndex find (linear table scan plus set clone); does not match old analysis: Work Θ(log n), Span Θ(log n) vs new; the table is an unsorted array
         pub fn search_food(&self) -> DocumentSet { (self.fw)(&"food".to_string()) }
 
         /// Example query: searching for 'chess' should return {"jack"}.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) — single find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + d), Span O(w + d) — no textbook cost; one DocumentIndex find (linear table scan plus set clone); does not match old analysis: Work Θ(log n), Span Θ(log n) vs new; the table is an unsorted array
         pub fn search_chess(&self) -> DocumentSet { (self.fw)(&"chess".to_string()) }
 
         /// Complex query from textbook:
         /// toSeq (queryAnd ((fw 'fun'), queryOr ((fw 'food'), (fw 'chess'))))
         /// Expected result: ⟨'jack', 'peter'⟩
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set operations
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + n h^2), Span O(w + n h^2) — no textbook cost; three linear finds, a union and an intersection (O(n h^2) each per the Chap41 review), and to_seq O(n h); does not match old analysis: Work Θ(m log(1+n/m)), Span same vs new; finds are linear and set operations are O(n h^2)
         pub fn complex_query_fun_and_food_or_chess(&self) -> ArraySeqStPerS<DocumentId> {
             let fun_docs = (self.fw)(&"fun".to_string());
             let food_docs = (self.fw)(&"food".to_string());
@@ -99,6 +108,7 @@ pub mod Example44_1 {
         /// size (queryAndNot ((fw 'fun'), (fw 'chess')))
         /// Expected result: 2 (mary and peter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set difference
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + n h^2), Span O(w + n h^2) — no textbook cost; two linear finds, a difference O(n h^2) per the Chap41 review, and size O(1); does not match old analysis: Work Θ(m log(1+n/m)), Span same vs new; finds are linear and set operations are O(n h^2)
         pub fn count_fun_but_not_chess(&self) -> usize {
             let fun_docs = (self.fw)(&"fun".to_string());
             let chess_docs = (self.fw)(&"chess".to_string());
@@ -109,6 +119,7 @@ pub mod Example44_1 {
 
         /// Additional example: documents with 'food' OR 'fun'.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + n h^2), Span O(w + n h^2) — no textbook cost; two linear finds and a union O(n h^2) per the Chap41 review; does not match old analysis: Work Θ(m log(1+n/m)), Span same vs new; finds are linear and set operations are O(n h^2)
         pub fn search_food_or_fun(&self) -> DocumentSet {
             let food_docs = (self.fw)(&"food".to_string());
             let fun_docs = (self.fw)(&"fun".to_string());
@@ -118,6 +129,7 @@ pub mod Example44_1 {
 
         /// Additional example: documents with 'party' AND 'food'.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + n h^2), Span O(w + n h^2) — no textbook cost; two linear finds and an intersection O(n h^2) per the Chap41 review; does not match old analysis: Work Θ(m log(1+n/m)), Span same vs new; finds are linear and set operations are O(n h^2)
         pub fn search_party_and_food(&self) -> DocumentSet {
             let party_docs = (self.fw)(&"party".to_string());
             let food_docs = (self.fw)(&"food".to_string());
@@ -127,14 +139,17 @@ pub mod Example44_1 {
 
         /// Get all unique words in the tweet collection.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + M), Span O(w + M) — no textbook cost; delegates to DocumentIndex get_all_words, whose collect deep-clones every document set (M = Σ set sizes); does not match old analysis: Work Θ(n), Span Θ(n) vs new
         pub fn get_all_words(&self) -> ArraySeqStPerS<Word> { self.index.get_all_words() }
 
         /// Get word count statistics.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         pub fn get_word_count(&self) -> usize { self.index.word_count() }
 
         /// Demonstrate query builder pattern.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work dominated by 4 finds + 3 set operations
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + n h^2), Span O(w + n h^2) — no textbook cost; delegates to QueryBuilder complex_query
         pub fn query_builder_example(&self) -> DocumentSet {
             let builder = QueryBuilder::new(&self.index);
 
@@ -149,6 +164,7 @@ pub mod Example44_1 {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) — to_seq + sort
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T) + n lg n), Span O(n h(T) + n lg n) — no textbook cost; DocumentIndex to_seq O(n h(T)), a copy loop, and a sequential sort; does not match old analysis: Work Θ(n log n), Span Θ(n log n) vs new; to_seq is O(n h(T)) per the Chap41 review
     pub fn doc_set_to_sorted_vec(docs: &DocumentSet) -> Vec<DocumentId> {
         let seq = DocumentIndex::to_seq(docs);
         let mut result = Vec::new();
@@ -164,6 +180,7 @@ pub mod Example44_1 {
 
     /// Verify the expected results from the textbook examples.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — builds index, runs queries, compares results
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(D^2 + N·(N + D·h^2)), Span same — no textbook cost; dominated by TweetQueryExamples new (index construction); does not match old analysis: Work Θ(n²), Span Θ(n²) vs new; make_index is O(N·(N + D·h^2))
     pub fn verify_textbook_examples() -> bool {
         let examples = TweetQueryExamples::new();
 
@@ -205,6 +222,7 @@ pub mod Example44_1 {
 
     /// Performance demonstration: compare indexed search vs brute force.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — dominated by index construction
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(D^2 + N·(N + D·h^2)), Span same — no textbook cost; dominated by create_tweet_index; does not match old analysis: Work Θ(n²), Span Θ(n²) vs new; make_index is O(N·(N + D·h^2))
     pub fn performance_comparison_demo() -> (usize, usize) {
         let tweets = create_tweet_collection();
         let _index = create_tweet_index();
@@ -234,6 +252,7 @@ pub mod Example44_1 {
 
     /// Demonstrate the tokenization process.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m), Span Θ(m) — delegates to tokens()
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m), Span O(m) — no textbook cost; m = sample length, one tokens call
     pub fn tokenization_demo() -> ArraySeqStPerS<Word> {
         let sample_content = "I had fun in dance club today!";
         tokens(&sample_content.to_string())
@@ -241,6 +260,7 @@ pub mod Example44_1 {
 
     /// Show index statistics for the tweet collection.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — builds index + iterates documents
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(D^2 + N·(N + D·h^2)), Span same — no textbook cost; dominated by create_tweet_index, plus a tokens pass over every document; does not match old analysis: Work Θ(n²), Span Θ(n²) vs new; make_index is O(N·(N + D·h^2))
     pub fn index_statistics() -> (usize, usize, usize) {
         let tweets = create_tweet_collection();
         let index = create_tweet_index();

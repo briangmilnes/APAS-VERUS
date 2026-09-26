@@ -194,6 +194,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch45 ref): Work O(n²), Span O(n²) — n × O(n) deleteMin dominates.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: UnsortedListPQ delete_min is O(k^2) (one-element appends rebuild the rest), and insert is O(k); does not match old analysis: O(n^2) vs O(n^3)
     pub fn heapsort_unsorted_list<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = UnsortedListPQ::empty();
         for element in sequence {
@@ -212,6 +213,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch45 ref): Work O(n²), Span O(n²) — n × O(n) insert dominates.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — matches textbook (SortedListPQ insert O(k), delete_min O(k))
     pub fn heapsort_sorted_list<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = SortedListPQ::empty();
         for element in sequence {
@@ -230,6 +232,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — insert is O(n) due to Vec conversion, not O(log n).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — does not match textbook: BalancedTreePQ insert and delete_min are each O(k lg k) (flatten and rebuild the AVL sequence); does not match old analysis: O(n^2) vs O(n^2 lg n)
     pub fn heapsort_balanced_tree<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = BalancedTreePQ::empty();
         for element in sequence {
@@ -248,6 +251,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n² log n), Span O(n² log n) — each insert/delete is O(n log n) due to array swaps.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: BinaryHeapPQ insert is O(k) (append copy) and delete_min is O(k^2) (one-element appends rebuild the array); does not match old analysis: O(n^2 lg n) vs O(n^3)
     pub fn heapsort_binary_heap<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = BinaryHeapPQ::empty();
         for element in sequence {
@@ -266,6 +270,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — each insert/delete clones tree O(n).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: LeftistHeapPQ insert and delete_min deep-clone the root, O(k) each, instead of O(lg k)
     pub fn heapsort_leftist_heap<T: StT + Ord + TotalOrder>(sequence: &[T]) -> Vec<T> {
         let mut pq = LeftistHeapPQ::empty();
         for element in sequence {

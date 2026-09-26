@@ -99,26 +99,31 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             requires self.spec_tablemteph_wf()
             ensures count == self@.dom().len();
         /// - APAS Cost Spec 42.5: Work 1, Span 1
         /// - Alg Analysis: APAS (Ch42 ref): Work O(1), Span O(1) -- agrees with APAS.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablemteph_wf();
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>()
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablemteph_wf();
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; sequential key extraction
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|^2), Span O(|a|^2) — does not match textbook: |a| sequential ArraySetStEph inserts, each a linear find plus copy; CS 42.5 Work O(|a|), Span O(lg |a|); does not match old analysis: Work O(n), Span O(n) vs new; each insert is O(|a|), not O(1)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), domain.spec_arraysetsteph_wf();
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|s| * W(f)), Span O(lg |s| + S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|·W(f)), Span O(lg |s| + S(f)) — parallel D&C tabulate via join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s| lg |s| + Σ W(f(k))), Span O(|s| + max S(f(k))) — does not match textbook: tabulate_table_dc splits with sequential subseq_copy and rejoins with sequential append at every level; APAS Span O(lg |s| + S(f)); does not match old analysis: Work O(|s|·W(f)), Span O(lg |s| + S(f)) vs new; the per-level O(|s|) copies give Span O(|s|)
         fn tabulate<F: Fn(&K) -> V + Clone + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires
                 keys.spec_arraysetsteph_wf(),
@@ -133,6 +138,7 @@ broadcast use {
                         && tabulated@[k] == result@);
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·W(f)), Span O(lg n + max W(f)) — parallel D&C map via join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Σ W(f(v))), Span O(|a| + max S(f(v))) — does not match textbook: map_table_dc splits with sequential subseq_copy and rejoins with sequential append at every level; CS 42.5 Work O(Σ W(f(v))), Span O(lg |a| + max S(f(v))); does not match old analysis: Work O(n·W(f)), Span O(lg n + max W(f)) vs new; the per-level O(|a|) copies give Span O(|a|)
         fn map<F: Fn(&V) -> V + Clone + Send + Sync + 'static>(&mut self, f: F)
             requires
                 old(self).spec_tablemteph_wf(),
@@ -148,6 +154,7 @@ broadcast use {
                         && self@[k] == result@);
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(k,v))), Span O(n + Σ W(f(k,v))) — ACCEPTED DIFFERENCE: array-backed unordered table; sequential loop; D&C no-dup proof pending
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(p(k, v))), Span O(|a| + Σ S(p(k, v))) — does not match textbook: sequential loop in an Mt module; CS 42.5 Span O(lg |a| + max S(p(k, v)))
         fn filter<F: Fn(&K, &V) -> bool + Clone + Send + Sync + 'static>(
             &mut self,
             f: F,
@@ -166,6 +173,7 @@ broadcast use {
                     ==> #[trigger] self@.dom().contains(k);
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: unsorted array, a sequential linear scan of b per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
             requires
                 old(self).spec_tablemteph_wf(),
@@ -183,6 +191,7 @@ broadcast use {
                         && self@[k] == r@);
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: two sequential phases of nested linear scans (a against b, then b against a); CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
             requires
                 old(self).spec_tablemteph_wf(),
@@ -204,6 +213,7 @@ broadcast use {
                         && self@[k] == r@);
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: unsorted array, a sequential linear scan of b per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn difference(&mut self, other: &Self)
             requires
                 old(self).spec_tablemteph_wf(),
@@ -214,6 +224,7 @@ broadcast use {
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan on flat array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: linear scan of an unsorted array; CS 42.5 O(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_tablemteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -223,11 +234,13 @@ broadcast use {
                 };
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; linear scan + copy
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: rebuilds the array without the key; CS 42.5 O(lg |a|)
         fn delete(&mut self, key: &K)
             requires old(self).spec_tablemteph_wf(), obeys_view_eq::<K>()
             ensures self@ =~= old(self)@.remove(key@), self.spec_tablemteph_wf();
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; linear scan + copy
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: linear scan plus a full copy of the array; CS 42.5 O(lg |a|)
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
             requires
                 old(self).spec_tablemteph_wf(),
@@ -245,6 +258,7 @@ broadcast use {
                     && self@[key@] == r@);
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|c|), Span O(|a|·|c|) — does not match textbook: a linear ArraySetStEph find in c per entry of a, sequential; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablemteph_wf(),
@@ -254,6 +268,7 @@ broadcast use {
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|c|), Span O(|a|·|c|) — does not match textbook: a linear ArraySetStEph find in c per entry of a, sequential; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablemteph_wf(),
@@ -263,9 +278,11 @@ broadcast use {
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone of backing array.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>)
             ensures spec_entries_to_map(entries@) == self@;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn iter(&self) -> (it: std::slice::Iter<'_, Pair<K, V>>)
             requires self.spec_tablemteph_wf()
             ensures
@@ -281,6 +298,7 @@ broadcast use {
 
     /// Parallel D&C map for table entries: clone keys, apply f to values.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C map via join.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Σ W(f(v))), Span O(|a| + max S(f(v))) — no textbook cost; does not match old analysis: Work O(n), Span O(lg n) vs new; each level copies both halves with sequential subseq_copy and rejoins with sequential append, W(n) = 2W(n/2) + O(n), S(n) = S(n/2) + O(n)
     fn map_table_dc<K: MtKey, V: MtVal, F: Fn(&V) -> V + Clone + Send + Sync + 'static>(
         entries: &ArraySeqMtEphS<Pair<K, V>>,
         f: &F,
@@ -419,6 +437,7 @@ broadcast use {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C tabulate via join.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s| lg |s| + Σ W(f(k))), Span O(|s| + max S(f(k))) — no textbook cost; does not match old analysis: Work O(n), Span O(lg n) vs new; each level copies both halves with sequential subseq_copy and rejoins with sequential append, W(n) = 2W(n/2) + O(n), S(n) = S(n/2) + O(n)
     /// Parallel D&C tabulate for table entries: apply f to each key.
     fn tabulate_table_dc<K: MtKey, V: MtVal, F: Fn(&K) -> V + Clone + Send + Sync + 'static>(
         f: &F,
@@ -569,6 +588,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
         {
             proof {
@@ -578,6 +598,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
         {
                       // Veracity: NEEDED assert
@@ -593,6 +614,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(key: K, value: V) -> (tree: Self)
         {
                       // Veracity: NEEDED proof block (speed hint)
@@ -626,6 +648,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|^2), Span O(|a|^2) — does not match textbook: |a| sequential ArraySetStEph inserts, each a linear find plus copy; CS 42.5 Work O(|a|), Span O(lg |a|); does not match old analysis: Work O(n), Span O(n) vs new; each insert is O(|a|), not O(1)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
             let mut keys = ArraySetStEph::empty();
@@ -700,6 +723,7 @@ broadcast use {
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s| lg |s| + Σ W(f(k))), Span O(|s| + max S(f(k))) — does not match textbook: to_seq copy, then tabulate_table_dc splits with sequential subseq_copy and rejoins with sequential append at every level; APAS Span O(lg |s| + S(f)); does not match old analysis: Work O(n), Span O(log n) vs new; the per-level O(|s|) copies give Span O(|s|)
         fn tabulate<F: Fn(&K) -> V + Clone + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             // Veracity: NEEDED assert (speed hint)
@@ -774,6 +798,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Σ W(f(v))), Span O(|a| + max S(f(v))) — does not match textbook: map_table_dc splits with sequential subseq_copy and rejoins with sequential append at every level; CS 42.5 Work O(Σ W(f(v))), Span O(lg |a| + max S(f(v))); does not match old analysis: Work O(n), Span O(log n) vs new; the per-level O(|a|) copies give Span O(|a|)
         fn map<F: Fn(&V) -> V + Clone + Send + Sync + 'static>(&mut self, f: F)
         {
             let ghost old_entries = self.entries@;
@@ -820,6 +845,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(p(k, v))), Span O(|a| + Σ S(p(k, v))) — does not match textbook: sequential loop in an Mt module; CS 42.5 Span O(lg |a| + max S(p(k, v)))
         #[verifier::loop_isolation(false)]
         fn filter<F: Fn(&K, &V) -> bool + Clone + Send + Sync + 'static>(
             &mut self,
@@ -921,6 +947,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: unsorted array, a sequential linear scan of b per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
         {
             proof {
@@ -1111,6 +1138,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: two sequential phases of nested linear scans (a against b, then b against a); CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         #[verifier::loop_isolation(false)]
         // r213: rlimit raised after a profile (logs/validate.20260922-055536.log) showed
         // no matching loop: 61K instantiations, led by the quadratic
@@ -1621,6 +1649,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: unsorted array, a sequential linear scan of b per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         #[verifier::loop_isolation(false)]
         fn difference(&mut self, other: &Self)
         {
@@ -1774,6 +1803,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: linear scan of an unsorted array; CS 42.5 O(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
         {
             let mut i: usize = 0;
@@ -1807,6 +1837,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: rebuilds the array without the key; CS 42.5 O(lg |a|)
         #[verifier::loop_isolation(false)]
         fn delete(&mut self, key: &K)
         {
@@ -1936,6 +1967,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: linear scan plus a full copy of the array; CS 42.5 O(lg |a|)
         #[verifier::loop_isolation(false)]
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
         {
@@ -2188,6 +2220,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|c|), Span O(|a|·|c|) — does not match textbook: a linear ArraySetStEph find in c per entry of a, sequential; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         #[verifier::loop_isolation(false)]
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
@@ -2288,6 +2321,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|c|), Span O(|a|·|c|) — does not match textbook: a linear ArraySetStEph find in c per entry of a, sequential; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         #[verifier::loop_isolation(false)]
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
@@ -2394,6 +2428,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
             let entries = self.entries.clone();
             proof {
@@ -2408,6 +2443,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn iter(&self) -> (it: std::slice::Iter<'_, Pair<K, V>>) {
             let it = self.entries.iter();
             proof {
@@ -2419,6 +2455,7 @@ broadcast use {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(n), Span O(n) vs new; from_vec moves the Vec, no copy
     // veracity: no_requires
     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
     {

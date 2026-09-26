@@ -81,14 +81,17 @@ broadcast use {
             spec fn spec_balancedtreepq_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn empty() -> (pq: Self)
                 ensures pq@.len() == 0, pq.spec_balancedtreepq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn singleton(element: T) -> (pq: Self)
                 ensures pq@.len() == 1, pq.spec_balancedtreepq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook; does not match old analysis: Work O(1), Span O(1) vs new; AVLTreeSeqStPer nth(0) descends the tree
             fn find_min(&self) -> (min_elem: Option<&T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -98,6 +101,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(lg n), Span O(lg n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: flattens the tree with values_in_order (n nth calls), Vec::insert, then rebuilds with from_vec; cost table insert O(lg n); does not match old analysis: Work O(lg n), Span O(lg n) vs new; not a tree insert
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -109,6 +113,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(lg n), Span O(lg n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: copies elements 1..n by n nth calls (O(lg n) each), then from_vec; cost table deleteMin O(lg n); does not match old analysis: Work O(lg n), Span O(lg n) vs new; not a tree delete
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -120,6 +125,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)): tree union
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((m + n) lg(m + n)), Span O((m + n) lg(m + n)) — does not match textbook: a sequential merge reading both trees by nth (O(lg) each), then from_vec; cost table meld O(m lg(1 + n/m)); does not match old analysis: Work O(m·lg(1+n/m)), Span same vs new; no tree union
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -129,26 +135,31 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 cost table, balanced trees): Work O(n lg n), Span O(n lg n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n): sequential inserts
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — does not match textbook: n sequential inserts, each O(i lg i) (flatten, Vec::insert, rebuild); cost table fromSeq O(n lg n); does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
                 requires seq.spec_avltreeseqstper_wf(),
                 ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn size(&self) -> (n: usize)
                 requires self.spec_balancedtreepq_wf(),
                 ensures n as int == self@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_empty(&self) -> (b: bool)
                 requires self.spec_balancedtreepq_wf(),
                 ensures b == (self@.len() == 0);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(n), Span O(n) vs new; AVLTreeSeqStPer clone is an Arc root clone
             fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures seq@ =~= self@;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
             fn find_max(&self) -> (max_elem: Option<&T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -157,6 +168,7 @@ broadcast use {
                     self@.len() > 0 ==> max_elem.unwrap()@ == self@[self@.len() - 1];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: copies elements 0..n-1 by n nth calls (O(lg n) each), then from_vec; APAS line O(log n); does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -167,6 +179,7 @@ broadcast use {
                     max_and_rest.0.spec_balancedtreepq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m^2 lg m + (m + n) lg(m + n)), Span same — no textbook cost; from_seq on the m new elements, then meld; does not match old analysis: Work O(m lg(1+n/m)), Span same vs new; from_seq is quadratic and meld is a sequential merge
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -175,16 +188,19 @@ broadcast use {
                 ensures pq@.len() == self@.len() + elements@.len(), pq.spec_balancedtreepq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(n), Span O(n) vs new; AVLTreeSeqStPer clone is an Arc root clone
             fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures sorted@.len() == self@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; linear scan by nth, O(lg n) per element, not a tree search; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn contains(&self, element: &T) -> (found: bool)
                 requires self.spec_balancedtreepq_wf(),
                 ensures found == self@.contains(element@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; n nth calls then from_vec; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -193,36 +209,43 @@ broadcast use {
                     rest_and_found.0.spec_balancedtreepq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; scans all n elements by nth, then from_vec; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn range(&self, min_val: &T, max_val: &T) -> (sub: AVLTreeSeqStPerS<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures sub@.len() <= self@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — no textbook cost; n sequential inserts, each O(i lg i); does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn from_vec(elements: Vec<T>) -> (pq: Self)
                 requires elements@.len() < usize::MAX as nat,
                 ensures pq@.len() == elements@.len(), pq.spec_balancedtreepq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; n nth calls; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn to_vec(&self) -> (vec: Vec<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures vec@.len() == self@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; delegates to to_vec (n nth calls); does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn to_sorted_vec(&self) -> (vec: Vec<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures vec@.len() == self@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; 2(n - 1) nth calls; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn is_sorted(&self) -> (sorted: bool)
                 requires self.spec_balancedtreepq_wf(),
                 ensures self@.len() <= 1 ==> sorted;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost; halves n until 1 (computes floor(lg n), not the tree's height)
             fn height(&self) -> (h: usize)
                 requires self.spec_balancedtreepq_wf(),
                 ensures self@.len() == 0 ==> h == 0;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — no textbook cost; inserts each element into left or right, each insert O(i lg i); does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn split(&self, element: &T) -> (parts: (Self, bool, Self))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -231,6 +254,7 @@ broadcast use {
                     parts.2.spec_balancedtreepq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((m + n) lg(m + n)), Span same — no textbook cost; delegates to meld (sequential merge by nth, then from_vec); does not match old analysis: Work O(m lg(1+n/m)), Span same vs new; meld is not a tree union
             fn join(left: &Self, right: &Self) -> (pq: Self)
                 requires
                     left.spec_balancedtreepq_wf(),
@@ -242,12 +266,14 @@ broadcast use {
         /// Extended operations requiring closure parameters.
         pub trait BalancedTreePQExtTrait<T: StT + Ord + TotalOrder>: Sized + BalancedTreePQTrait<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n + Σ W(p(x))), Span O(n^2 lg n + Σ S(p(x))) — no textbook cost; one insert (O(i lg i)) per kept element; does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
                     forall|t: &T| #[trigger] predicate.requires((t,)),
                 ensures filtered.spec_balancedtreepq_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n + Σ W(f(x))), Span O(n^2 lg n + Σ S(f(x))) — no textbook cost; one insert (O(i lg i)) per element; does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn map<U: StT + Ord + TotalOrder, G: Fn(&T) -> U>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -266,6 +292,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time empty construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn empty() -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::empty(),
@@ -274,6 +301,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time singleton construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn singleton(element: T) -> Self {
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::singleton(element),
@@ -282,6 +310,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: indexed access to first element of sorted seq.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook; does not match old analysis: Work O(1), Span O(1) vs new; AVLTreeSeqStPer nth(0) descends the tree
             fn find_min(&self) -> Option<&T> {
                 if self.elements.length() == 0 {
                     None
@@ -292,6 +321,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: values_in_order + Vec::insert at sorted position.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: flattens the tree with values_in_order (n nth calls), Vec::insert, then rebuilds with from_vec; cost table insert O(lg n); does not match old analysis: Work O(n), Span O(n) vs new; values_in_order is O(n lg n)
             fn insert(&self, element: T) -> Self {
                 let mut vals: Vec<T> = self.elements.values_in_order();
                 let ghost old_vals = vals@;
@@ -358,6 +388,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: clone elements 1..n, rebuild via from_vec.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: copies elements 1..n by n nth calls (O(lg n) each), then from_vec; cost table deleteMin O(lg n); does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn delete_min(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -379,6 +410,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(m log(1+n/m)), Span O(m log(1+n/m)).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — ACCEPTED DIFFERENCE: merge two sorted sequences, rebuild via from_vec.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((m + n) lg(m + n)), Span O((m + n) lg(m + n)) — does not match textbook: a sequential merge reading both trees by nth (O(lg) each), then from_vec; cost table meld O(m lg(1 + n/m)); does not match old analysis: Work O(m+n), Span O(m+n) vs new; each nth is O(lg n)
             fn meld(&self, other: &Self) -> Self {
                 let n1 = self.elements.length();
                 let n2 = other.elements.length();
@@ -444,6 +476,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: n calls to insert, each O(n).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — does not match textbook: n sequential inserts, each O(i lg i) (flatten, Vec::insert, rebuild); cost table fromSeq O(n lg n); does not match old analysis: Work O(n^2), Span O(n^2) vs new; insert is O(n lg n), not O(n)
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
                 let mut result = Self::empty();
                 // Veracity: NEEDED proof block
@@ -473,15 +506,19 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn size(&self) -> usize { self.elements.length() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_empty(&self) -> bool { self.elements.length() == 0 }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(n), Span O(n) vs new; AVLTreeSeqStPer clone is an Arc root clone
             fn to_seq(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
             fn find_max(&self) -> Option<&T> {
                 let n = self.elements.length();
                 if n == 0 {
@@ -493,6 +530,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: clone elements 0..n-1, rebuild via from_vec.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: copies elements 0..n-1 by n nth calls (O(lg n) each), then from_vec; APAS line O(log n); does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn delete_max(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -523,6 +561,7 @@ broadcast use {
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m^2 lg m + (m + n) lg(m + n)), Span same — no textbook cost; from_seq on the m new elements, then meld; does not match old analysis: Work O(m lg(1+n/m)), Span same vs new; from_seq is quadratic and meld is a sequential merge
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
                 let other = Self::from_seq(elements);
                 // Veracity: NEEDED proof block
@@ -535,10 +574,12 @@ broadcast use {
 
             /// Already sorted — clone the backing tree.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(n), Span O(n) vs new; AVLTreeSeqStPer clone is an Arc root clone
             fn extract_all_sorted(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
             #[verifier::loop_isolation(false)]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; linear scan by nth, O(lg n) per element, not a tree search; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn contains(&self, element: &T) -> bool {
                 let n = self.elements.length();
                 let mut i: usize = 0;
@@ -562,6 +603,7 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; n nth calls then from_vec; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn remove(&self, element: &T) -> (Self, bool) {
                 let n = self.elements.length();
                 let mut values: Vec<T> = Vec::new();
@@ -591,6 +633,7 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; scans all n elements by nth, then from_vec; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
                 let n = self.elements.length();
                 let mut values: Vec<T> = Vec::new();
@@ -620,6 +663,7 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — no textbook cost; n sequential inserts, each O(i lg i); does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn from_vec(elements: Vec<T>) -> Self {
                 let mut result = Self::empty();
                 let n = elements.len();
@@ -642,6 +686,7 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; n nth calls; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn to_vec(&self) -> Vec<T> {
                 let n = self.elements.length();
                 let mut result: Vec<T> = Vec::new();
@@ -661,11 +706,13 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; delegates to to_vec (n nth calls); does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn to_sorted_vec(&self) -> Vec<T> {
                 self.to_vec()
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; 2(n - 1) nth calls; does not match old analysis: Work O(n), Span O(n) vs new; each nth is O(lg n)
             fn is_sorted(&self) -> bool {
                 let n = self.elements.length();
                 if n <= 1 {
@@ -688,6 +735,7 @@ broadcast use {
 
             /// Approximate balanced tree height: ceil(log2(n)).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost; halves n until 1 (computes floor(lg n), not the tree's height)
             fn height(&self) -> usize {
                 let n = self.elements.length();
                 if n == 0 {
@@ -709,6 +757,7 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — no textbook cost; inserts each element into left or right, each insert O(i lg i); does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn split(&self, element: &T) -> (Self, bool, Self) {
                 // The proof uses the views only through their lengths. Unfolded,
                 // spec_inorder turns every view term into `l + seq![v] + r`, which
@@ -753,11 +802,13 @@ broadcast use {
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((m + n) lg(m + n)), Span same — no textbook cost; delegates to meld (sequential merge by nth, then from_vec); does not match old analysis: Work O(m lg(1+n/m)), Span same vs new; meld is not a tree union
             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
         }
 
         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n + Σ W(p(x))), Span O(n^2 lg n + Σ S(p(x))) — no textbook cost; one insert (O(i lg i)) per kept element; does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
             {
                 let mut result = Self::empty();
@@ -795,6 +846,7 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n + Σ W(f(x))), Span O(n^2 lg n + Σ S(f(x))) — no textbook cost; one insert (O(i lg i)) per element; does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; insert is O(n lg n)
             fn map<U: StT + Ord + TotalOrder, G: Fn(&T) -> U>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
             {
                 let mut result = BalancedTreePQ::<U>::empty();

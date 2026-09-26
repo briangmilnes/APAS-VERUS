@@ -103,9 +103,11 @@ broadcast use {
             spec fn spec_is_leaf(&self) -> bool;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn rank(&self) -> (rank_val: usize)
                 ensures rank_val as nat == self.spec_rank();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 requires
                     left.spec_size() + right.spec_size() + 1 <= usize::MAX as nat,
@@ -123,6 +125,7 @@ broadcast use {
                     forall|x: T| TotalOrder::le(x, key) ==>
                         #[trigger] node.spec_key_le_root(x);
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg m + lg n), Span O(lg m + lg n) — matches textbook (Theorem 45.2: recursion follows the two right spines, make_node is O(1))
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 requires
                     a.spec_size() + b.spec_size() <= usize::MAX as nat,
@@ -138,26 +141,32 @@ broadcast use {
                     forall|x: T| a.spec_key_le_root(x) && b.spec_key_le_root(x) ==>
                         #[trigger] node.spec_key_le_root(x);
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn size(&self) -> (n: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_size();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn height(&self) -> (h: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures
                     self.spec_is_leaf() ==> h == 0,
                     h as nat <= self.spec_size();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn is_leftist(&self) -> (is_leftist: bool)
                 ensures is_leftist <==> self.spec_is_leftist();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn is_heap(&self) -> (is_heap: bool)
                 ensures is_heap <==> self.spec_is_heap();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h), h = tree height ≤ n — no textbook cost; does not match old analysis: O(n) vs O(n·h); every node calls size() on both children
             fn is_rank_bounded(&self) -> (bounded: bool)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures bounded <==> self.spec_rank_bounded();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); each node copies its right subtree's vector, and an element lies in a right subtree at most rank(root) ≤ lg(n+1) times
             fn to_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
@@ -254,6 +263,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn rank(&self) -> (rank_val: usize) {
                 match self {
                     LeftistHeapNode::Leaf => {
@@ -266,6 +276,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: Self) {
                 let ghost left_ms = left@;
                 let ghost right_ms = right@;
@@ -304,6 +315,7 @@ broadcast use {
 
             /// Core meld operation following right spines (Data Structure 45.3).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg m + lg n), Span O(lg m + lg n) — matches textbook (Theorem 45.2: recursion follows the two right spines, make_node is O(1))
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 decreases a.spec_size() + b.spec_size()
             {
@@ -367,6 +379,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn size(&self) -> (n: usize)
                 decreases *self
             {
@@ -384,6 +397,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn height(&self) -> (h: usize)
                 decreases *self
             {
@@ -402,6 +416,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn is_leftist(&self) -> (is_leftist: bool)
                 decreases *self
             {
@@ -414,6 +429,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn is_heap(&self) -> (is_heap: bool)
                 decreases *self
             {
@@ -436,6 +452,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h), h = tree height ≤ n — no textbook cost; does not match old analysis: O(n) vs O(n·h); every node calls size() on both children
             fn is_rank_bounded(&self) -> (bounded: bool)
                 decreases *self
             {
@@ -452,6 +469,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); each node copies its right subtree's vector, and an element lies in a right subtree at most rank(root) ≤ lg(n+1) times
             fn to_vec(&self) -> (v: Vec<T>)
                 decreases *self
             {
@@ -598,18 +616,21 @@ broadcast use {
             spec fn spec_sorted(s: Seq<T>) -> bool;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn empty() -> (pq: Self)
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == 0,
                     pq@ =~= Multiset::empty();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn singleton(element: T) -> (pq: Self)
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == 1,
                     pq@ =~= Multiset::empty().insert(element);
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn find_min(&self) -> (min_elem: Option<&T>)
                 requires self.spec_leftistheappq_wf(),
                 ensures
@@ -620,6 +641,7 @@ broadcast use {
                         #[trigger] TotalOrder::le(*min_elem.unwrap(), e);
             /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg n), Span O(lg n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n): meld with singleton
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: meld deep-clones self.root (O(n)) before the O(lg n) spine meld; does not match old analysis: O(lg n) vs O(n)
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -630,6 +652,7 @@ broadcast use {
                     pq@ =~= self@.insert(element);
             /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg n), Span O(lg n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n): meld children
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: deep-clones the whole root (O(n)) before melding the children in O(lg n); does not match old analysis: O(lg n) vs O(n)
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     self.spec_leftistheappq_wf(),
@@ -646,6 +669,7 @@ broadcast use {
                         #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e);
             /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg m + lg n), Span O(lg m + lg n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg m + lg n), Span O(lg m + lg n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m + n), Span O(m + n) — does not match textbook: deep-clones both roots before meld_nodes; does not match old analysis: O(lg m + lg n) vs O(m + n)
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -657,19 +681,23 @@ broadcast use {
                     pq@ =~= self@.add(other@);
             /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(n), Span O(lg^2 n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential reduce, APAS Span O(lg^2 n) assumes parallel
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: n sequential inserts, each O(i) from the root clone, not a reduce of melds; does not match old analysis: O(n) vs O(n²)
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == seq@.len();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn size(&self) -> (n: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_size();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_empty(&self) -> (is_empty: bool)
                 ensures is_empty == (self.spec_size() == 0);
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n lg n) vs O(n²); n delete_min calls, each O(k) from the root clone
             fn extract_all_sorted(&self) -> (sorted: Vec<T>)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -678,27 +706,33 @@ broadcast use {
                     sorted@.len() as nat == self.spec_size(),
                     Self::spec_sorted(sorted@);
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn height(&self) -> (levels: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures self.spec_size() == 0 ==> levels == 0;
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn root_rank(&self) -> (rank_val: usize)
                 ensures self.spec_size() == 0 ==> rank_val == 0;
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h), h = tree height ≤ n — no textbook cost; does not match old analysis: O(n) vs O(n·h); is_rank_bounded calls size() at every node
             fn is_valid_leftist_heap(&self) -> (is_valid: bool)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures is_valid <==> self.spec_leftistheappq_wf();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n) vs O(n²); delegates to from_seq
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == vec@.len();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); node to_vec copies each right subtree's vector
             fn to_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n lg n) vs O(n²); calls extract_all_sorted
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -709,6 +743,7 @@ broadcast use {
             spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat;
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * lg(n)), Span O(k * lg(n))
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k·N), Span O(k·N), N = total size — no textbook cost; does not match old analysis: O(k lg n) vs O(k·N); each of the k melds deep-clones the accumulated result and heaps[i]
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
                 requires
                     forall|i: int| 0 <= i < heaps@.len() ==>
@@ -718,6 +753,7 @@ broadcast use {
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int);
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n lg n) vs O(n²); to_vec then n inserts, each O(k) from the root clone
             fn split(&self, key: &T) -> (parts: (Self, Self))
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures
@@ -731,6 +767,7 @@ broadcast use {
         /// Exec comparison with spec ensures connecting to TotalOrder::le.
         // veracity: no_requires
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
             ensures le <==> TotalOrder::le(*a, *b)
         // Veracity: NEEDED proof block
@@ -782,6 +819,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time Leaf construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn empty() -> (pq: Self) {
                 let pq = LeftistHeapPQ { root: LeftistHeapNode::Leaf };
                 pq
@@ -789,6 +827,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time Node construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn singleton(element: T) -> (pq: Self) {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::Node {
@@ -815,6 +854,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); root access by heap property.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 // Veracity: NEEDED proof block
                 match &self.root {
@@ -848,6 +888,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n); singleton then meld along right spines.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: meld deep-clones self.root (O(n)) before the O(lg n) spine meld; does not match old analysis: O(lg n) vs O(n)
             fn insert(&self, element: T) -> (pq: Self) {
                 let singleton = Self::singleton(element);
                 let pq = self.meld(&singleton);
@@ -865,6 +906,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n); remove root, meld children.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: deep-clones the whole root (O(n)) before melding the children in O(lg n); does not match old analysis: O(lg n) vs O(n)
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 match &self.root {
                     LeftistHeapNode::Leaf => (self.clone(), None),
@@ -928,6 +970,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log m + log n), Span O(log m + log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m + log n), Span O(log m + log n); recursive meld along right spines.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m + n), Span O(m + n) — does not match textbook: deep-clones both roots before meld_nodes; does not match old analysis: O(lg m + lg n) vs O(m + n)
             fn meld(&self, other: &Self) -> (pq: Self) {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::meld_nodes(self.root.clone(), other.root.clone()),
@@ -938,6 +981,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — ACCEPTED DIFFERENCE: sequential insert, not reduce-based.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: n sequential inserts, each O(i) from the root clone, not a reduce of melds (textbook Work O(n), Span O(lg² n)); does not match old analysis: O(n lg n) vs O(n²)
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self) {
                 let n = seq.length();
                 let mut pq = Self::empty();
@@ -954,11 +998,13 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn size(&self) -> (n: usize) {
                 self.root.size()
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_empty(&self) -> (is_empty: bool) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
@@ -977,6 +1023,7 @@ broadcast use {
 
             #[verifier::exec_allows_no_decreases_clause]
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n lg n) vs O(n²); n delete_min calls, each O(k) from the root clone
             fn extract_all_sorted(&self) -> (sorted: Vec<T>) {
                 let mut result: Vec<T> = Vec::new();
                 let mut current_heap = self.clone();
@@ -1074,6 +1121,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn height(&self) -> (levels: usize) {
                 match &self.root {
                     LeftistHeapNode::Leaf => 0,
@@ -1082,6 +1130,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn root_rank(&self) -> (rank_val: usize) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
@@ -1100,17 +1149,20 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h), h = tree height ≤ n — no textbook cost; does not match old analysis: O(n) vs O(n·h); is_rank_bounded calls size() at every node
             fn is_valid_leftist_heap(&self) -> (is_valid: bool) {
                 self.root.is_leftist() && self.root.is_heap() && self.root.is_rank_bounded()
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n) vs O(n²); delegates to from_seq
             fn from_vec(vec: Vec<T>) -> (pq: Self) {
                 let seq = ArraySeqStPerS::from_vec(vec);
                 Self::from_seq(&seq)
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost; does not match old analysis: O(n) vs O(n lg n); node to_vec copies each right subtree's vector
             fn to_vec(&self) -> (v: Vec<T>) {
                 match &self.root {
                     LeftistHeapNode::Leaf => Vec::new(),
@@ -1119,9 +1171,11 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n lg n) vs O(n²); calls extract_all_sorted
             fn to_sorted_vec(&self) -> (v: Vec<T>) { self.extract_all_sorted() }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * lg(n)), Span O(k * lg(n))
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k·N), Span O(k·N), N = total size — no textbook cost; does not match old analysis: O(k lg n) vs O(k·N); each of the k melds deep-clones the accumulated result and heaps[i]
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self) {
                 let mut result = Self::empty();
                 // Veracity: NEEDED proof block
@@ -1142,6 +1196,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost; does not match old analysis: O(n lg n) vs O(n²); to_vec then n inserts, each O(k) from the root clone
             fn split(&self, key: &T) -> (parts: (Self, Self)) {
                 let all_elements = self.to_vec();
                 let mut less_than = Self::empty();

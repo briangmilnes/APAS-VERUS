@@ -84,6 +84,7 @@ broadcast use {
             spec fn spec_sorted(s: Seq<T>) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn empty() -> (pq: Self)
                 ensures
                     pq@.len() == 0,
@@ -91,6 +92,7 @@ broadcast use {
                     pq.spec_unsortedlistpq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
@@ -99,6 +101,7 @@ broadcast use {
                     pq.spec_unsortedlistpq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
@@ -109,6 +112,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(1), Span O(1)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: persistent array append copies entire array
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqStPer append copies the whole array; cost table insert O(1)
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -119,6 +123,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(n), Span O(n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: after the O(n) min scan, the rest is rebuilt by n - 1 one-element ArraySeqStPer appends, each copying the prefix; cost table deleteMin O(n); does not match old analysis: Work O(n), Span O(n) vs new; append per element is quadratic
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires obeys_feq_clone::<T>(),
                 ensures
@@ -141,6 +146,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(m + n), Span O(m + n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m + n), Span O(m + n) — matches textbook
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -151,24 +157,29 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(n), Span O(n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures pq@ =~= seq@;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_empty(&self) -> (b: bool)
                 ensures b == (self.spec_size() == 0);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures seq@ =~= self@;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m + n), Span O(m + n) — no textbook cost
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -178,6 +189,7 @@ broadcast use {
                     pq@.to_multiset() =~= self@.to_multiset().add(elements@.to_multiset());
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — no textbook cost; n delete_min calls, each O(k^2) because it rebuilds the rest by one-element appends, plus an O(k) append per extracted element; does not match old analysis: Work O(n^2), Span O(n^2) vs new; delete_min is O(n^2)
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -187,16 +199,19 @@ broadcast use {
                     Self::spec_sorted(sorted.seq@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures pq@ =~= vec@.map(|_i: int, t: T| t@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn to_vec(&self) -> (v: Vec<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures v@.len() == self@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — no textbook cost; dominated by extract_all_sorted, then an O(n) copy; does not match old analysis: Work O(n^2), Span O(n^2) vs new; delete_min is O(n^2)
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -229,6 +244,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time empty construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn empty() -> (pq: Self) {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::empty(),
@@ -249,6 +265,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time singleton construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn singleton(element: T) -> (pq: Self) {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::singleton(element),
@@ -265,6 +282,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); linear scan over unsorted list.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 if self.elements.length() == 0 {
                     return None;
@@ -321,6 +339,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: append copies persistent array.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqStPer append copies the whole array; cost table insert O(1)
             fn insert(&self, element: T) -> (pq: Self) {
                 // Veracity: NEEDED proof block
                 let single_seq = ArraySeqStPerS::singleton(element);
@@ -362,6 +381,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); linear scan for min, then rebuild without it.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: after the O(n) min scan, the rest is rebuilt by n - 1 one-element ArraySeqStPer appends, each copying the prefix; cost table deleteMin O(n); does not match old analysis: Work O(n), Span O(n) vs new; append per element is quadratic
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     // Veracity: NEEDED proof block
@@ -539,6 +559,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(m+n), Span O(m+n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n); concatenates two persistent arrays.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m + n), Span O(m + n) — matches textbook
             fn meld(&self, other: &Self) -> (pq: Self) {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::append(&self.elements, &other.elements),
@@ -577,6 +598,7 @@ broadcast use {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); clones persistent array.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self) {
                 let pq = UnsortedListPQ { elements: seq.clone() };
                 // Veracity: NEEDED proof block
@@ -590,15 +612,19 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn size(&self) -> (n: usize) { self.elements.length() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn is_empty(&self) -> (b: bool) { self.elements.length() == 0 }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) { self.elements.clone() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m + n), Span O(m + n) — no textbook cost
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
                 let other = Self::from_seq(elements);
                 self.meld(&other)
@@ -606,6 +632,7 @@ broadcast use {
 
             #[verifier::exec_allows_no_decreases_clause]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — no textbook cost; n delete_min calls, each O(k^2) because it rebuilds the rest by one-element appends, plus an O(k) append per extracted element; does not match old analysis: Work O(n^2), Span O(n^2) vs new; delete_min is O(n^2)
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>) {
                 let mut result = ArraySeqStPerS::empty();
                 let mut current_pq = self.clone();
@@ -723,6 +750,7 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn from_vec(vec: Vec<T>) -> Self {
                 let ghost vec_view = vec@;
                 let seq = ArraySeqStPerS::from_vec(vec);
@@ -760,6 +788,7 @@ broadcast use {
             }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn to_vec(&self) -> Vec<T> {
                 let n = self.elements.length();
                 let mut result: Vec<T> = Vec::new();
@@ -777,6 +806,7 @@ broadcast use {
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — no textbook cost; dominated by extract_all_sorted, then an O(n) copy; does not match old analysis: Work O(n^2), Span O(n^2) vs new; delete_min is O(n^2)
             fn to_sorted_vec(&self) -> Vec<T> {
                 let sorted_seq = self.extract_all_sorted();
                 let n = sorted_seq.length();

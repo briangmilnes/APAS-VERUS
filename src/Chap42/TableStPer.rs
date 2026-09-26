@@ -170,6 +170,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             requires self.spec_tablestper_wf(),
             ensures count == self@.len();
@@ -177,23 +178,27 @@ pub mod TableStPer {
         /// - APAS Cost Spec 42.5: Work 1, Span 1
         /// - Alg Analysis: APAS (Ch42 ref): Work O(1), Span O(1) -- agrees with APAS.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablestper_wf();
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>(),
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablestper_wf();
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential key extraction
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|^2), Span O(|a|^2) — does not match textbook: |a| sequential ArraySetStEph inserts, each a linear find plus copy; CS 42.5 Work O(|a|), Span O(lg |a|); does not match old analysis: Work O(n), Span O(n) vs new; each insert is O(|a|), not O(1)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), domain.spec_arraysetsteph_wf();
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|s| * W(f)), Span O(lg |s| + S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|·W(f)), Span O(|s|·W(f)) — ACCEPTED DIFFERENCE: sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s| + Σ W(f(k))), Span O(|s| + Σ S(f(k))) — does not match textbook: to_seq copy then sequential loop; APAS Span O(lg |s| + S(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
             ensures
@@ -206,6 +211,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·W(f)), Span O(n·W(f)) — ACCEPTED DIFFERENCE: sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(f(v))), Span O(|a| + Σ S(f(v))) — does not match textbook: sequential loop; CS 42.5 Span O(lg |a| + max S(f(v)))
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -222,6 +228,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(k,v))), Span O(n + Σ W(f(k,v))) — ACCEPTED DIFFERENCE: sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(p(k, v))), Span O(|a| + Σ S(p(k, v))) — does not match textbook: sequential loop; CS 42.5 Span O(lg |a| + max S(p(k, v)))
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -242,6 +249,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: unsorted array, a linear scan of b per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -260,6 +268,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|b|·(|a| + |b|)), Span O(|b|·(|a| + |b|)) — does not match textbook: clones a, then |b| sequential inserts, each a linear scan plus full copy of the growing table; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); does not match old analysis: Work O(n·m), Span O(n·m) vs new; the copies make it quadratic in |b|
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -282,6 +291,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: unsorted array, a linear scan of b per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -291,6 +301,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: linear scan on unsorted array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: linear scan of an unsorted array; CS 42.5 O(lg |a|)
         fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
@@ -303,6 +314,7 @@ pub mod TableStPer {
         /// The ensures `*v == self.spec_stored_value(key@)` lets callers transfer
         /// exec-level properties (e.g., wf) from the stored value to the result.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan on flat array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         fn find_ref(&self, key: &K) -> (found: Option<&V>)
             requires self.spec_tablestper_wf(), obeys_view_eq::<K>()
             ensures
@@ -314,6 +326,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: linear scan + copy
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: copies the array without the key; CS 42.5 O(lg |a|)
         fn delete(&self, key: &K) -> (updated: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -324,6 +337,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: linear scan + copy
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: linear scan plus a full copy of the array; CS 42.5 O(lg |a|)
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -344,6 +358,7 @@ pub mod TableStPer {
                     && updated.spec_stored_value(key@) == r);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan + rebuild with wf preservation
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         /// Like insert, but additionally ensures all stored values preserve well-formedness.
         fn insert_wf<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
             where K: ClonePreservesView, V: ClonePreservesWf
@@ -374,6 +389,7 @@ pub mod TableStPer {
                     updated.spec_stored_value(k).spec_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan + rebuild with wf preservation
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         /// Like delete, but additionally ensures all remaining stored values preserve well-formedness.
         /// Requires K: ClonePreservesView, V: ClonePreservesWf.
         fn delete_wf(&self, key: &K) -> (updated: Self)
@@ -392,6 +408,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|c|), Span O(|a|·|c|) — does not match textbook: a linear ArraySetStEph find in c per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
             requires self.spec_tablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -401,6 +418,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans on array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|c|), Span O(|a|·|c|) — does not match textbook: a linear ArraySetStEph find in c per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
             requires self.spec_tablestper_wf(), obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -410,6 +428,7 @@ pub mod TableStPer {
 
         /// - Alg Analysis: APAS (Ch42 ref): Work O(|a|), Span O(lg |a|) -- from Algorithm 42.3
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- returns backing entries directly.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: clones the entry array; it is not Algorithm 42.3, and the APAS line's Span O(lg |a|) needs a parallel copy
         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
             ensures spec_entries_to_map(collected@) == self@;
     }
@@ -447,6 +466,7 @@ pub mod TableStPer {
 
         /// Returns an iterator over table entries (key-value pairs).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         pub fn iter<'a>(&'a self) -> (it: std::slice::Iter<'a, Pair<K, V>>)
             ensures
                 IteratorSpec::remaining(&it) == self.entries.seq@.as_ref(),
@@ -470,6 +490,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
         {
             // Veracity: NEEDED proof block
@@ -480,6 +501,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
         {
             let entries = ArraySeqStPerS::empty();
@@ -488,6 +510,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(key: K, value: V) -> (tree: Self)
         {
             let entries = ArraySeqStPerS::singleton(Pair(key, value));
@@ -508,6 +531,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|^2), Span O(|a|^2) — does not match textbook: |a| sequential ArraySetStEph inserts, each a linear find plus copy; CS 42.5 Work O(|a|), Span O(lg |a|); does not match old analysis: Work O(n), Span O(n) vs new; each insert is O(|a|), not O(1)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
             let mut keys = ArraySetStEph::empty();
@@ -579,6 +603,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|s| + Σ W(f(k))), Span O(|s| + Σ S(f(k))) — does not match textbook: to_seq copy then sequential loop; APAS Span O(lg |s| + S(f))
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             let key_seq = keys.to_seq();
@@ -668,6 +693,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(f(v))), Span O(|a| + Σ S(f(v))) — does not match textbook: sequential loop; CS 42.5 Span O(lg |a| + max S(f(v)))
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
         {
             let ghost old_view = self.entries@;
@@ -744,6 +770,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(p(k, v))), Span O(|a| + Σ S(p(k, v))) — does not match textbook: sequential loop; CS 42.5 Span O(lg |a| + max S(p(k, v)))
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -845,6 +872,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: unsorted array, a linear scan of b per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
         {
             let ghost self_view = self.entries@;
@@ -1033,6 +1061,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|b|·(|a| + |b|)), Span O(|b|·(|a| + |b|)) — does not match textbook: clones a, then |b| sequential inserts, each a linear scan plus full copy of the growing table; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m)); does not match old analysis: Work O(n * m), Span O(n * m) vs new; the copies make it quadratic in |b|
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
         {
             let ghost self_view = self.entries@;
@@ -1256,6 +1285,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|b|), Span O(|a|·|b|) — does not match textbook: unsorted array, a linear scan of b per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let ghost self_view = self.entries@;
@@ -1400,6 +1430,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: linear scan of an unsorted array; CS 42.5 O(lg |a|)
         // Veracity: NEEDED proof block
         fn find(&self, key: &K) -> (found: Option<V>)
         {
@@ -1434,6 +1465,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         fn find_ref(&self, key: &K) -> (found: Option<&V>)
         {
             let mut i: usize = 0;
@@ -1479,6 +1511,7 @@ pub mod TableStPer {
 
         // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: copies the array without the key; CS 42.5 O(lg |a|)
         fn delete(&self, key: &K) -> (updated: Self)
         {
             // Veracity: NEEDED proof block
@@ -1624,6 +1657,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: linear scan plus a full copy of the array; CS 42.5 O(lg |a|)
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
         {
             let ghost key_view: K::V = key@;
@@ -1852,6 +1886,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         fn insert_wf<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
             where K: ClonePreservesView, V: ClonePreservesWf
         {
@@ -2171,6 +2206,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         fn delete_wf(&self, key: &K) -> (updated: Self)
             where K: ClonePreservesView, V: ClonePreservesWf
         {
@@ -2368,6 +2404,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|c|), Span O(|a|·|c|) — does not match textbook: a linear ArraySetStEph find in c per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
         {
             let ghost self_view = self.entries@;
@@ -2466,6 +2503,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|·|c|), Span O(|a|·|c|) — does not match textbook: a linear ArraySetStEph find in c per entry of a; CS 42.5 Work O(m lg(1 + n/m)), Span O(lg(n + m))
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
         {
             let ghost self_view = self.entries@;
@@ -2566,6 +2604,7 @@ pub mod TableStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: clones the entry array; it is not Algorithm 42.3, and the APAS line's Span O(lg |a|) needs a parallel copy
         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
         {
             let collected = self.entries.clone();
@@ -2582,6 +2621,7 @@ pub mod TableStPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(n), Span O(n) vs new; from_vec moves the Vec, no copy
     // veracity: no_requires
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
@@ -2594,6 +2634,7 @@ pub mod TableStPer {
     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
     /// mapping each key to the subsequence of values for that key, preserving order.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|^2), Span O(|a|^2) — no textbook cost; per pair a linear find (cloning the value sequence), append, delete, and insert, each copying the O(i) table built so far; Algorithm 42.3 states no cost
     pub fn collect_by_key<K: StT + Ord + Eq, V: StT>(
         pairs: &ArraySeqStPerS<Pair<K, V>>,
     ) -> (grouped: TableStPer<K, ArraySeqStPerS<V>>)

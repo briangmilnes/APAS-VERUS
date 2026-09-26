@@ -227,6 +227,7 @@ pub mod BinaryHeapPQ {
             spec fn right_child_spec(i: int) -> int;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn empty() -> (pq: Self)
                 ensures
                     pq@.len() == 0,
@@ -234,6 +235,7 @@ pub mod BinaryHeapPQ {
                     pq.spec_binaryheappq_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
@@ -243,6 +245,7 @@ pub mod BinaryHeapPQ {
                     Self::spec_is_exec_heap(pq.spec_seq());
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn find_min(&self) -> (min_elem: Option<&T>)
                 requires
                     Self::spec_is_exec_heap(self.spec_seq()),
@@ -255,6 +258,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 cost table, binary heaps): Work O(lg n), Span O(lg n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n): sift up
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqStPer append copies the array O(n) before the O(lg n) bubble_up_heap; cost table insert O(lg n); does not match old analysis: Work O(lg n), Span O(lg n) vs new; the append copy dominates
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -267,6 +271,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 cost table, binary heaps): Work O(lg n), Span O(lg n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n): sift down
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: rebuilds the array by n - 2 one-element ArraySeqStPer appends (each copies the prefix) before the O(lg n) bubble_down_heap; cost table deleteMin O(lg n); does not match old analysis: Work O(lg n), Span O(lg n) vs new; the rebuild is quadratic
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     obeys_feq_clone::<T>(),
@@ -288,6 +293,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 cost table, binary heaps): Work O(m + n), Span O(m + n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n): rebuild heap from combined arrays
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((m + n)^3), Span O((m + n)^3) — does not match textbook: append then heapify, whose bubble_down swaps by swap_elements, an O(n^2) rebuild per swap, over O(n) swaps; cost table meld O(m + n); does not match old analysis: Work O(m + n), Span O(m + n) vs new; heapify is cubic
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -299,6 +305,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 cost table, binary heaps): Work O(n), Span O(n)
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) Work: bottom-up heapify
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: heapify's bubble_down swaps by swap_elements, an O(n^2) rebuild per swap, over O(n) swaps; cost table fromSeq O(n); does not match old analysis: Work O(n), Span O(n) vs new; heapify is cubic
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -307,19 +314,23 @@ pub mod BinaryHeapPQ {
                     pq@.len() == seq@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn is_empty(&self) -> (empty: bool)
                 ensures empty == (self.spec_size() == 0);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
             fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures seq@ =~= self@;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((m + n)^3), Span O((m + n)^3) — does not match textbook: from_seq O(m^3) then meld O((m + n)^3); APAS line O((m+n) log(m+n)); does not match old analysis: Work O(m + n), Span O(m + n) vs new; heapify is cubic
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -328,6 +339,7 @@ pub mod BinaryHeapPQ {
                 ensures pq@.len() == self@.len() + elements@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: n delete_min calls, each O(k^2), plus an O(k) append per element; APAS line O(n log n); does not match old analysis: Work O(n log n), Span O(n log n) vs new; delete_min is O(n^2)
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -338,15 +350,18 @@ pub mod BinaryHeapPQ {
                     Self::spec_sorted(sorted.seq@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
             fn is_valid_heap(&self) -> (valid: bool)
                 requires self@.len() * 2 <= usize::MAX as int;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
             fn height(&self) -> (levels: usize)
                 requires self@.len() <= usize::MAX as int,
                 ensures self@.len() == 0 ==> levels == 0;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(2^level), Span O(2^level)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(level + L^2), Span O(level + L^2) — does not match textbook: L = min(2^level, n) elements, each added by a one-element ArraySeqStPer append that copies the prefix; APAS line O(2^level); does not match old analysis: Work O(2^level), Span O(2^level) vs new; the appends are quadratic in L
             fn level_elements(&self, level: usize) -> (elts: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -354,6 +369,7 @@ pub mod BinaryHeapPQ {
                     usize::BITS >= 64;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: from_seq (heapify is cubic); APAS line O(n); does not match old analysis: Work O(n), Span O(n) vs new; heapify is cubic
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -361,11 +377,13 @@ pub mod BinaryHeapPQ {
                 ensures pq@.len() == vec@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
             fn to_vec(&self) -> (v: Vec<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures v@.len() == self@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: dominated by extract_all_sorted, then an O(n) copy; APAS line O(n log n); does not match old analysis: Work O(n log n), Span O(n log n) vs new; delete_min is O(n^2)
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -380,6 +398,7 @@ pub mod BinaryHeapPQ {
 
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn left_child(i: usize) -> (child_idx: usize)
             requires i <= usize::MAX / 2 - 1,
             ensures child_idx as int == 2 * (i as int) + 1,
@@ -388,6 +407,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn right_child(i: usize) -> (child_idx: usize)
             requires i <= usize::MAX / 2 - 1,
             ensures child_idx as int == 2 * (i as int) + 2,
@@ -396,6 +416,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn parent(i: usize) -> (parent_idx: usize)
             requires i > 0,
             ensures parent_idx as int == (i as int - 1) / 2,
@@ -404,6 +425,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — no textbook cost; rebuilds the array by n one-element ArraySeqStPer appends, each copying the prefix; does not match old analysis: Work O(n), Span O(n) vs new; append per element is quadratic
         fn swap_elements<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -475,6 +497,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — no textbook cost; an O(n) clone plus up to lg n swap_elements calls, O(n^2) each; does not match old analysis: Work O(n log n), Span O(n log n) vs new; swap_elements is O(n^2)
         fn bubble_up<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (heaped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -530,6 +553,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n), Span O(n^2 lg n) — no textbook cost; an O(n) clone plus up to lg n swap_elements calls, O(n^2) each; does not match old analysis: Work O(n log n), Span O(n log n) vs new; swap_elements is O(n^2)
         fn bubble_down<T: StT + Ord + TotalOrder>(heap: &ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -596,6 +620,7 @@ pub mod BinaryHeapPQ {
         /// Sifts down from position 0, restoring full heap property.
         /// Takes ownership to enable in-place vec_swap for T-level identity.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost; takes the Vec by value and sifts down with in-place vec_swap
         fn bubble_down_heap<T: StT + Ord + TotalOrder>(heap: ArraySeqStPerS<T>) -> (heaped: ArraySeqStPerS<T>)
             requires
                 heap.seq@.len() > 0,
@@ -780,6 +805,7 @@ pub mod BinaryHeapPQ {
         /// Sifts up from position i, restoring full heap property.
         /// Takes ownership to enable in-place vec_swap for T-level identity.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost; takes the Vec by value and sifts up with in-place vec_swap
         fn bubble_up_heap<T: StT + Ord + TotalOrder>(heap: ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)
             requires
                 heap.seq@.len() > 0,
@@ -975,6 +1001,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — no textbook cost; n/2 bottom-up bubble_down calls, each an O(n) clone, with O(n) swaps in total, each swap an O(n^2) swap_elements; does not match old analysis: Work O(n^2), Span O(n^2) vs new; each swap is O(n^2), not O(1)
         fn heapify<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>) -> (heap: ArraySeqStPerS<T>)
             requires
                 // Veracity: NEEDED proof block
@@ -1027,6 +1054,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn is_heap<T: StT + Ord + TotalOrder>(elements: &ArraySeqStPerS<T>) -> (valid: bool)
             requires elements@.len() * 2 <= usize::MAX as int,
             ensures true,
@@ -1058,6 +1086,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(e), Span O(e)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(e), Span O(e) — no textbook cost
         fn exec_pow2(e: usize) -> (power: usize)
             requires pow2(e as nat) <= usize::MAX as int,
             ensures power as int == pow2(e as nat),
@@ -1091,6 +1120,7 @@ pub mod BinaryHeapPQ {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
         fn exec_log2(n: usize) -> (log_val: usize)
             requires n >= 1,
             ensures log_val as int == log(2, n as int),
@@ -1179,6 +1209,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time empty construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn empty() -> (pq: Self) {
                 let pq = BinaryHeapPQ {
                     elements: ArraySeqStPerS::empty(),
@@ -1192,6 +1223,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); constant-time singleton construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn singleton(element: T) -> (pq: Self) {
                 let pq = BinaryHeapPQ {
                     elements: ArraySeqStPerS::singleton(element),
@@ -1208,6 +1240,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); root of heap is minimum.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 if self.elements.length() == 0 {
                     None
@@ -1235,6 +1268,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: append copies persistent array O(n), then bubble_up O(log n).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqStPer append copies the array O(n) before the O(lg n) bubble_up_heap; cost table insert O(lg n)
             fn insert(&self, element: T) -> Self {
                 let single_seq = ArraySeqStPerS::singleton(element);
                 let new_elements = ArraySeqStPerS::append(&self.elements, &single_seq);
@@ -1309,6 +1343,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: rebuild array O(n), then bubble_down O(log n).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: rebuilds the array by n - 2 one-element ArraySeqStPer appends (each copies the prefix) before the O(lg n) bubble_down_heap; cost table deleteMin O(lg n); does not match old analysis: Work O(n), Span O(n) vs new; the rebuild is quadratic
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -1516,6 +1551,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(m+n), Span O(m+n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n); append O(m+n), then heapify O(m+n).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((m + n)^3), Span O((m + n)^3) — does not match textbook: append then heapify, whose bubble_down swaps by swap_elements, an O(n^2) rebuild per swap, over O(n) swaps; cost table meld O(m + n); does not match old analysis: Work O(m+n), Span O(m+n) vs new; heapify is cubic
             fn meld(&self, other: &Self) -> Self {
                 let merged = ArraySeqStPerS::append(&self.elements, &other.elements);
                 let heapified = heapify(&merged);
@@ -1550,6 +1586,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); heapify via bottom-up bubble_down.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: heapify's bubble_down swaps by swap_elements, an O(n^2) rebuild per swap, over O(n) swaps; cost table fromSeq O(n); does not match old analysis: Work O(n), Span O(n) vs new; heapify is cubic
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
             {
                 // Veracity: NEEDED proof block
@@ -1559,24 +1596,28 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); field access.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn size(&self) -> usize {
                 self.elements.length()
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); field access and comparison.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn is_empty(&self) -> bool {
                 self.elements.length() == 0
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); clones persistent array.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
             fn to_seq(&self) -> ArraySeqStPerS<T> {
                 self.elements.clone()
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O((m+n) log(m+n)), Span O((m+n) log(m+n)).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — ACCEPTED DIFFERENCE: from_seq O(m), then meld O(m+n).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((m + n)^3), Span O((m + n)^3) — does not match textbook: from_seq O(m^3) then meld O((m + n)^3); APAS line O((m+n) log(m+n)); does not match old analysis: Work O(m+n), Span O(m+n) vs new; heapify is cubic
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
                 let other = Self::from_seq(elements);
                 self.meld(&other)
@@ -1584,6 +1625,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: n iterations of delete_min each O(n).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: n delete_min calls, each O(k^2), plus an O(k) append per element; APAS line O(n log n); does not match old analysis: Work O(n^2), Span O(n^2) vs new; delete_min is O(n^2)
             #[verifier::exec_allows_no_decreases_clause]
             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
                 let mut result = ArraySeqStPerS::empty();
@@ -1693,12 +1735,14 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); linear scan checking parent-child ordering.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
             fn is_valid_heap(&self) -> bool {
                 is_heap(&self.elements)
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n); computes floor(log2(n)) + 1.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — matches textbook
             fn height(&self) -> usize {
                 let n = self.elements.length();
                 if n == 0 {
@@ -1717,6 +1761,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(2^level), Span O(2^level).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(2^level), Span O(2^level); copies elements in [2^level - 1, 2^(level+1) - 1).
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(level + L^2), Span O(level + L^2) — does not match textbook: L = min(2^level, n) elements, each added by a one-element ArraySeqStPer append that copies the prefix; APAS line O(2^level); does not match old analysis: Work O(2^level), Span O(2^level) vs new; the appends are quadratic in L
             fn level_elements(&self, level: usize) -> ArraySeqStPerS<T> {
                 let mut result = ArraySeqStPerS::empty();
                 let n = self.elements.length();
@@ -1760,6 +1805,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n); from_vec then heapify.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: from_seq (heapify is cubic); APAS line O(n); does not match old analysis: Work O(n), Span O(n) vs new; heapify is cubic
             fn from_vec(vec: Vec<T>) -> Self {
                 let seq = ArraySeqStPerS::from_vec(vec);
                 // Veracity: NEEDED proof block
@@ -1789,6 +1835,7 @@ pub mod BinaryHeapPQ {
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: extract_all_sorted O(n^2), then linear copy.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3), Span O(n^3) — does not match textbook: dominated by extract_all_sorted, then an O(n) copy; APAS line O(n log n); does not match old analysis: Work O(n^2), Span O(n^2) vs new; delete_min is O(n^2)
             fn to_sorted_vec(&self) -> Vec<T> {
                 let sorted_seq = self.extract_all_sorted();
                 let n = sorted_seq.length();

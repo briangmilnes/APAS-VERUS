@@ -91,6 +91,7 @@ pub mod DocumentIndex {
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.2): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — ACCEPTED DIFFERENCE: sequential loops, APAS Span O(lg^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(N·(N + D·h^2)), Span O(N·(N + D·h^2)) — does not match textbook: N = total tokens, D = |docs|, h = document-set height; per token a linear TableStPer find_ref, an AVLTreeSetStPer union O(D h^2), and a persistent TableStPer insert that deep-clones every entry O(N); Alg 44.2 Work O(n lg n), Span O(lg^2 n); does not match old analysis: Work O(n lg n), Span O(n lg n) vs new; the table is an unsorted array copied on every insert, not a BST
         fn make_index(docs: &DocumentCollection) -> (di: Self)
             requires
                 docs.spec_len() <= usize::MAX as nat / 2,
@@ -102,6 +103,7 @@ pub mod DocumentIndex {
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + d), Span O(w + d) — does not match textbook: w = distinct words, d = result size; linear TableStPer find_ref plus a deep clone_wf of the document set; Alg 44.3 O(lg n); does not match old analysis: Work O(lg n), Span O(lg n) vs new; the table is an unsorted array
         fn find(&self, word: &Word) -> (found: DocumentSet)
             requires
                 self.spec_documentindex_wf(),
@@ -114,6 +116,7 @@ pub mod DocumentIndex {
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — ACCEPTED DIFFERENCE: sequential split-join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; AVLTreeSetStPer intersection (sequential BSTParaStEph intersect with deep-copy exposes, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) vs new; callee cost per Chap41 review
         fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -127,6 +130,7 @@ pub mod DocumentIndex {
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — ACCEPTED DIFFERENCE: sequential split-join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; AVLTreeSetStPer union (sequential BSTParaStEph union with deep-copy exposes, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) vs new; callee cost per Chap41 review
         fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -141,6 +145,7 @@ pub mod DocumentIndex {
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — ACCEPTED DIFFERENCE: sequential split-join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; AVLTreeSetStPer difference (sequential BSTParaStEph difference with deep-copy exposes, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) vs new; callee cost per Chap41 review
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (remaining: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -154,25 +159,30 @@ pub mod DocumentIndex {
 
         /// - Alg Analysis: APAS (Ch44 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(docs: &DocumentSet) -> (count: usize)
             requires docs.spec_avltreesetstper_wf()
             ensures count == docs@.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential iteration over AVL tree sequence
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: Work O(n), Span O(n) vs new; AVLTreeSetStPer to_seq is O(n h(T)) per the Chap41 review, then n AVLTreeSeqStPer nth calls, O(lg n) each
         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>)
             requires docs.spec_avltreesetstper_wf()
             ensures seq.spec_arrayseqstper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (di: Self)
             ensures di.spec_documentindex_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collects table keys into sequence
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + M), Span O(w + M) — no textbook cost; w = distinct words, M = Σ document-set sizes; does not match old analysis: Work O(n), Span O(n) vs new; TableStPer collect deep-clones every document set before the keys are extracted
         fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>)
             requires self.spec_documentindex_wf()
             ensures words.spec_arrayseqstper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to Table.size
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn word_count(&self) -> (count: usize)
             requires self.spec_documentindex_wf();
     }
@@ -188,6 +198,7 @@ pub mod DocumentIndex {
         /// Algorithm 44.2: Make Index — table-based insert.
         /// Iterate docs, iterate words per doc, insert each word into the table.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(D * W * lg n), Span O(D * W * lg n) — nested loops: D docs × W words/doc × O(lg n) table insert; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(N·(N + D·h^2)), Span O(N·(N + D·h^2)) — does not match textbook: N = total tokens, D = |docs|, h = document-set height; per token a linear TableStPer find_ref, an AVLTreeSetStPer union O(D h^2), and a persistent TableStPer insert that deep-clones every entry O(N); Alg 44.2 Work O(n lg n), Span O(lg^2 n); does not match old analysis: Work O(D * W * lg n), Span same vs new; TableStPer insert is O(table size) with deep clones, not O(lg n)
         fn make_index(docs: &DocumentCollection) -> (di: Self) {
             // Veracity: NEEDED proof block (speed hint)
             proof {
@@ -368,6 +379,7 @@ pub mod DocumentIndex {
 
         /// Algorithm 44.3: find function - simple table lookup.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — BST table lookup + clone; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + d), Span O(w + d) — does not match textbook: w = distinct words, d = result size; linear TableStPer find_ref plus a deep clone_wf of the document set; Alg 44.3 O(lg n); does not match old analysis: Work O(lg n), Span O(lg n) vs new; the table is an unsorted array, not a BST
         fn find(&self, word: &Word) -> (found: DocumentSet) {
             match self.word_to_docs.find_ref(word) {
                 Some(doc_set_ref) => {
@@ -379,30 +391,35 @@ pub mod DocumentIndex {
 
         /// Algorithm 44.3: queryAnd - set intersection.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set intersection; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; AVLTreeSetStPer intersection (sequential BSTParaStEph intersect with deep-copy exposes, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(n + m), Span O(n + m) vs new; callee cost per Chap41 review
         fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet) {
             docs_a.intersection(docs_b)
         }
 
         /// Algorithm 44.3: queryOr - set union.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set union; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; AVLTreeSetStPer union (sequential BSTParaStEph union with deep-copy exposes, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(n + m), Span O(n + m) vs new; callee cost per Chap41 review
         fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet) {
             docs_a.union(docs_b)
         }
 
         /// Algorithm 44.3: queryAndNot - set difference.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set difference; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; AVLTreeSetStPer difference (sequential BSTParaStEph difference with deep-copy exposes, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(n + m), Span O(n + m) vs new; callee cost per Chap41 review
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (remaining: DocumentSet) {
             docs_a.difference(docs_b)
         }
 
         /// Algorithm 44.3: size function.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — AVL tree cached size.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(docs: &DocumentSet) -> (count: usize) {
             docs.size()
         }
 
         /// Algorithm 44.3: toSeq function.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal collecting n elements; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: Work O(n), Span O(n) vs new; AVLTreeSetStPer to_seq is O(n h(T)) per the Chap41 review, then n AVLTreeSeqStPer nth calls, O(lg n) each
         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>) {
             let avl_seq = docs.to_seq();
             let len = avl_seq.length();
@@ -424,6 +441,7 @@ pub mod DocumentIndex {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty table allocation.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (di: Self) {
             DocumentIndex {
                 word_to_docs: TableStPer::empty(),
@@ -431,6 +449,7 @@ pub mod DocumentIndex {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collect all table entries then extract keys; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + M), Span O(w + M) — no textbook cost; w = distinct words, M = Σ document-set sizes; does not match old analysis: Work O(n), Span O(n) vs new; TableStPer collect deep-clones every document set before the keys are extracted
         fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>) {
             let entries = self.word_to_docs.collect();
             let len = entries.length();
@@ -451,6 +470,7 @@ pub mod DocumentIndex {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — table size query.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn word_count(&self) -> (count: usize) {
             self.word_to_docs.size()
         }
@@ -472,12 +492,14 @@ pub mod DocumentIndex {
         spec fn spec_index_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(index: &'a DocumentIndex) -> (qb: Self)
             requires spec_documentindex_wf(index)
             ensures qb.spec_index_wf();
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + d), Span O(w + d) — does not match textbook: delegates to DocumentIndex find, a linear TableStPer find_ref plus a deep clone of the document set; Alg 44.3 O(lg n); does not match old analysis: Work O(lg n), Span O(lg n) vs new; the table is an unsorted array
         fn find(&self, word: &Word) -> (found: DocumentSet)
             requires
                 self.spec_index_wf(),
@@ -489,6 +511,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; delegates to query_and (AVLTreeSetStPer intersection, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(m log(1 + n/m)), Span same vs new; callee cost per Chap41 review
         fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -501,6 +524,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; delegates to query_or (AVLTreeSetStPer union, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(m log(1 + n/m)), Span same vs new; callee cost per Chap41 review
         fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -514,6 +538,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; delegates to query_and_not (AVLTreeSetStPer difference, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(m log(1 + n/m)), Span same vs new; callee cost per Chap41 review
         fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (remaining: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -526,6 +551,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work dominated by 4 finds + 3 set operations
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + n h^2), Span O(w + n h^2) — no textbook cost; w = distinct words, n = total size of the four document sets, h = max height; four linear finds plus two sequential set operations and a union of their results
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (found: DocumentSet)
             requires
                 self.spec_index_wf(),
@@ -545,32 +571,38 @@ pub mod DocumentIndex {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — reference copy.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(index: &'a DocumentIndex) -> (qb: Self) {
             QueryBuilder { index }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — delegates to DocumentIndex::find.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + d), Span O(w + d) — does not match textbook: delegates to DocumentIndex find, a linear TableStPer find_ref plus a deep clone of the document set; Alg 44.3 O(lg n); does not match old analysis: Work O(lg n), Span O(lg n) vs new; the table is an unsorted array
         fn find(&self, word: &Word) -> (found: DocumentSet) {
             self.index.find(word)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — delegates to query_and.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; delegates to query_and (AVLTreeSetStPer intersection, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(n + m), Span O(n + m) vs new; callee cost per Chap41 review
         fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet) {
             DocumentIndex::query_and(&docs_a, &docs_b)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — delegates to query_or.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; delegates to query_or (AVLTreeSetStPer union, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(n + m), Span O(n + m) vs new; callee cost per Chap41 review
         fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet) {
             DocumentIndex::query_or(&docs_a, &docs_b)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — delegates to query_and_not.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |A| + |B|, h = max height; delegates to query_and_not (AVLTreeSetStPer difference, per the Chap41 review); Alg 44.3 Work O(m lg(1 + n/m)), Span O(lg n + lg m); does not match old analysis: Work O(n + m), Span O(n + m) vs new; callee cost per Chap41 review
         fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (remaining: DocumentSet) {
             DocumentIndex::query_and_not(&docs_a, &docs_b)
         }
 
         /// Complex query: (word1 AND word2) OR (word3 AND NOT word4).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — 4 finds + 3 set ops; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(w + n h^2), Span O(w + n h^2) — no textbook cost; w = distinct words, n = total size of the four document sets, h = max height; does not match old analysis: Work O(n), Span O(n) vs new; the finds are linear in w and each set operation is O(n h^2) per the Chap41 review
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (found: DocumentSet) {
             let set1 = self.find(word1);
             let set2 = self.find(word2);
@@ -594,6 +626,7 @@ pub mod DocumentIndex {
 
     /// Tokenization: splits content into lowercase ASCII words.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential character iteration
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m), Span O(m) — no textbook cost; m = content length, one pass over the characters
     // veracity: no_requires
     pub fn tokens(content: &Contents) -> (words: ArraySeqStPerS<Word>)
         ensures words.spec_arrayseqstper_wf()
@@ -685,6 +718,7 @@ pub mod DocumentIndex {
 
     /// Convenience function for staged computation pattern (Example 44.2).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — closure capture only
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {
         move |word: &Word| index.find(word)
     }
