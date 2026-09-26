@@ -59,6 +59,7 @@ pub mod BottomUpDPStPer {
             ensures self.spec_med(i, j) <= i + j;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self)
             ensures
                 dp.spec_bottomupdpstper_wf(),
@@ -68,22 +69,26 @@ pub mod BottomUpDPStPer {
                 dp.spec_t_len() == t.spec_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn s_length(&self) -> (len: usize)
             requires self.spec_bottomupdpstper_wf(),
             ensures len as nat == self.spec_s_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn t_length(&self) -> (len: usize)
             requires self.spec_bottomupdpstper_wf(),
             ensures len as nat == self.spec_t_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_bottomupdpstper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - Alg Analysis: APAS (Ch51 Alg 51.1): Work O(|S| * |T|), Span O(|S| + |T|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|), Span O(|S|*|T|) — does not match textbook: row-by-row sequential fill; APAS pebbles diagonals in parallel, Span O(|S|+|T|)
         fn med_bottom_up(&self) -> (distance: usize)
             requires
                 self.spec_bottomupdpstper_wf(),
@@ -95,6 +100,7 @@ pub mod BottomUpDPStPer {
                 );
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|), Span O(|S|*|T|) — no textbook cost
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)
             requires
                 self.spec_bottomupdpstper_wf(),
@@ -113,6 +119,7 @@ pub mod BottomUpDPStPer {
                     table@[0]@[j] == j as nat;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — computes one DP cell.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn compute_cell_value(
             &self,
             table: &Vec<Vec<usize>>,
@@ -175,16 +182,20 @@ pub mod BottomUpDPStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self) {
             BottomUpDPStPerS { seq_s: s, seq_t: t }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (empty: bool) {
             let s_empty = self.seq_s.length() == 0;
             let t_empty = self.seq_t.length() == 0;
@@ -193,6 +204,7 @@ pub mod BottomUpDPStPer {
 
         /// Compute MED using bottom-up row-by-row fill (Algorithm 51.1).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — bottom-up DP table fill; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|), Span O(|S|*|T|) — does not match textbook: row-by-row sequential fill; APAS pebbles diagonals in parallel, Span O(|S|+|T|)
         fn med_bottom_up(&self) -> (distance: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -329,6 +341,7 @@ pub mod BottomUpDPStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|), Span O(|S|*|T|) — no textbook cost
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -396,6 +409,7 @@ pub mod BottomUpDPStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — computes one DP cell.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn compute_cell_value(
             &self,
             table: &Vec<Vec<usize>>,

@@ -96,6 +96,7 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<V>(),
@@ -105,6 +106,7 @@ broadcast use {
             ensures out.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self)
             requires
                 v.spec_avltreesetstper_wf(),
@@ -120,39 +122,47 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); AVL set len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> usize
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); AVL set len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_edges(&self) -> usize
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn vertices(&self) -> &AVLTreeSetStPer<V>
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn edges(&self) -> &AVLTreeSetStPer<Pair<V, V>>
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(log |E|), Span Theta(log |E|)
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n); AVL find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E), Span O(|E| h_E) — does not match textbook: AVLTreeSetStPer find is O(size * height) on the unbalanced, deep-copying ParamBST (Chap41 review), APAS O(lg n); does not match old analysis: O(lg n) vs O(|E| h_E)
         fn has_edge(&self, u: &V, v: &V) -> bool
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(|E| log |V|), Span Theta(|E| log |V|)
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) work; sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E^2 + d^2), Span O(|E| h_E^2 + d^2) — does not match textbook: AVLTreeSetStPer filter is O(|E| h_E^2), then d sequential find+persistent insert of sorted keys into the unbalanced result set, O(i) each, APAS Work O(m), Span O(lg n); does not match old analysis: O(m), O(m) vs new
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
             requires self.spec_edgesetgraphstper_wf()
             ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetstper_wf();
         /// Work Theta(|E|), Span Theta(|E|)
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) work; sequential filter then len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E^2 + d^2), Span O(|E| h_E^2 + d^2) — does not match textbook: builds the full out-neighbor set (out_neighbors), APAS Work O(m), Span O(lg n); does not match old analysis: O(m), O(m) vs new
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphstper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E|), Span O(|V| h_V + |E|) — does not match textbook: persistent AVLTreeSetStPer insert is O(size * height) and the edge set is cloned, O(|E|); CS 52.1 O(lg n); does not match old analysis: O(log n) vs new
         fn insert_vertex(&self, v: V) -> (updated: Self)
             requires
                 self.spec_edgesetgraphstper_wf(),
@@ -160,11 +170,13 @@ broadcast use {
             ensures updated.spec_edgesetgraphstper_wf();
         /// Work Theta(|E| log |E|), Span Theta(|E| log |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log m), Span O(m log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| h_E^2), Span O(|V| h_V + |E| h_E^2) — does not match textbook: CS 52.1 deletes an isolated vertex in O(lg n); the code filters every edge (AVLTreeSetStPer filter O(|E| h_E^2)); does not match old analysis: O(m log m) vs new
         fn delete_vertex(&self, v: &V) -> (updated: Self)
             requires self.spec_edgesetgraphstper_wf()
             ensures updated.spec_edgesetgraphstper_wf(), !updated.spec_vertices().contains(v@);
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + log m), Span O(log n + log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| h_E), Span O(|V| h_V + |E| h_E) — does not match textbook: two persistent vertex inserts and one edge insert at O(size * height) each, CS 52.1 O(lg n); does not match old analysis: O(log n + log m) vs new
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
             requires
                 self.spec_edgesetgraphstper_wf(),
@@ -173,6 +185,7 @@ broadcast use {
             ensures updated.spec_edgesetgraphstper_wf();
         /// Work Theta(log |E|), Span Theta(log |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E| h_E), Span O(|V| + |E| h_E) — does not match textbook: persistent AVLTreeSetStPer delete is O(size * height) and the vertex set is cloned, O(|V|); CS 52.1 O(lg n); does not match old analysis: O(log m) vs new
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
             requires self.spec_edgesetgraphstper_wf()
             ensures updated.spec_edgesetgraphstper_wf();
@@ -208,6 +221,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (out: Self) {
             EdgeSetGraphStPer {
                 vertices: AVLTreeSetStPer::empty(),
@@ -216,26 +230,33 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self) {
             EdgeSetGraphStPer { vertices: v, edges: e }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> usize { self.vertices.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_edges(&self) -> usize { self.edges.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn vertices(&self) -> &AVLTreeSetStPer<V> { &self.vertices }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn edges(&self) -> &AVLTreeSetStPer<Pair<V, V>> { &self.edges }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E), Span O(|E| h_E) — does not match textbook: AVLTreeSetStPer find is O(size * height) (Chap41 review), APAS O(lg n); does not match old analysis: O(log m) vs O(|E| h_E)
         fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E^2 + d^2), Span O(|E| h_E^2 + d^2) — does not match textbook: AVLTreeSetStPer filter is O(|E| h_E^2), then d sequential find+persistent insert of sorted keys into the unbalanced result set, O(i) each, APAS Work O(m), Span O(lg n); does not match old analysis: O(m), O(m) vs new
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>)
             ensures neighbors@ == self.spec_out_neighbors(u@)
         {
@@ -339,10 +360,12 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E^2 + d^2), Span O(|E| h_E^2 + d^2) — does not match textbook: builds the full out-neighbor set (out_neighbors), APAS Work O(m), Span O(lg n); does not match old analysis: Θ(m), Θ(m) vs new
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E|), Span O(|V| h_V + |E|) — does not match textbook: persistent AVLTreeSetStPer insert is O(size * height) and the edge set is cloned, O(|E|); CS 52.1 O(lg n); does not match old analysis: O(log n) vs new
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             let new_vertices = self.vertices.insert(v);
             let new_edges = self.edges.clone();
@@ -360,6 +383,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log m), Span O(m log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| h_E^2), Span O(|V| h_V + |E| h_E^2) — does not match textbook: CS 52.1 deletes an isolated vertex in O(lg n); the code filters every edge (AVLTreeSetStPer filter O(|E| h_E^2)); does not match old analysis: O(m log m) vs new
         // Veracity: NEEDED proof block
         fn delete_vertex(&self, v: &V) -> (updated: Self)
             ensures !updated.vertices@.contains(v@)
@@ -405,6 +429,7 @@ broadcast use {
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + log m), Span O(log n + log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| h_E), Span O(|V| h_V + |E| h_E) — does not match textbook: two persistent vertex inserts and one edge insert at O(size * height) each, CS 52.1 O(lg n); does not match old analysis: O(log n + log m) vs new
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let u_cv = u.clone_view();
             let v_cv = v.clone_view();
@@ -427,6 +452,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E| h_E), Span O(|V| + |E| h_E) — does not match textbook: persistent AVLTreeSetStPer delete is O(size * height) and the vertex set is cloned, O(|V|); CS 52.1 O(lg n); does not match old analysis: O(log m) vs new
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
             let new_vertices = self.vertices.clone();
@@ -486,6 +512,7 @@ broadcast use {
 
     impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Debug> fmt::Debug for EdgeSetGraphStPer<V> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work depends on graph size — outside verus!, not verified.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| h_E), Span O(|V| h_V + |E| h_E) — no textbook cost; AVLTreeSetStPer Debug collects the in-order sequence of each set
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("EdgeSetGraphStPer")
                 .field("vertices", &self.vertices)

@@ -92,6 +92,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; creates empty sets.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<V>(),
@@ -102,6 +103,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps existing sets.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)
             requires
                 v.spec_avltreesetsteph_wf(),
@@ -116,38 +118,46 @@ broadcast use {
             ensures out.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); AVL set len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); AVL set len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_edges(&self) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn vertices(&self) -> &AVLTreeSetStEph<V>
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>>
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n); AVL find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E), Span O(|E| h_E) — does not match textbook: AVLTreeSetStEph find is O(size * height) on the unbalanced, deep-copying ParamBST (Chap41 review), APAS O(lg n); does not match old analysis: O(lg n) vs O(|E| h_E)
         fn has_edge(&self, u: &V, v: &V) -> bool
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) work; sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E^2 + d^2), Span O(|E| h_E^2 + d^2) — does not match textbook: AVLTreeSetStEph filter is O(|E| h_E^2), then d sequential find+insert of sorted keys into the unbalanced result set, O(i) each, APAS Work O(m), Span O(lg n); does not match old analysis: O(m), O(m) vs new
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             requires self.spec_edgesetgraphsteph_wf()
             ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) work; sequential filter then len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E^2 + d^2), Span O(|E| h_E^2 + d^2) — does not match textbook: builds the full out-neighbor set (out_neighbors), APAS Work O(m), Span O(lg n); does not match old analysis: O(m), O(m) vs new
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg n), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n), Span Theta(lg n) — agrees; AVL set insert.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V), Span O(|V| h_V) — does not match textbook: AVLTreeSetStEph insert is O(size * height) (Chap41 review), APAS O(lg n); does not match old analysis: O(lg n) vs O(|V| h_V)
         fn insert_vertex(&mut self, v: V)
             requires
                 old(self).spec_edgesetgraphsteph_wf(),
@@ -156,12 +166,14 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m lg m), Span O(m lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg m), Span O(m lg m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(m lg m), Span Theta(m lg m) — agrees; filter and rebuild edge set.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| lg |E| + (1 + deg(v)) |E| h_E), Span O(|V| h_V + |E| lg |E| + (1 + deg(v)) |E| h_E) — does not match textbook: CS 52.1 deletes an isolated vertex in O(lg n); the code scans every edge and deletes each incident edge, on the O(size * height) ParamBST; does not match old analysis: O(m lg m) vs new
         fn delete_vertex(&mut self, v: &V)
             requires old(self).spec_edgesetgraphsteph_wf()
             ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg n + lg m), Span O(lg n + lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + lg m), Span O(lg n + lg m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; vertex insert + edge insert.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| h_E), Span O(|V| h_V + |E| h_E) — does not match textbook: two vertex inserts and one edge insert at O(size * height) each, APAS O(lg n); does not match old analysis: O(lg n + lg m) vs new
         fn insert_edge(&mut self, u: V, v: V)
             requires
                 old(self).spec_edgesetgraphsteph_wf(),
@@ -171,6 +183,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg m), Span O(lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg m), Span O(lg m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg m), Span Theta(lg m) — agrees; AVL set delete.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E), Span O(|E| h_E) — does not match textbook: AVLTreeSetStEph delete is O(size * height) (Chap41 review), APAS O(lg n); does not match old analysis: O(lg m) vs O(|E| h_E)
         fn delete_edge(&mut self, u: &V, v: &V)
             requires old(self).spec_edgesetgraphsteph_wf()
             ensures self.spec_edgesetgraphsteph_wf();
@@ -206,6 +219,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (out: Self) {
             EdgeSetGraphStEph {
                 vertices: AVLTreeSetStEph::empty(),
@@ -214,26 +228,33 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self) {
             EdgeSetGraphStEph { vertices: v, edges: e }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> usize { self.vertices.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_edges(&self) -> usize { self.edges.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn vertices(&self) -> &AVLTreeSetStEph<V> { &self.vertices }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>> { &self.edges }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E), Span O(|E| h_E) — does not match textbook: AVLTreeSetStEph find is O(size * height) (Chap41 review), APAS O(lg n); does not match old analysis: O(log m) vs O(|E| h_E)
         fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E^2 + d^2), Span O(|E| h_E^2 + d^2) — does not match textbook: AVLTreeSetStEph filter is O(|E| h_E^2), then d sequential find+insert of sorted keys into the unbalanced result set, O(i) each, APAS Work O(m), Span O(lg n); does not match old analysis: O(m), O(m) vs new
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             ensures neighbors@ == self.spec_out_neighbors(u@)
         {
@@ -336,10 +357,12 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E^2 + d^2), Span O(|E| h_E^2 + d^2) — does not match textbook: builds the full out-neighbor set (out_neighbors), APAS Work O(m), Span O(lg n); does not match old analysis: Θ(m), Θ(m) vs new
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V), Span O(|V| h_V) — does not match textbook: AVLTreeSetStEph insert is O(size * height) (Chap41 review), APAS O(lg n); does not match old analysis: O(log n) vs O(|V| h_V)
         fn insert_vertex(&mut self, v: V) {
             self.vertices.insert(v);
             proof {
@@ -356,6 +379,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log m), Span O(m log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| lg |E| + (1 + deg(v)) |E| h_E), Span O(|V| h_V + |E| lg |E| + (1 + deg(v)) |E| h_E) — does not match textbook: CS 52.1 deletes an isolated vertex in O(lg n); the code scans every edge and deletes each incident edge, on the O(size * height) ParamBST; does not match old analysis: O(m log m) vs new
         fn delete_vertex(&mut self, v: &V)
             ensures !self.spec_vertices().contains(v@)
         {
@@ -427,6 +451,7 @@ broadcast use {
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + log m), Span O(log n + log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| h_V + |E| h_E), Span O(|V| h_V + |E| h_E) — does not match textbook: two vertex inserts and one edge insert at O(size * height) each, APAS O(lg n); does not match old analysis: O(log n + log m) vs new
         fn insert_edge(&mut self, u: V, v: V) {
             let u_cv = u.clone_view();
             let v_cv = v.clone_view();
@@ -451,6 +476,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E| h_E), Span O(|E| h_E) — does not match textbook: AVLTreeSetStEph delete is O(size * height) (Chap41 review), APAS O(lg n); does not match old analysis: O(log m) vs O(|E| h_E)
         fn delete_edge(&mut self, u: &V, v: &V) {
             self.edges.delete(&Pair(u.clone(), v.clone()));
             proof {

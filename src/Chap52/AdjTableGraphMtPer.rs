@@ -89,6 +89,7 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<Pair<V, AVLTreeSetMtPer<V>>>(),
@@ -102,11 +103,13 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); table size
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); cached field
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_edges(&self) -> (m: usize)
             where V: crate::vstdplus::total_order::total_order::TotalOrder
             requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat
@@ -114,12 +117,14 @@ broadcast use {
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n); table find + set find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find is O(n h) (Chap43 lines), and each deep-copy expose also clones the neighbor sets it copies; CS 52.3 O(lg n); does not match old analysis: O(lg n) vs new
         fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             requires self.spec_adjtablegraphmtper_wf()
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
         /// Work Theta(log |V|), Span Theta(log |V|)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + d_g(v)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n); table find returns neighbor set
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find is O(n h) and copies neighbor sets during expose, plus an O(d) clone; CS 52.3 Work O(lg n + d), Span O(lg n); does not match old analysis: O(lg n) vs new
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
             requires self.spec_adjtablegraphmtper_wf()
             ensures
@@ -129,10 +134,12 @@ broadcast use {
         /// Work Theta(log |V|), Span Theta(log |V|)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n); table find + set len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find is O(n h) and copies neighbor sets during expose; CS 52.3 O(lg n); does not match old analysis: O(lg n) vs new
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphmtper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find then clone or insert_wf, each O(n h) with neighbor sets copied; CS 52.3 O(lg n); does not match old analysis: O(log n) vs new
         fn insert_vertex(&self, v: V) -> (updated: Self)
             requires
                 self.spec_adjtablegraphmtper_wf(),
@@ -144,6 +151,7 @@ broadcast use {
                 updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
         /// Work Theta((|V| + |E|) log |V|), Span Theta(log^2 |V| + log |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * (log n + d)), Span O(n * (log n + d))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h_T), Span O(|V| (|V| + |E|) h_T) — does not match textbook: table delete, a sequential OrderedTableMtPer map (O(|V|(|V| + |E|)) plus a set delete per vertex), then count_table_edges does first_key + find + delete per vertex at O((|V| + |E|) h_T) each; CS 52.3 O(lg n) for an isolated vertex; does not match old analysis: O(n * (log n + d)) vs new
         fn delete_vertex(&self, v: &V) -> (updated: Self)
             requires
                 self.spec_adjtablegraphmtper_wf(),
@@ -154,6 +162,7 @@ broadcast use {
                 updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
         /// Work Theta(log |V|), Span Theta(log |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: a full table clone, up to three finds and three insert_wf calls, each O(n h) with neighbor sets copied; CS 52.3 O(lg n); does not match old analysis: O(log n + d) vs new
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
             requires
                 self.spec_adjtablegraphmtper_wf(),
@@ -168,6 +177,7 @@ broadcast use {
                 updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find, then insert_wf (or a full clone), each O(n h) with neighbor sets copied; CS 52.3 O(lg n); does not match old analysis: O(log n + d) vs new
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
             requires
                 self.spec_adjtablegraphmtper_wf(),
@@ -325,6 +335,7 @@ broadcast use {
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (out: Self) {
             let adj = OrderedTableMtPer::empty();
             let out = AdjTableGraphMtPer { adj, num_edges: 0 };
@@ -347,11 +358,13 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> usize {
             self.adj.size()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); cached field
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_edges(&self) -> (m: usize)
             where V: crate::vstdplus::total_order::total_order::TotalOrder
         {
@@ -360,6 +373,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find is O(n h) (Chap43 lines), and each deep-copy expose also clones the neighbor sets it copies; CS 52.3 O(lg n); does not match old analysis: O(log n) vs new
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
             match self.adj.find(u) {
                 Some(neighbors) => {
@@ -393,6 +407,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find is O(n h) and copies neighbor sets during expose, plus an O(d) clone; CS 52.3 Work O(lg n + d), Span O(lg n); does not match old analysis: O(d) vs new
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>) {
             match self.adj.find(u) {
                 Some(ns) => {
@@ -420,6 +435,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find is O(n h) and copies neighbor sets during expose; CS 52.3 O(lg n); does not match old analysis: O(log n) vs new
         fn out_degree(&self, u: &V) -> usize {
             let ns = self.out_neighbors(u);
             // out_neighbors now ensures ns.spec_avltreesetmtper_wf().
@@ -427,6 +443,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find then clone or insert_wf, each O(n h) with neighbor sets copied; CS 52.3 O(lg n); does not match old analysis: O(log n) vs new
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             if self.adj.find(&v).is_some() {
                 // v already in domain. Clone preserves view → preserves wf.
@@ -496,6 +513,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * (log n + d)), Span O(n * (log n + d))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h_T), Span O(|V| (|V| + |E|) h_T) — does not match textbook: table delete, a sequential OrderedTableMtPer map (O(|V|(|V| + |E|)) plus a set delete per vertex), then count_table_edges does first_key + find + delete per vertex at O((|V| + |E|) h_T) each; CS 52.3 O(lg n) for an isolated vertex; does not match old analysis: O(n * (log n + d)) vs new
         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             let without_v = self.adj.delete(v);
             let ghost v_view = v@;
@@ -635,6 +653,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: a full table clone, up to three finds and three insert_wf calls, each O(n h) with neighbor sets copied; CS 52.3 O(lg n); does not match old analysis: O(log n + d) vs new
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let mut new_adj = self.adj.clone();
             // clone ensures: new_adj@ == self.adj@
@@ -888,6 +907,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V| + |E|) h_T), Span O((|V| + |E|) h_T) — does not match textbook: OrderedTableMtPer find, then insert_wf (or a full clone), each O(n h) with neighbor sets copied; CS 52.3 O(lg n); does not match old analysis: O(log n + d) vs new
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             let updated = match self.adj.find(u) {
                 Some(u_neighbors) => {

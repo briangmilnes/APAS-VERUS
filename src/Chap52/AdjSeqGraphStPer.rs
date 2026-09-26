@@ -89,6 +89,7 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — no textbook cost
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjseqgraphstper_wf(),
@@ -97,6 +98,7 @@ broadcast use {
 
         /// Work Theta(n + m), Span Theta(n + m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — counting loop
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — no textbook cost; does not match old analysis: O(n+m) vs O(|V|); the loop reads each row's length in O(1)
         fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (constructed: Self)
             requires
                 forall|u: int, j: int|
@@ -119,6 +121,7 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); seq len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphstper_wf()
             ensures n as nat == self.spec_num_vertices();
@@ -126,6 +129,7 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached field
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_edges(&self) -> (m: usize)
             requires self.spec_adjseqgraphstper_wf()
             ensures
@@ -137,6 +141,7 @@ broadcast use {
         /// Work Theta(deg(u)), Span Theta(deg(u))
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(u)), Span O(lg d_g(u))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) work; sequential scan
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(d), Span O(d) — does not match textbook: sequential linear scan of u's neighbors, CS 52.5 Span O(lg d)
         fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
@@ -146,6 +151,7 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(v)), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); returns reference to inner seq
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook: Ex 52.3 finds the out-neighbors in Θ(1); the APAS line's Work O(d) is the cost of mapping over them
         fn out_neighbors(&self, u: usize) -> (neighbors: &ArraySeqStPerS<usize>)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures
@@ -156,12 +162,14 @@ broadcast use {
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); inner seq len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: persistent update deep-copies every row with nested sequential tabulates, CS 52.5 Work Θ(n), Span Θ(1); does not match old analysis: O(d) vs O(|V| + |E|)
         fn insert_edge(&self, u: usize, v: usize) -> (updated: Self)
             requires
                 self.spec_adjseqgraphstper_wf(),
@@ -183,6 +191,7 @@ broadcast use {
 
         /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: persistent update deep-copies every row with nested sequential tabulates, CS 52.5 Work Θ(n), Span Θ(1); does not match old analysis: O(d) vs O(|V| + |E|)
         fn delete_edge(&self, u: usize, v: usize) -> (updated: Self)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures
@@ -225,6 +234,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — no textbook cost
         fn new(n: usize) -> (empty: Self) {
             let adj = ArraySeqStPerS::tabulate(
                 &|_i: usize| -> (r: ArraySeqStPerS<usize>)
@@ -245,6 +255,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — no textbook cost; does not match old analysis: O(n+m) vs O(|V|); the loop reads each row's length in O(1)
         fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (constructed: Self) {
             let n = adj.length();
             let ghost degree_fn: spec_fn(int) -> nat = |i: int| adj.spec_index(i).spec_len();
@@ -280,16 +291,19 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> (n: usize) {
             self.adj.length()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_edges(&self) -> (m: usize) {
             self.num_edges
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(d), Span O(d) — does not match textbook: sequential linear scan of u's neighbors, CS 52.5 Span O(lg d)
         fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
             let neighbors = self.adj.nth(u);
             let len = neighbors.length();
@@ -316,16 +330,19 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook: Ex 52.3 finds the out-neighbors in Θ(1); does not match old analysis: O(d) vs O(1); returns a reference, no copy
         fn out_neighbors(&self, u: usize) -> (neighbors: &ArraySeqStPerS<usize>) {
             self.adj.nth(u)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn out_degree(&self, u: usize) -> (d: usize) {
             self.adj.nth(u).length()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: persistent update deep-copies every row with nested sequential tabulates, CS 52.5 Work Θ(n), Span Θ(1); does not match old analysis: O(d) vs O(|V| + |E|)
         fn insert_edge(&self, u: usize, v: usize) -> (updated: Self) {
             let n_v = self.adj.length();
             let src_u = self.adj.nth(u);
@@ -493,6 +510,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: persistent update deep-copies every row with nested sequential tabulates, CS 52.5 Work Θ(n), Span Θ(1); does not match old analysis: O(d) vs O(|V| + |E|)
         fn delete_edge(&self, u: usize, v: usize) -> (updated: Self) {
             let n_v = self.adj.length();
             let src_u = self.adj.nth(u);

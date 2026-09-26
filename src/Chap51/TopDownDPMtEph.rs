@@ -85,16 +85,20 @@ pub mod TopDownDPMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self) {
             TopDownDPMtEphS { seq_s: s, seq_t: t }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (empty: bool) {
             let s_empty = self.seq_s.length() == 0;
             let t_empty = self.seq_t.length() == 0;
@@ -102,12 +106,15 @@ pub mod TopDownDPMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn set_s(&mut self, s: ArraySeqMtEphS<char>) { self.seq_s = s; }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn set_t(&mut self, t: ArraySeqMtEphS<char>) { self.seq_t = t; }
 
         /// Compute MED using sequential top-down memoization (Algorithm 51.4).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|) expected, Span O(|S|*|T|) expected — matches textbook: Alg 51.4 threaded memo is sequential; the name "concurrent" is misleading
         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
             // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
@@ -120,6 +127,7 @@ pub mod TopDownDPMtEph {
 
         /// Compute MED with parallel subproblem exploration.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|*(|S|+|T|)) when branches share memo entries, exponential worst case, Span O((|S|+|T|)^2) — does not match textbook: each call clones S and T (Vec, O(|S|+|T|)) and concurrent branches recompute shared subproblems (no synchronization variables); does not match old analysis: O(n*m), O(n+m) vs new
         fn med_memoized_parallel(&mut self) -> (distance: usize) {
             // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
@@ -159,6 +167,7 @@ pub mod TopDownDPMtEph {
             ensures self.spec_med(i, j) <= i + j;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self)
             ensures
                 dp.spec_topdowndpmteph_wf(),
@@ -168,21 +177,25 @@ pub mod TopDownDPMtEph {
                 dp.spec_t_len() == t.spec_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn s_length(&self) -> (len: usize)
             requires self.spec_topdowndpmteph_wf(),
             ensures len as nat == self.spec_s_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn t_length(&self) -> (len: usize)
             requires self.spec_topdowndpmteph_wf(),
             ensures len as nat == self.spec_t_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- two length checks.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_topdowndpmteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn set_s(&mut self, s: ArraySeqMtEphS<char>)
             requires old(self).spec_topdowndpmteph_wf(),
             ensures
@@ -191,6 +204,7 @@ pub mod TopDownDPMtEph {
                 self.spec_t() == old(self).spec_t();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn set_t(&mut self, t: ArraySeqMtEphS<char>)
             requires old(self).spec_topdowndpmteph_wf(),
             ensures
@@ -200,6 +214,7 @@ pub mod TopDownDPMtEph {
 
         /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|*|T|) (sequential memo threading)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential memoized recursion.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|) expected, Span O(|S|*|T|) expected — matches textbook
         fn med_memoized_concurrent(&mut self) -> (distance: usize)
             requires
                 old(self).spec_topdowndpmteph_wf(),
@@ -215,6 +230,7 @@ pub mod TopDownDPMtEph {
 
         /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (parallel subproblem exploration)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) -- fork-join on branches.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|*(|S|+|T|)) when branches share memo entries, exponential worst case, Span O((|S|+|T|)^2) — does not match textbook: each call clones S and T (Vec, O(|S|+|T|)) and concurrent branches recompute shared subproblems (no synchronization variables); does not match old analysis: O(|S|*|T|), O(|S|+|T|) vs new
         fn med_memoized_parallel(&mut self) -> (distance: usize)
             requires
                 old(self).spec_topdowndpmteph_wf(),
@@ -235,6 +251,7 @@ pub mod TopDownDPMtEph {
     /// Sequential recursive MED with verified memoization.
     /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|*|T|) (Algorithm 51.4, sequential)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|) expected, Span O(|S|*|T|) expected — matches textbook
     fn med_recursive_sequential(
         seq_s: &ArraySeqMtEphS<char>,
         seq_t: &ArraySeqMtEphS<char>,
@@ -316,6 +333,7 @@ pub mod TopDownDPMtEph {
     /// Parallel recursive MED with thread-safe memoization.
     /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (parallel subproblem exploration)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) -- fork-join on delete/insert.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|*(|S|+|T|)) when branches share memo entries, exponential worst case, Span O((|S|+|T|)^2) — does not match textbook: each call clones S and T (Vec, O(|S|+|T|)) and concurrent branches recompute shared subproblems (no synchronization variables); does not match old analysis: O(|S|*|T|), O(|S|+|T|) vs new
     fn med_recursive_parallel(
         seq_s: &ArraySeqMtEphS<char>,
         seq_t: &ArraySeqMtEphS<char>,

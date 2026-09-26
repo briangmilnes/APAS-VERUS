@@ -83,6 +83,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; creates empty table.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<V>(),
@@ -91,6 +92,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps existing table.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
             requires
                 table.spec_tablesteph_wf(),
@@ -105,16 +107,19 @@ broadcast use {
             ensures out.spec_adjtablegraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1); table size
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — ACCEPTED DIFFERENCE: APAS assumes cached; impl sums degrees sequentially
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|^2), Span O(|V|^2) — does not match textbook: per entry a linear find_ref of its own key in the unsorted TableStEph (Chap42 review), APAS O(1); does not match old analysis: O(n+m) vs O(|V|^2)
         fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphsteph_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(|V|), Span O(|V|) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(|V|), Span Theta(|V|) — agrees; builds set from domain.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|^2 h_V), Span O(|V|^2 h_V) — does not match textbook: |V| sequential AVLTreeSetStEph inserts at O(size * height) each (Chap41 review), APAS O(|V|); does not match old analysis: O(|V|) vs O(|V|^2 h_V)
         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
             requires
                 self.spec_adjtablegraphsteph_wf(),
@@ -122,11 +127,13 @@ broadcast use {
             ensures verts@ == self.spec_adj().dom();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n); table find + set find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + d h_u), Span O(|V| + d h_u) — does not match textbook: linear find_ref in the unsorted TableStEph, then an O(size * height) AVLTreeSetStEph find, CS 52.3 O(lg n); does not match old analysis: O(lg n) vs O(|V| + d h_u)
         fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             requires self.spec_adjtablegraphsteph_wf()
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + d_g(v)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n); table find returns neighbor set
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + d), Span O(|V| + d) — does not match textbook: linear TableStEph find plus an O(d) clone of the neighbor set, CS 52.3 Work O(lg n + d), Span O(lg n); does not match old analysis: O(lg n) vs O(|V| + d)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             requires self.spec_adjtablegraphsteph_wf()
             ensures
@@ -134,23 +141,27 @@ broadcast use {
                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n); table find + set len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — does not match textbook: linear find_ref in the unsorted TableStEph, CS 52.3 O(lg n); does not match old analysis: O(lg n) vs O(|V|)
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n), Span Theta(lg n) — agrees; table insert.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: TableStEph insert rebuilds the entry array, cloning every other entry including its neighbor set, CS 52.3 O(lg n); does not match old analysis: O(lg n) vs O(|V| + |E|)
         fn insert_vertex(&mut self, v: V)
             requires old(self).spec_adjtablegraphsteph_wf()
             ensures self.spec_adjtablegraphsteph_wf(), self.spec_adj().dom().contains(v@);
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O((n + m) lg n), Span O((n + m) lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta((n + m) lg n), Span Theta((n + m) lg n) — agrees; removes from all neighbor sets.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|^2 + |V| |E|), Span O(|V|^2 + |V| |E|) — does not match textbook: O(|V|^2) domain, then per vertex a linear find_ref and a TableStEph insert that clones every entry, CS 52.3 O(lg n) for an isolated vertex; does not match old analysis: O((n + m) lg n) vs new
         fn delete_vertex(&mut self, v: &V)
             requires old(self).spec_adjtablegraphsteph_wf()
             ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + lg m), Span O(lg n + lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + lg m), Span O(lg n + lg m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set insert.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: linear find_ref, clone and insert into u's set, then a TableStEph insert that clones every entry, CS 52.3 O(lg n); does not match old analysis: O(lg n + lg m) vs O(|V| + |E|)
         fn insert_edge(&mut self, u: V, v: V)
             requires
                 old(self).spec_adjtablegraphsteph_wf(),
@@ -163,6 +174,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + lg m), Span O(lg n + lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + lg m), Span O(lg n + lg m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set delete.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: linear find_ref, clone and delete in u's set, then a TableStEph insert that clones every entry, CS 52.3 O(lg n); does not match old analysis: O(lg n + lg m) vs O(|V| + |E|)
         fn delete_edge(&mut self, u: &V, v: &V)
             requires old(self).spec_adjtablegraphsteph_wf()
             ensures
@@ -204,6 +216,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (out: Self) {
             let adj: TableStEph<V, AVLTreeSetStEph<V>> = TableStEph::empty();
             // Veracity: NEEDED proof block
@@ -220,6 +233,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) {
             // Veracity: NEEDED proof block
             let out = AdjTableGraphStEph { adj: table };
@@ -241,10 +255,12 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn num_vertices(&self) -> usize { self.adj.size() }
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|^2), Span O(|V|^2) — does not match textbook: per entry a linear find_ref of its own key in the unsorted TableStEph (Chap42 review), APAS O(1); does not match old analysis: O(n) vs O(|V|^2)
         fn num_edges(&self) -> (m: usize) {
             proof {
                 reveal(obeys_view_eq);
@@ -292,6 +308,7 @@ broadcast use {
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|^2 h_V), Span O(|V|^2 h_V) — does not match textbook: |V| sequential AVLTreeSetStEph inserts at O(size * height) each (Chap41 review), APAS O(|V|); does not match old analysis: O(n log n) vs O(|V|^2 h_V)
         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
             ensures verts@ == self.spec_adj().dom()
         {
@@ -368,6 +385,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + d h_u), Span O(|V| + d h_u) — does not match textbook: linear find_ref in the unsorted TableStEph, then an O(size * height) AVLTreeSetStEph find, CS 52.3 O(lg n); does not match old analysis: O(log n) vs O(|V| + d h_u)
         fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@))
         {
@@ -382,6 +400,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + d), Span O(|V| + d) — does not match textbook: linear TableStEph find plus an O(d) clone of the neighbor set, CS 52.3 Work O(lg n + d), Span O(lg n); does not match old analysis: O(d) vs O(|V| + d)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             ensures
                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
@@ -397,6 +416,7 @@ broadcast use {
 // Veracity: NEEDED proof block (speed hint)
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — does not match textbook: linear find_ref in the unsorted TableStEph, CS 52.3 O(lg n); does not match old analysis: O(log n) vs O(|V|)
         fn out_degree(&self, u: &V) -> usize {
             proof { reveal(obeys_view_eq); }
             match self.adj.find_ref(u) {
@@ -407,6 +427,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: TableStEph insert rebuilds the entry array, cloning every other entry including its neighbor set, CS 52.3 O(lg n); does not match old analysis: O(log n) vs O(|V| + |E|)
         fn insert_vertex(&mut self, v: V) {
             proof { reveal(obeys_view_eq); }
             let ghost old_adj = self.spec_adj();
@@ -480,6 +501,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * (log n + d)), Span O(n * (log n + d))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|^2 + |V| |E|), Span O(|V|^2 + |V| |E|) — does not match textbook: O(|V|^2) domain, then per vertex a linear find_ref and a TableStEph insert that clones every entry, CS 52.3 O(lg n) for an isolated vertex; does not match old analysis: O(n * (log n + d)) vs new
         fn delete_vertex(&mut self, v: &V) {
             proof { reveal(obeys_view_eq); }
             let ghost old_adj = self.spec_adj();
@@ -663,6 +685,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: linear find_ref, clone and insert into u's set, then a TableStEph insert that clones every entry, CS 52.3 O(lg n); does not match old analysis: O(log n + d) vs O(|V| + |E|)
         fn insert_edge(&mut self, u: V, v: V) {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
@@ -798,6 +821,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: linear find_ref, clone and delete in u's set, then a TableStEph insert that clones every entry, CS 52.3 O(lg n); does not match old analysis: O(log n + d) vs O(|V| + |E|)
         fn delete_edge(&mut self, u: &V, v: &V) {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;

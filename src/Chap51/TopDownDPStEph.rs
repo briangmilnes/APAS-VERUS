@@ -75,6 +75,7 @@ pub mod TopDownDPStEph {
             ensures self.spec_med(i, j) <= i + j;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self)
             ensures
                 dp.spec_topdowndpsteph_wf(),
@@ -84,31 +85,37 @@ pub mod TopDownDPStEph {
                 dp.spec_t_len() == t.spec_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn s_length(&self) -> (len: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures len as nat == self.spec_s_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn t_length(&self) -> (len: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures len as nat == self.spec_t_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- two length checks.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_topdowndpsteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return hash map size.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (size: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures size == self.spec_memo().len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map contains_key.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) expected — no textbook cost
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)
             requires self.spec_topdowndpsteph_wf(),
             ensures memoized == self.spec_memo().contains_key(Pair(i, j));
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map lookup.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) expected — no textbook cost
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)
             requires self.spec_topdowndpsteph_wf(),
             ensures
@@ -119,6 +126,7 @@ pub mod TopDownDPStEph {
                 };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map insert.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) amortized expected, Span O(1) amortized expected — no textbook cost
         fn insert_memo(&mut self, i: usize, j: usize, value: usize)
             requires old(self).spec_topdowndpsteph_wf(),
             ensures
@@ -127,6 +135,7 @@ pub mod TopDownDPStEph {
                 self.spec_memo() == old(self).spec_memo().insert(Pair(i, j), value);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = memo capacity — no textbook cost
         fn clear_memo(&mut self)
             ensures
                 self.spec_topdowndpsteph_wf(),
@@ -135,6 +144,7 @@ pub mod TopDownDPStEph {
                 self.spec_memo() == Map::<Pair<usize, usize>, usize>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = memo capacity — no textbook cost; does not match old analysis: O(1) vs O(n); the impl also clears the memo table
         fn set_s(&mut self, s: ArraySeqStEphS<char>)
             requires old(self).spec_topdowndpsteph_wf(),
             ensures
@@ -143,6 +153,7 @@ pub mod TopDownDPStEph {
                 self.spec_t() == old(self).spec_t();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = memo capacity — no textbook cost; does not match old analysis: O(1) vs O(n); the impl also clears the memo table
         fn set_t(&mut self, t: ArraySeqStEphS<char>)
             requires old(self).spec_topdowndpsteph_wf(),
             ensures
@@ -152,6 +163,7 @@ pub mod TopDownDPStEph {
 
         /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.4)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|) expected, Span O(|S|*|T|) expected — matches textbook: the prose calls threaded-memo top-down inherently sequential, so the APAS line's Span O(|S|+|T|) overstates the textbook
         fn med_memoized(&mut self) -> (distance: usize)
             requires
                 old(self).spec_topdowndpsteph_wf(),
@@ -167,6 +179,7 @@ pub mod TopDownDPStEph {
 
         /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (medOne from Algorithm 51.4)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|) expected, Span O(|S|*|T|) expected — matches textbook: the prose calls threaded-memo top-down inherently sequential, so the APAS line's Span O(|S|+|T|) overstates the textbook
         fn med_recursive(&mut self, i: usize, j: usize) -> (distance: usize)
             requires
                 i <= old(self).spec_s_len(),
@@ -212,6 +225,7 @@ pub mod TopDownDPStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self) {
             // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
@@ -223,11 +237,14 @@ pub mod TopDownDPStEph {
             }
         }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (empty: bool) {
             let s_empty = self.seq_s.length() == 0;
             let t_empty = self.seq_t.length() == 0;
@@ -235,6 +252,7 @@ pub mod TopDownDPStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (size: usize) {
             // The vstd `len` axiom holds under the Pair key model.
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -242,12 +260,14 @@ pub mod TopDownDPStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) expected — no textbook cost
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             self.memo_table.contains_key(&Pair(i, j))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — memo table lookup.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) expected, Span O(1) expected — no textbook cost
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             match self.memo_table.get(&Pair(i, j)) {
@@ -257,23 +277,27 @@ pub mod TopDownDPStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — memo table insert.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) amortized expected, Span O(1) amortized expected — no textbook cost
         fn insert_memo(&mut self, i: usize, j: usize, value: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             self.memo_table.insert(Pair(i, j), value);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clears memo table where n is entries.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = memo capacity — no textbook cost
         fn clear_memo(&mut self) {
             self.memo_table.clear();
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write + memo clear where n is memo entries.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = memo capacity — no textbook cost
         fn set_s(&mut self, s: ArraySeqStEphS<char>) {
             self.seq_s = s;
             self.memo_table.clear();
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write + memo clear where n is memo entries.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = memo capacity — no textbook cost
         fn set_t(&mut self, t: ArraySeqStEphS<char>) {
             self.seq_t = t;
             self.memo_table.clear();
@@ -281,6 +305,7 @@ pub mod TopDownDPStEph {
 
         /// Compute MED using top-down memoization (Algorithm 51.4).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|) expected, Span O(|S|*|T|) expected — matches textbook: the prose calls threaded-memo top-down inherently sequential
         fn med_memoized(&mut self) -> (distance: usize) {
             self.memo_table.clear();
             let s_len = self.seq_s.length();
@@ -290,6 +315,7 @@ pub mod TopDownDPStEph {
 
         /// Recursive MED with memoization (medOne from Algorithm 51.4).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — memoized recursion filling n×m table; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S|*|T|) expected, Span O(|S|*|T|) expected — matches textbook: the prose calls threaded-memo top-down inherently sequential
         fn med_recursive(&mut self, i: usize, j: usize) -> (distance: usize)
             decreases i + j,
         {
