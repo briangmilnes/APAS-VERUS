@@ -53,15 +53,19 @@ pub mod Probability {
     /// Trait for probability operations
     pub trait ProbabilityTrait: Sized {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 wrapper construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(p: f64) -> Self;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 field access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn value(&self) -> f64;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 constant construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn infinity() -> Self;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 constant construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn zero() -> Self;
     }
 
@@ -70,24 +74,30 @@ pub mod Probability {
 
     impl ProbabilityTrait for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 wrapper construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(p: f64) -> Self { Probability(p) }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 field access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn value(&self) -> f64 { self.0 }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 constant construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn infinity() -> Self { Probability(f64::INFINITY) }
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 constant construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn zero() -> Self { Probability(0.0) }
     }
 
     impl PartialOrd for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to cmp().
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
     }
 
     impl Ord for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — NaN-aware f64 comparison.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
 
         #[verifier::external_body] // accept hole
         fn cmp(&self, other: &Self) -> Ordering {
@@ -110,12 +120,14 @@ pub mod Probability {
 
     impl From<f64> for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 wrapping.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn from(value: f64) -> Self { Probability(value) }
     }
 
     impl From<Probability> for f64 {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 unwrapping.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn from(prob: Probability) -> Self { prob.0 }
     }
@@ -124,6 +136,7 @@ pub mod Probability {
         type Output = Self;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 addition.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn add(self, other: Self) -> Self { Probability(self.0 + other.0) }
     }
@@ -132,6 +145,7 @@ pub mod Probability {
         type Output = Self;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 subtraction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn sub(self, other: Self) -> Self { Probability(self.0 - other.0) }
     }
@@ -140,6 +154,7 @@ pub mod Probability {
         type Output = Self;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 multiplication.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn mul(self, other: Self) -> Self { Probability(self.0 * other.0) }
     }
@@ -148,6 +163,7 @@ pub mod Probability {
         type Output = Self;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 division.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         #[verifier::external_body] // accept hole
         fn div(self, other: Self) -> Self { Probability(self.0 / other.0) }
     }
@@ -172,11 +188,13 @@ pub mod Probability {
     // 11. derive impls
     impl Default for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to zero().
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn default() -> Self { <Probability as ProbabilityTrait>::zero() }
     }
 
     impl PartialEq for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — bit-level f64 comparison.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
 
         #[verifier::external_body] // accept hole
         fn eq(&self, other: &Self) -> bool {
@@ -188,6 +206,7 @@ pub mod Probability {
 
     impl Hash for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash f64 bits.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
 
         #[verifier::external_body]  // accept hole
         fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }
@@ -208,11 +227,13 @@ pub mod Probability {
 
     impl Debug for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format f64 to debug string.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "Probability({})", self.0) }
     }
 
     impl Display for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format f64 to display string.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "{}", self.0) }
     }
 }

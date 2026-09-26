@@ -79,6 +79,7 @@ pub mod ETSPMtEph {
 
     impl ETSPPointTrait for Point {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn distance(&self, other: &Point) -> (d: f64) {
             point_distance(self, other)
         }
@@ -386,6 +387,7 @@ pub mod ETSPMtEph {
         /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg^2 n) — parallel recur + parallel minVal.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — O(n²) swap search dominates; could be reduced
         ///   to Θ(lg² n) with parallel reduce over edge pairs.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n) — does not match textbook: delegates to etsp_parallel_inner, whose swap search is an O(1) stub and whose split and combine are sequential O(n) loops; does not match old analysis: W n², S n² vs new; no O(n²) swap search runs
         fn etsp_parallel(points: &Vec<Point>) -> (tour: Vec<Edge>)
             requires
                 points@.len() >= 2,
@@ -395,6 +397,7 @@ pub mod ETSPMtEph {
 
     pub trait ETSPPointTrait {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn distance(&self, other: &Point) -> (d: f64);
     }
 
@@ -404,6 +407,7 @@ pub mod ETSPMtEph {
     /// Parallel eTSP inner recursion. Structural logic verified; threading via join().
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg^2 n) — parallel recur + parallel minVal.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — O(n²) swap search dominates span.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n) — does not match textbook: find_best_swap is an O(1) stub and the split is a midpoint copy, so W(n) = 2W(n/2) + O(n); sequential split and combine loops give S(n) = S(n/2) + O(n); does not match old analysis: W n², S n² vs new; the swap search is a stub
     fn etsp_parallel_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
         requires
             points@.len() >= 2,
@@ -571,6 +575,7 @@ pub mod ETSPMtEph {
 
     impl ETSPMtTrait for Vec<Point> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2 log n), Span O(n log^2 n) — recursive D&C with parallel swap search; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n) — does not match textbook: delegates to etsp_parallel_inner, whose swap search is an O(1) stub; does not match old analysis: W n^2 log n, S n log^2 n vs new; no swap search runs
         fn etsp_parallel(points: &Vec<Point>) -> (tour: Vec<Edge>) {
             etsp_parallel_inner(points)
         }
@@ -580,6 +585,7 @@ pub mod ETSPMtEph {
     /// Split points at midpoint. Verified: every output point traces to the input.
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n), Span O(n) — linear partition (simplified from sort-based split).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential copy into halves.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
         requires points@.len() >= 4,
         ensures
@@ -641,6 +647,7 @@ pub mod ETSPMtEph {
     /// Find swap indices. Verified: returned indices are within bounds.
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg n) — parallel minVal over all edge pairs.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — stub returning (0,0); real search in find_best_swap_impl.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: stub returns (0, 0) with no minVal search over edge pairs
     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
         requires
             left_tour@.len() >= 2,
@@ -653,6 +660,7 @@ pub mod ETSPMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 arithmetic: dx^2 + dy^2 + sqrt.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn point_distance(a: &Point, b: &Point) -> (d: f64)
         ensures d == spec_point_distance(*a, *b),
@@ -667,6 +675,7 @@ pub mod ETSPMtEph {
 
     /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — sort + split.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — no textbook cost
     #[verifier::external_body]
     pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {
         let n = points.len();
@@ -695,6 +704,7 @@ pub mod ETSPMtEph {
     /// and runs both halves in parallel via HFScheduler join().
     /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(m * lg n) — parallel D&C over left_tour.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n * m), Span O(n + m) — does not match textbook: sequential Vec clones of both tours and a sequential inner loop over right_tour; APAS Span O(lg n); does not match old analysis: S m * lg n vs O(n + m); the clones dominate, and find_best_swap_par has span O(m + lg n)
     pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (best_swap: (usize, usize))
         requires
             left_tour@.len() >= 1,
@@ -712,6 +722,7 @@ pub mod ETSPMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(m * lg n) — recursive D&C with parallel halves via join; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n * m), Span O(m + lg n) — does not match textbook: each leaf of at most 16 left edges scans all m right edges sequentially; APAS Span O(lg n); does not match old analysis: S m * lg n vs O(m + lg n); the m-scan happens once per root-to-leaf path, not per level
     fn find_best_swap_par(
         left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,
     ) -> (best_swap: (usize, usize, f64))

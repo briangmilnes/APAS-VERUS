@@ -36,6 +36,7 @@ pub mod MaxContigSubSumOptMtEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.16): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: the two scans and the max reduce are sequential loops in an Mt module; APAS Span O(lg n); does not match old analysis: S lg n vs O(n); the impl has no join
         /// - Claude-Opus-4.6 (verified): Work Θ(n), Span Θ(n)
         fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             requires
@@ -52,6 +53,7 @@ pub mod MaxContigSubSumOptMtEph {
 
     impl MaxContigSubSumOptMtTrait for ArraySeqMtEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — prefix sums + single pass; sequential despite Mt module (no join).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: the two scans and the max reduce are sequential loops in an Mt module; APAS Span O(lg n)
         fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 { return None; }

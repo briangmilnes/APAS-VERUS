@@ -55,6 +55,7 @@ pub mod ScanContractMtEph {
         /// Returns prefixes where result[i] = fold_left(input[0..i], id, spec_f).
         /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — contraction parallel via one-level join; expansion sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: contract_parallel and expand_scan_parallel each have Span O(n), so S(n) = S(n/2) + O(n); APAS Span O(lg n)
         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
@@ -76,6 +77,7 @@ pub mod ScanContractMtEph {
         /// Expand phase: interleave contracted scan results into full scan output.
         /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(1) — parallel tabulate (expansion step).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop, no parallelism.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential push loop over n/2 pairs; APAS expansion Span O(1)
         fn expand_scan_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             b: &ArraySeqMtEphS<T>,
@@ -115,6 +117,7 @@ pub mod ScanContractMtEph {
 
     impl<T: StTInMtT + Clone + 'static> ScanContractMtEphTrait<T> for ArraySeqMtEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg^2 n) — recursive contract/expand; Mt parallel contract via join + parallel expand via tabulate.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: contract_parallel and expand_scan_parallel each have Span O(n), so S(n) = S(n/2) + O(n); APAS Span O(lg n); does not match old analysis: S lg^2 n vs O(n); the expansion is a sequential loop, not a tabulate
         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
@@ -203,6 +206,7 @@ pub mod ScanContractMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel expand via tabulate over n elements.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential push loop over n/2 pairs; APAS expansion Span O(1); does not match old analysis: S lg n vs O(n); the body is a while loop, not a tabulate
         fn expand_scan_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             b: &ArraySeqMtEphS<T>,

@@ -138,6 +138,7 @@ broadcast use {
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.15): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
@@ -152,6 +153,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch28 Alg 28.15): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),
@@ -166,6 +168,7 @@ broadcast use {
 
     impl MaxContigSubSumIterTrait for ArraySeqStEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass Kadane's algorithm; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 {

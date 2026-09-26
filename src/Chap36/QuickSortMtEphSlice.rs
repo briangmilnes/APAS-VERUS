@@ -214,6 +214,7 @@ pub mod QuickSortMtEphSlice {
         /// Quicksort with first-element pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n lg n) worst — parallel D&C partition via join + parallel recursion via ParaPair
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n) worst, Span O(n^2) worst — does not match textbook: partition_three_dc rejoins with sequential appends (W O(m lg m), S O(m) at size m), and to_vec and concat_three_vecs copy sequentially, over up to n levels; APAS worst W O(n^2), S O(n lg n); does not match old analysis: W n^2, S n lg n vs new; the partition is not O(lg m) span
         fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
@@ -228,6 +229,7 @@ pub mod QuickSortMtEphSlice {
         /// Quicksort with median-of-three pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C partition O(lg n) per level + parallel recursion via ParaPair
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n) worst, Span O(n^2) worst — does not match textbook: the partition rejoin, to_vec, and concat are sequential (S O(m) per level), and median-of-three has a quadratic worst case per the textbook; does not match old analysis: W n lg n, S lg^2 n vs new; deterministic pivot and sequential per-level copies
         fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
@@ -242,6 +244,7 @@ pub mod QuickSortMtEphSlice {
         /// Quicksort with random pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(lg^2 n) expected — parallel D&C partition O(lg n) per level + parallel recursion via ParaPair
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg^2 n) expected, Span O(n) expected — does not match textbook: partition_three_dc (W O(m lg m), S O(m)), to_vec, and concat_three_vecs are sequential at each level; APAS W O(n lg n), S O(lg^2 n); does not match old analysis: W n lg n, S lg^2 n vs new; the partition rejoin is sequential
         fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
@@ -255,6 +258,7 @@ pub mod QuickSortMtEphSlice {
 
         /// Compute the median of three values.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn median_of_three(a: T, b: T, c: T) -> (median: T)
             ensures
                 median == a || median == b || median == c,
@@ -262,6 +266,7 @@ pub mod QuickSortMtEphSlice {
 
         /// Returns index of median among a[0], a[n/2], a[n-1].
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three element reads + median comparison.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn median3_pivot_idx(a: &ArraySeqMtEphSliceS<T>, n: usize) -> (idx: usize)
             requires
                 n >= 2, n == a.spec_len(),
@@ -275,6 +280,7 @@ pub mod QuickSortMtEphSlice {
 
         /// Concatenate three Vecs.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies three Vecs into one.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn concat_three_vecs(
             left: &Vec<T>,
             mid: &Vec<T>,
@@ -482,6 +488,7 @@ pub mod QuickSortMtEphSlice {
         for ArraySeqMtEphSliceS<T>
     {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn median_of_three(a: T, b: T, c: T) -> (median: T) {
             match TotalOrder::cmp(&a, &b) {
                 core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
@@ -542,6 +549,7 @@ pub mod QuickSortMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three element reads + median comparison.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn median3_pivot_idx(a: &ArraySeqMtEphSliceS<T>, n: usize) -> (idx: usize) {
             let first = a.nth_cloned(0);
             let mid = a.nth_cloned(n / 2);
@@ -561,6 +569,7 @@ pub mod QuickSortMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies three Vecs into one.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn concat_three_vecs(
             left: &Vec<T>,
             mid: &Vec<T>,
@@ -649,6 +658,7 @@ pub mod QuickSortMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n lg n) worst — parallel D&C partition + parallel recursion via ParaPair.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n) worst, Span O(n^2) worst — does not match textbook: partition_three_dc rejoins with sequential appends (W O(m lg m), S O(m) at size m), and to_vec and concat_three_vecs copy sequentially, over up to n levels; APAS worst W O(n^2), S O(n lg n); does not match old analysis: W n^2, S n lg n vs new; the partition is not O(lg m) span
         fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
             decreases old(a).spec_len(),
         {
@@ -775,6 +785,7 @@ pub mod QuickSortMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C partition + parallel recursion via ParaPair.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 lg n) worst, Span O(n^2) worst — does not match textbook: the partition rejoin, to_vec, and concat are sequential (S O(m) per level), and median-of-three has a quadratic worst case per the textbook; does not match old analysis: W n lg n, S lg^2 n vs new; deterministic pivot and sequential per-level copies
         fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)
             decreases old(a).spec_len(),
         {
@@ -899,6 +910,7 @@ pub mod QuickSortMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(lg^2 n) expected — parallel D&C partition + parallel recursion via ParaPair.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg^2 n) expected, Span O(n) expected — does not match textbook: partition_three_dc (W O(m lg m), S O(m)), to_vec, and concat_three_vecs are sequential at each level; APAS W O(n lg n), S O(lg^2 n); does not match old analysis: W n lg n, S lg^2 n vs new; the partition rejoin is sequential
         fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)
             decreases old(a).spec_len(),
         {

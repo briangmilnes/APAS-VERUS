@@ -154,6 +154,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce max identity (parallel)
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqMtPerS::reduce is a sequential left fold; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn max_element_parallel(a: &ArraySeqMtPerS<usize>) -> (max: Option<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -170,6 +171,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce (+) 0 identity (parallel)
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqMtPerS::reduce is a sequential left fold; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn sum_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -182,6 +184,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce (*) 1 identity (parallel)
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqMtPerS::reduce is a sequential left fold; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn product_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -194,6 +197,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce (||) false identity (parallel)
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqMtPerS::reduce is a sequential left fold; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn any_parallel(a: &ArraySeqMtPerS<bool>) -> (found: bool)
             requires
                 a.spec_len() <= usize::MAX,
@@ -206,6 +210,7 @@ pub mod DivConReduceMtPer {
         /// Pattern: reduce (&&) true identity (parallel)
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: ArraySeqMtPerS::reduce is a sequential left fold; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn all_parallel(a: &ArraySeqMtPerS<bool>) -> (all_true: bool)
             requires
                 a.spec_len() <= usize::MAX,
@@ -221,6 +226,7 @@ pub mod DivConReduceMtPer {
     //		9. bridge fns (named closures with ensures per standard 8)
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(lg n) vs O(n); ArraySeqMtPerS::reduce is a sequential left fold
     fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
         requires spec_monoid(spec_max_fn(), 0usize)
         ensures reduced == spec_iterate(
@@ -233,6 +239,7 @@ pub mod DivConReduceMtPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(lg n) vs O(n); ArraySeqMtPerS::reduce is a sequential left fold
     fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
         requires spec_monoid(spec_sum_fn(), 0usize)
         ensures reduced == spec_iterate(
@@ -245,6 +252,7 @@ pub mod DivConReduceMtPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(lg n) vs O(n); ArraySeqMtPerS::reduce is a sequential left fold
     fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
         requires spec_monoid(spec_product_fn(), 1usize)
         ensures reduced == spec_iterate(
@@ -257,6 +265,7 @@ pub mod DivConReduceMtPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(lg n) vs O(n); ArraySeqMtPerS::reduce is a sequential left fold
     fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
         requires spec_monoid(spec_or_fn(), false)
         ensures reduced == spec_iterate(
@@ -269,6 +278,7 @@ pub mod DivConReduceMtPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: Span O(lg n) vs O(n); ArraySeqMtPerS::reduce is a sequential left fold
     fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
         requires spec_monoid(spec_and_fn(), true)
         ensures reduced == spec_iterate(
@@ -283,6 +293,7 @@ pub mod DivConReduceMtPer {
 
     impl DivConReduceMtTrait for ArraySeqMtPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C reduce via call_reduce_max; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: call_reduce_max uses the sequential ArraySeqMtPerS::reduce; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn max_element_parallel(a: &ArraySeqMtPerS<usize>) -> (max: Option<usize>) {
             let len = a.length();
             if len == 0 {
@@ -322,21 +333,25 @@ pub mod DivConReduceMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to call_reduce_sum; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: call_reduce_sum uses the sequential ArraySeqMtPerS::reduce; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn sum_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize) {
             call_reduce_sum(a)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to call_reduce_product; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: call_reduce_product uses the sequential ArraySeqMtPerS::reduce; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn product_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize) {
             call_reduce_product(a)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to call_reduce_or; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: call_reduce_or uses the sequential ArraySeqMtPerS::reduce; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn any_parallel(a: &ArraySeqMtPerS<bool>) -> (found: bool) {
             call_reduce_or(a)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to call_reduce_and; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: call_reduce_and uses the sequential ArraySeqMtPerS::reduce; does not match old analysis: Span O(lg n) vs O(n); the called reduce is not parallel
         fn all_parallel(a: &ArraySeqMtPerS<bool>) -> (all_true: bool) {
             call_reduce_and(a)
         }

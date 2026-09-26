@@ -100,6 +100,7 @@ pub mod ScanDCMtPer {
         /// Returns (prefixes, total) where prefixes[i] = sum(a[0], ..., a[i-1]).
         /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n) — parallel recursive calls.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — parallel recursion via join(), sequential O(n) combine: S(n) = S(n/2) + O(n) = O(n).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n) — does not match textbook: sequential Vec split and concat loops, S(n) = S(n/2) + O(n); APAS Span O(lg n)
         fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -116,6 +117,7 @@ pub mod ScanDCMtPer {
     /// Parallel prefix sums inner recursion. Structural logic verified, recursion parallelized.
     /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n) — parallel recursive calls + O(n)/O(1) combine.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — parallel recursion via join(), sequential O(n) combine: S(n) = S(n/2) + O(n) = O(n).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n) — does not match textbook: sequential Vec split and concat loops, S(n) = S(n/2) + O(n); APAS Span O(lg n)
     #[verifier::spinoff_prover]
     fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
         requires a.spec_len() <= usize::MAX,
@@ -358,6 +360,7 @@ pub mod ScanDCMtPer {
 
     impl ScanDCMtTrait for ArraySeqMtPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg^2 n) — parallel D&C scan with join; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n) — does not match textbook: delegates to prefix_sums_dc_inner, whose sequential Vec copies give S(n) = S(n/2) + O(n); does not match old analysis: W n, S lg^2 n vs new; each level copies O(n) sequentially
         fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize)) {
             prefix_sums_dc_inner(a)
         }

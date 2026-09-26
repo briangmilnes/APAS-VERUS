@@ -104,6 +104,7 @@ pub mod OrderStatSelectStEph {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
         /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — ACCEPTED DIFFERENCE: sequential partition loop, span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — does not match textbook: sequential partition loop and sequential recursion; APAS Span O(lg^2 n) w.h.p.
         fn select(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -117,6 +118,7 @@ pub mod OrderStatSelectStEph {
 
     impl<T: TotalOrder + Copy> OrderStatSelectStEphTrait<T> for ArraySeqStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — delegates to select_inner; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — does not match textbook: sequential partition loop and sequential recursion; APAS Span O(lg^2 n) w.h.p.
         fn select(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
         {
             let n = a.length();
@@ -131,6 +133,7 @@ pub mod OrderStatSelectStEph {
     /// in the call chain is vstdplus::rand::random_usize_range.
     /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n) expected, Span O(lg^2 n) w.h.p.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — ACCEPTED DIFFERENCE: St sequential, APAS Span O(lg^2 n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — does not match textbook: sequential partition loop over n per round; APAS Span O(lg^2 n) w.h.p.
     fn select_inner<T: TotalOrder + Copy>(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
         requires
             a.spec_len() <= usize::MAX,

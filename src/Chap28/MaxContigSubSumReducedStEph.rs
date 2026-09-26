@@ -53,6 +53,7 @@ pub mod MaxContigSubSumReducedStEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.16): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential single-pass loop, no parallel scan
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: Alg 28.13 (the APAS line cites 28.16) is W O(n^2), S O(lg n); here the MCSSS instances run as sequential nested loops; does not match old analysis: W n, S n vs new; the body is two nested loops, not a single pass
         fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
@@ -69,6 +70,7 @@ pub mod MaxContigSubSumReducedStEph {
 
     /// - Alg Analysis: APAS (Ch28 Alg 28.16): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),
@@ -83,6 +85,7 @@ pub mod MaxContigSubSumReducedStEph {
 
     impl MaxContigSubSumReducedTrait for ArraySeqStEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass reduction-based MCSS; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: Alg 28.13 is W O(n^2), S O(lg n); here the MCSSS instances run as sequential nested loops; does not match old analysis: W n, S n vs new; the body is two nested loops, not a single pass
         fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
 

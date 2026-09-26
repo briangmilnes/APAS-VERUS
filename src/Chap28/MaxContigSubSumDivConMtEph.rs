@@ -52,6 +52,7 @@ pub mod MaxContigSubSumDivConMtEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.17): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: the two recursive calls run sequentially (no join), the split copies with subseq_copy, and the suffix/prefix loops are sequential; APAS Span O(lg^2 n); does not match old analysis: S lg^2 n vs O(n lg n); the impl has no fork
         /// - Claude-Opus-4.6 (verified): Work Θ(n log n), Span Θ(n log n)
         fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             requires
@@ -68,6 +69,7 @@ pub mod MaxContigSubSumDivConMtEph {
 
     /// - Alg Analysis: APAS (Ch28 Alg 28.17): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),
@@ -83,6 +85,7 @@ pub mod MaxContigSubSumDivConMtEph {
     /// Find max suffix sum (MCSSE problem, Algorithm 28.12).
     /// - Alg Analysis: APAS (Ch28 Alg 28.18): Work O(n), Span O(lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential prefix-min loop instead of scan and reduce; APAS Span O(lg n)
     fn max_suffix_sum(a: &ArraySeqMtEphS<i32>) -> (mss: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
         ensures is_max_suffix_sum(a.seq@, mss as int),
@@ -141,6 +144,7 @@ pub mod MaxContigSubSumDivConMtEph {
     /// Find max prefix sum (MCSSS problem, Algorithm 28.11).
     /// - Alg Analysis: APAS (Ch28 Alg 28.18): Work O(n), Span O(lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential running-max loop instead of scan and reduce; APAS Span O(lg n)
     fn max_prefix_sum(a: &ArraySeqMtEphS<i32>) -> (mps: i32)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@),
         ensures is_max_prefix_sum(a.seq@, mps as int),
@@ -178,6 +182,7 @@ pub mod MaxContigSubSumDivConMtEph {
 
     impl MaxContigSubSumDivConMtTrait for ArraySeqMtEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — D&C with parallel halves via join + O(n) merge; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: the two recursive calls run sequentially (no join), the split copies with subseq_copy, and the suffix/prefix loops are sequential; APAS Span O(lg^2 n); does not match old analysis: S n vs O(n lg n); there is no join in the body
         fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             decreases a.seq@.len(),
         {

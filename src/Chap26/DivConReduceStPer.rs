@@ -68,6 +68,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce max identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential while loop, not D&C
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential loop, not D&C; APAS Span O(lg n)
         fn max_element(a: &ArraySeqStPerS<usize>) -> (max: Option<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -84,6 +85,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce (+) 0 identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: delegates to sequential reduce
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: StPer reduce is a sequential fold; APAS Span O(lg n)
         fn sum(a: &ArraySeqStPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -96,6 +98,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce (*) 1 identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: delegates to sequential reduce
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: StPer reduce is a sequential fold; APAS Span O(lg n)
         fn product(a: &ArraySeqStPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -108,6 +111,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce (||) false identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: delegates to sequential reduce
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: StPer reduce is a sequential fold; APAS Span O(lg n)
         fn any(a: &ArraySeqStPerS<bool>) -> (found: bool)
             requires
                 a.spec_len() <= usize::MAX,
@@ -120,6 +124,7 @@ pub mod DivConReduceStPer {
         /// Pattern: reduce (&&) true identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: delegates to sequential reduce
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: StPer reduce is a sequential fold; APAS Span O(lg n)
         fn all(a: &ArraySeqStPerS<bool>) -> (all_true: bool)
             requires
                 a.spec_len() <= usize::MAX,
@@ -134,6 +139,7 @@ pub mod DivConReduceStPer {
 
     impl DivConReduceStTrait for ArraySeqStPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass max scan; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential loop, not D&C; APAS Span O(lg n)
         fn max_element(a: &ArraySeqStPerS<usize>) -> (max: Option<usize>) {
             let len = a.length();
             if len == 0 {
@@ -163,6 +169,7 @@ pub mod DivConReduceStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to reduce; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: StPer reduce is a sequential fold; APAS Span O(lg n)
         fn sum(a: &ArraySeqStPerS<usize>) -> (total: usize) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &usize, y: &usize| -> (ret: usize)
@@ -172,6 +179,7 @@ pub mod DivConReduceStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to reduce; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: StPer reduce is a sequential fold; APAS Span O(lg n)
         fn product(a: &ArraySeqStPerS<usize>) -> (total: usize) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &usize, y: &usize| -> (ret: usize)
@@ -181,6 +189,7 @@ pub mod DivConReduceStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to reduce; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: StPer reduce is a sequential fold; APAS Span O(lg n)
         fn any(a: &ArraySeqStPerS<bool>) -> (found: bool) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &bool, y: &bool| -> (ret: bool)
@@ -190,6 +199,7 @@ pub mod DivConReduceStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to reduce; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: StPer reduce is a sequential fold; APAS Span O(lg n)
         fn all(a: &ArraySeqStPerS<bool>) -> (all_true: bool) {
             ArraySeqStPerS::reduce(a,
                 &(|x: &bool, y: &bool| -> (ret: bool)

@@ -285,6 +285,7 @@ pub mod ETSPStEph {
         /// Returns a tour as a sequence of directed edges forming a cycle through all points.
         /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: delegates to etsp_inner, which uses the O(1) find_best_swap stub and a midpoint split, so no O(n^2) swap search runs, and recursion is sequential; does not match old analysis: W n^2, S n^2 vs new; the swap search is a stub
         fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)
             requires
                 points@.len() >= 2,
@@ -300,6 +301,7 @@ pub mod ETSPStEph {
     /// and verifies the structural combination.
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg^2 n) — D&C eTSP heuristic.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — sequential implementation, Span = Work.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: find_best_swap is an O(1) stub and the split is a midpoint copy, so W(n) = 2W(n/2) + O(n); recursion is sequential; does not match old analysis: W n², S n² vs new; the swap search is a stub
     #[verifier::rlimit(20)]
     fn etsp_inner(points: &Vec<Point>) -> (tour: Vec<Edge>)
         requires
@@ -486,6 +488,7 @@ pub mod ETSPStEph {
 
     impl ETSPStTrait for Vec<Point> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2 log n), Span O(n^2 log n) — recursive D&C with O(n*m) swap search; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: delegates to etsp_inner, whose swap search is an O(1) stub; does not match old analysis: W n^2 log n, S n^2 log n vs new; no O(n*m) search runs
         fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>) {
             etsp_inner(points)
         }
@@ -495,6 +498,7 @@ pub mod ETSPStEph {
     /// Split points at midpoint. Verified: every output point traces to the input.
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n), Span O(n) — linear partition (simplified from sort-based split).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential copy into halves.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     pub fn sort_and_split(points: &Vec<Point>) -> (halves: (Vec<Point>, Vec<Point>))
         requires points@.len() >= 4,
         ensures
@@ -560,6 +564,7 @@ pub mod ETSPStEph {
     /// Find swap indices. Verified: returned indices are within bounds.
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg n) — parallel minVal over all edge pairs.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — stub returning (0,0); real search in find_best_swap_impl.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: stub returns (0, 0) with no minVal search over edge pairs
     pub fn find_best_swap(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (swap_indices: (usize, usize))
         requires
             left_tour@.len() >= 2,

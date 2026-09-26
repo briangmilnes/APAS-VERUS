@@ -102,6 +102,7 @@ broadcast use {
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.16): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: the two scans and the max reduce are sequential loops; APAS Span O(lg n)
         fn max_contig_sub_sum_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
@@ -117,6 +118,7 @@ broadcast use {
 
     impl MaxContigSubSumOptTrait for ArraySeqStEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — prefix sums + single pass; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: the two scans and the max reduce are sequential loops; APAS Span O(lg n)
         #[verifier::rlimit(50)]
         fn max_contig_sub_sum_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();

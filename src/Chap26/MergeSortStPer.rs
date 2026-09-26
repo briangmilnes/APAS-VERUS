@@ -106,6 +106,7 @@ pub mod MergeSortStPer {
         /// Merge two sorted sequences into one sorted sequence.
         /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n), Span O(lg n) — parallel merge assumed for merge sort analysis.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential two-pointer merge, Span = Work.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential two-finger merge; APAS Span O(lg n)
         fn merge(left: &ArraySeqStPerS<usize>, right: &ArraySeqStPerS<usize>) -> (merged: ArraySeqStPerS<usize>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
@@ -120,6 +121,7 @@ pub mod MergeSortStPer {
         /// Sort a sequence using merge sort. Algorithm 26.4.
         /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — ACCEPTED DIFFERENCE: sequential recursion and sequential merge
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: sequential recursion and sequential merge; APAS Span O(lg^2 n)
         fn merge_sort(a: &ArraySeqStPerS<usize>) -> (sorted: ArraySeqStPerS<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -133,6 +135,7 @@ pub mod MergeSortStPer {
 
     impl MergeSortStTrait for ArraySeqStPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — two-finger merge; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential two-finger merge; APAS Span O(lg n)
         fn merge(left: &ArraySeqStPerS<usize>, right: &ArraySeqStPerS<usize>) -> (merged: ArraySeqStPerS<usize>) {
             let n_left = left.length();
             let n_right = right.length();
@@ -209,6 +212,7 @@ pub mod MergeSortStPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — recursive D&C with O(n) merge; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: sequential recursion, split loops, and merge; APAS Span O(lg^2 n)
         fn merge_sort(a: &ArraySeqStPerS<usize>) -> (sorted: ArraySeqStPerS<usize>)
             decreases a.spec_len(),
         {

@@ -155,6 +155,7 @@ pub mod OrderStatSelectMtEph {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
         /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(lg^2 n) expected — parallel D&C partition O(lg n) per round + parallel recursion
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n) expected — does not match textbook: each round's partition copies the input sequentially and rejoins halves with sequential appends (W O(m lg m), S O(m) for size m); APAS W O(n), S O(lg^2 n); does not match old analysis: W n, S lg^2 n vs new; the partition is not O(lg n) span
         fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (found: Option<T>)
             requires
                 a.spec_len() <= usize::MAX,
@@ -215,6 +216,7 @@ pub mod OrderStatSelectMtEph {
     /// Work O(n), Span O(lg n) for the divide phase (plus O(n) sequential rejoin).
     /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg n) — uses parallel filter.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C partition via join, base case O(1), O(lg n) levels
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n) — does not match textbook: after the join, append_vec copies the right half's three Vecs with sequential pushes, so W(n) = 2W(n/2) + O(n), S(n) = S(n/2) + O(n); APAS filter W O(n), S O(lg n); does not match old analysis: W n, S lg n vs new; the rejoin is sequential
     fn partition_three_dc<T: StTInMtT + TotalOrder + Copy>(
         a: &ArraySeqMtEphSliceS<T>,
         pivot: &T,
@@ -371,6 +373,7 @@ pub mod OrderStatSelectMtEph {
     /// Uses D&C parallel partition via join() for O(lg n) span divide phase.
     /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg n) — uses parallel filter.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C partition via join
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n) — does not match textbook: sequential copy of a into a Vec, then partition_three_dc (W O(n lg n), S O(n)); APAS filter W O(n), S O(lg n); does not match old analysis: W n, S lg n vs new; the copy and the rejoin are sequential
     fn parallel_three_way_partition<T: StTInMtT + TotalOrder + Copy>(
         a: &ArraySeqMtEphS<T>, pivot: T, pivot_idx: usize, n: usize,
     ) -> (partition: (Vec<T>, usize, Vec<T>))
@@ -476,6 +479,7 @@ pub mod OrderStatSelectMtEph {
 
     impl<T: StTInMtT + TotalOrder + Copy> OrderStatSelectMtEphTrait<T> for ArraySeqMtEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(lg^2 n) expected — delegates to select_inner; D&C parallel partition via join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n) expected — does not match textbook: select_inner's partition has W O(m lg m), S O(m) per round; APAS W O(n), S O(lg^2 n); does not match old analysis: W n, S lg^2 n vs new; the partition is not O(lg n) span
         fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (found: Option<T>)
         {
             let n = a.length();
@@ -490,6 +494,7 @@ pub mod OrderStatSelectMtEph {
     /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n) expected, Span O(lg^2 n) w.h.p.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(lg^2 n) expected — D&C partition is O(lg n) span
     ///   per round; geometric shrinkage over O(lg n) expected rounds gives O(lg^2 n).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n) expected — does not match textbook: parallel_three_way_partition has W O(m lg m), S O(m) at size m, and the sizes shrink geometrically in expectation; APAS W O(n), S O(lg^2 n); does not match old analysis: W n, S lg^2 n vs new; the partition is not O(lg n) span
     fn select_inner<T: StTInMtT + TotalOrder + Copy>(
         a: &ArraySeqMtEphS<T>, k: usize,
     ) -> (found: Option<T>)

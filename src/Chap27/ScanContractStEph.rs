@@ -65,6 +65,7 @@ pub mod ScanContractStEph {
         /// Returns prefixes where result[i] = fold_left(input[0..i], id, spec_f).
         /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential contraction/expansion loops
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential contraction and expansion loops, S(n) = S(n/2) + O(n); APAS Span O(lg n)
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
@@ -85,6 +86,7 @@ pub mod ScanContractStEph {
         /// Expand phase: interleave contracted scan results into full scan output.
         /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(1) — parallel tabulate (expansion step).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop, no parallelism.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential push loop over n/2 pairs; APAS expansion Span O(1)
         fn expand_scan<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             b: &ArraySeqStEphS<T>,
@@ -124,6 +126,7 @@ pub mod ScanContractStEph {
 
     impl<T: StT + Clone> ScanContractStEphTrait<T> for ArraySeqStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive contract/expand; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential contraction and expansion loops, S(n) = S(n/2) + O(n); APAS Span O(lg n)
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
@@ -235,6 +238,7 @@ pub mod ScanContractStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single loop over n/2 pairs; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential push loop over n/2 pairs; APAS expansion Span O(1)
         fn expand_scan<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             b: &ArraySeqStEphS<T>,

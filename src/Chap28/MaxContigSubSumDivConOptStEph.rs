@@ -272,6 +272,7 @@ broadcast use {
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential recursion; combine is O(1) so work matches, but span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: max_contig_sub_sum_aux copies halves with subseq_copy (O(n) per level) and recurses sequentially; APAS W O(n), S O(lg^2 n); does not match old analysis: W n, S n vs new; the split copy is not O(1)
         fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
@@ -288,6 +289,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),
@@ -303,6 +305,7 @@ broadcast use {
     /// Auxiliary function: returns (mcss, max_prefix, max_suffix, total).
     /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel. subseq_copy O(n) per level
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: subseq_copy split costs O(n) per level and the recursion is sequential; APAS W O(n), S O(lg^2 n)
     fn max_contig_sub_sum_aux(a: &ArraySeqStEphS<i32>) -> (mcss: StrengthResult)
         requires
             a.seq@.len() > 0,
@@ -408,6 +411,7 @@ broadcast use {
 
     impl MaxContigSubSumDivConOptTrait for ArraySeqStEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C with O(1) merge returning 4-tuple; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: delegates to max_contig_sub_sum_aux, whose subseq_copy split costs O(n) per level; APAS W O(n), S O(lg^2 n); does not match old analysis: W n, S n vs new; the split copy is not O(1)
         fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             if a.length() == 0 {
                 return None;

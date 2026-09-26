@@ -55,6 +55,7 @@ pub mod ReduceContractMtEph {
         /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
         /// - Alg Analysis: APAS (Ch27 Alg 27.2): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — contraction via one-level join, each half sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: contract_parallel clones a and fills each half with a sequential loop, S(n) = S(n/2) + O(n); APAS Span O(lg n)
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
@@ -77,6 +78,7 @@ pub mod ReduceContractMtEph {
     /// Parallel contraction: build b[j] = f(a[2j], a[2j+1]) using fork-join.
     /// Parallelism via the help-first scheduler's join.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n/2) — two parallel halves via join, each O(n/4).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential clone of a, two sequential O(n/4) loops under one join, and Vec append; APAS contraction step (parallel tabulate) Span O(1)
     pub fn contract_parallel<T: StTInMtT, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
         a: &ArraySeqMtEphS<T>,
         f: &Arc<F>,
@@ -239,6 +241,7 @@ pub mod ReduceContractMtEph {
 
     impl<T: StTInMtT + Clone + 'static> ReduceContractMtEphTrait<T> for ArraySeqMtEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — recursive contraction halving n each step; Mt parallel contract via join.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: contract_parallel has Span O(n), so S(n) = S(n/2) + O(n); APAS Span O(lg n); does not match old analysis: S lg n vs O(n); each contraction step clones and loops sequentially
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,

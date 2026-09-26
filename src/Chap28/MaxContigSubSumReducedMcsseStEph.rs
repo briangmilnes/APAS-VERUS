@@ -56,6 +56,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.14): Work O(n^2), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: each MCSSE instance is a sequential prefix loop and the instances run one after another; APAS Span O(lg n)
         fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
@@ -72,6 +73,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
 
     /// - Alg Analysis: APAS (Ch28 Alg 28.14): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),
@@ -86,6 +88,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
 
     impl MaxContigSubSumReducedMcsseTrait for ArraySeqStEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass reduction using MCSSE 4-tuple; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: each MCSSE instance is a sequential prefix loop and the instances run one after another; APAS Span O(lg n); does not match old analysis: W n, S n vs new; the inner loop reruns the prefix sum for each j
         fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 {

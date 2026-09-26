@@ -57,6 +57,7 @@ pub mod MaxContigSubSumBruteStEph {
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.6): Work O(n^3), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — ACCEPTED DIFFERENCE: triple-nested sequential loops
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: two nested sequential loops keep a running sum per start, so Work O(n^2) not O(n^3) and Span O(n^2) not O(lg n); does not match old analysis: W n^3, S n^3 vs new; there is no third loop
         fn max_contig_sub_sum_brute(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),
@@ -73,6 +74,7 @@ pub mod MaxContigSubSumBruteStEph {
 
     /// - Alg Analysis: APAS (Ch28 Alg 28.6): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures
@@ -88,6 +90,7 @@ pub mod MaxContigSubSumBruteStEph {
 
     impl MaxContigSubSumBruteTrait for ArraySeqStEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — nested loops over all (lo,hi) pairs; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: two nested sequential loops keep a running sum per start, so Work O(n^2) not O(n^3) and Span O(n^2) not O(lg n)
         fn max_contig_sub_sum_brute(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
 

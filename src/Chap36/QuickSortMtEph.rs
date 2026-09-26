@@ -187,6 +187,7 @@ pub mod QuickSortMtEph {
         /// Quicksort with first-element pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n^2) worst — ACCEPTED DIFFERENCE: Vec-backed; see QuickSortMtEphSlice for parallel partition
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2) worst, Span O(n^2) worst — does not match textbook: sequential partition loop and concat at each of up to n levels (the recursion is forked with ParaPair!); APAS worst Span O(n lg n)
         fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures
@@ -197,6 +198,7 @@ pub mod QuickSortMtEph {
         /// Quicksort with median-of-three pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; see QuickSortMtEphSlice for parallel partition
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2) worst, Span O(n^2) worst — does not match textbook: sequential partition loop and concat per level; the textbook's worst case for median-of-three is W Θ(n^2), and O(n lg n) only on sorted inputs; does not match old analysis: W n lg n, S n vs new; the pivot rule is deterministic, so the worst case is quadratic
         fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures
@@ -207,6 +209,7 @@ pub mod QuickSortMtEph {
         /// Quicksort with random pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(n) expected — ACCEPTED DIFFERENCE: Vec-backed; see QuickSortMtEphSlice for parallel partition
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n) expected — does not match textbook: sequential partition loop and concat, S(n) = S(larger part) + O(n); APAS Span O(lg^2 n)
         fn quick_sort_random(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures
@@ -216,6 +219,7 @@ pub mod QuickSortMtEph {
 
         /// Compute the median of three values.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn median_of_three(a: T, b: T, c: T) -> (median: T)
             ensures
                 median == a || median == b || median == c,
@@ -223,6 +227,7 @@ pub mod QuickSortMtEph {
 
         /// Returns index of median among a[0], a[n/2], a[n-1].
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three element reads + median comparison.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn median3_pivot_idx(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize)
             requires n >= 2, n == a.spec_len(),
             ensures
@@ -232,6 +237,7 @@ pub mod QuickSortMtEph {
 
         /// Concatenate three ArraySeqMtEphS into one Vec.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies three arrays into one Vec.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn concat_three(
             left: &ArraySeqMtEphS<T>,
             mid: &ArraySeqMtEphS<T>,
@@ -246,6 +252,7 @@ pub mod QuickSortMtEph {
 
     impl<T: TotalOrder + Copy + Send + 'static> QuickSortMtEphTrait<T> for ArraySeqMtEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn median_of_three(a: T, b: T, c: T) -> (median: T) {
             match TotalOrder::cmp(&a, &b) {
                 core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
@@ -306,6 +313,7 @@ pub mod QuickSortMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three element reads + median comparison.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn median3_pivot_idx(a: &ArraySeqMtEphS<T>, n: usize) -> (idx: usize) {
             let first = *a.nth(0);
             let mid = *a.nth(n / 2);
@@ -321,6 +329,7 @@ pub mod QuickSortMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies three arrays into one Vec.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn concat_three(
             left: &ArraySeqMtEphS<T>,
             mid: &ArraySeqMtEphS<T>,
@@ -406,6 +415,7 @@ pub mod QuickSortMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n) — parallel recursion via ParaPair!, sequential O(n) partition; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2) worst, Span O(n^2) worst — does not match textbook: sequential partition loop and concat at each of up to n levels; APAS worst Span O(n lg n); does not match old analysis: S n vs O(n^2) worst; on sorted input the levels form a chain and their O(n - i) partitions add up
         fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)
             decreases old(a).spec_len(),
         {
@@ -521,6 +531,7 @@ pub mod QuickSortMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n) expected — median-of-three pivot + parallel recursion; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2) worst, Span O(n^2) worst — does not match textbook: sequential partition loop and concat per level; the textbook's worst case for median-of-three is W Θ(n^2); does not match old analysis: W n log n expected, S n expected vs O(n^2) worst; the pivot rule is deterministic
         fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>)
             decreases old(a).spec_len(),
         {
@@ -644,6 +655,7 @@ pub mod QuickSortMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n) expected — random pivot + parallel recursion; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n) expected — does not match textbook: sequential partition loop and concat, S(n) = S(larger part) + O(n); APAS Span O(lg^2 n)
         fn quick_sort_random(a: &mut ArraySeqMtEphS<T>)
             decreases old(a).spec_len(),
         {

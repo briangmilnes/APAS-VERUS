@@ -49,6 +49,7 @@ pub mod ReduceContractStEph {
         /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
         /// - Alg Analysis: APAS (Ch27 Alg 27.2): Work O(n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential contraction, no parallel tabulate
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential contraction loop, S(n) = S(n/2) + O(n); APAS Span O(lg n)
         fn reduce_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
@@ -69,6 +70,7 @@ pub mod ReduceContractStEph {
 
     impl<T: StT + Clone> ReduceContractStEphTrait<T> for ArraySeqStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive contraction halving n each step; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential contraction loop, S(n) = S(n/2) + O(n); APAS Span O(lg n)
         fn reduce_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,

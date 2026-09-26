@@ -182,6 +182,7 @@ pub mod MergeSortMtPer {
         /// Merge two sorted sequences using parallel binary-search divide and conquer.
         /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n), Span O(lg n) — parallel merge assumed for merge sort span analysis.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — parallel D&C merge via join(); Vec concat at each level is O(n), dominating span. O(lg² n) requires O(1) concat (balanced tree).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: calls merge_dc, whose sequential Vec split and concat copies cost O(n) per level; does not match old analysis: W n, S n vs new; lg n levels of copying, and the right side need not halve
         fn merge_parallel(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
@@ -196,6 +197,7 @@ pub mod MergeSortMtPer {
         /// Sort a sequence using parallel merge sort. Algorithm 26.4.
         /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n lg n), Span O(lg^2 n) — with O(lg n)-span merge.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — parallel recursion via join(), O(n) merge: S(n) = S(n/2) + O(n) = O(n).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg^2 n), Span O(n lg n) — does not match textbook: sequential split copies and merge_dc W O(n lg n), S O(n lg n) per level; does not match old analysis: W n lg n, S n vs new; merge_dc is not linear work
         fn merge_sort_parallel(a: &ArraySeqMtPerS<usize>) -> (sorted: ArraySeqMtPerS<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -210,6 +212,7 @@ pub mod MergeSortMtPer {
     /// Binary search in a sorted array: find the count of elements <= pivot.
     /// - Alg Analysis: APAS (Ch26 ref): Work O(lg n), Span O(lg n) — binary search for merge.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n), Span O(lg n) — no textbook cost
     fn binary_search_upper_bound(arr: &ArraySeqMtPerS<usize>, pivot: usize) -> (pos: usize)
         requires spec_sorted(Seq::new(arr.spec_len(), |i: int| arr.spec_index(i))),
         ensures
@@ -275,6 +278,7 @@ pub mod MergeSortMtPer {
     /// then recursively merges both halves in parallel via join().
     /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n), Span O(lg n) — parallel merge via binary search and recursive halving.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — Vec concat at each level is O(n), dominating span.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: sequential Vec split and concat copy O(n) per level over lg n levels; does not match old analysis: W n, S n vs new; copy work sums per level, and the right side need not halve
     fn merge_dc(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>)
         requires
             spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
@@ -629,12 +633,14 @@ pub mod MergeSortMtPer {
 
     impl MergeSortMtTrait for ArraySeqMtPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(lg^2(n + m)) — parallel D&C merge via join; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg (n + m)), Span O((n + m) lg (n + m)) — does not match textbook: merge_dc copies sequentially, APAS W n, S lg n; does not match old analysis: W n + m, S lg^2(n + m) vs new; delegates to merge_dc, which copies sequentially at each level
         fn merge_parallel(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>) {
             merge_dc(left, right)
         }
 
         // Verified parallel merge sort: structural logic proven, recursion parallelized.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — parallel D&C sort with parallel merge; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg^2 n), Span O(n lg n) — does not match textbook: sequential split copies and merge_dc W O(n lg n), S O(n lg n) per level; does not match old analysis: W n log n, S n vs new; merge_dc is not linear work
         fn merge_sort_parallel(a: &ArraySeqMtPerS<usize>) -> (sorted: ArraySeqMtPerS<usize>)
             // Veracity: NEEDED proof block
             decreases a.spec_len(),
