@@ -272,11 +272,13 @@ pub mod ArraySeqMtEphSlice {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn length(&self) -> (len: usize)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures len as int == self.spec_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index + clone.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn nth_cloned(&self, index: usize) -> (elem: T)
             requires
                 self.spec_arrayseqmtephslice_wf(),
@@ -285,6 +287,7 @@ pub mod ArraySeqMtEphSlice {
             ensures elem == self.spec_index(index as int);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc clone + window adjust.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         /// O(1) slice: shares backing storage, adjusts window.
         fn slice(&self, start: usize, length: usize) -> (sliced: Self)
             requires
@@ -298,6 +301,7 @@ pub mod ArraySeqMtEphSlice {
                     0 <= i < length ==> sliced.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vec(data: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmtephslice_wf(),
@@ -307,6 +311,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty_seq: Self)
             ensures
                 empty_seq.spec_arrayseqmtephslice_wf(),
@@ -314,6 +319,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(item: T) -> (s: Self)
             requires obeys_feq_clone::<T>(),
             ensures
@@ -322,6 +328,7 @@ pub mod ArraySeqMtEphSlice {
                 s.spec_index(0) == item;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             requires
                 length <= usize::MAX,
@@ -334,6 +341,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// Materialize the slice window into a freshly-allocated Vec.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         fn to_vec(&self) -> (v: Vec<T>)
             requires
                 self.spec_arrayseqmtephslice_wf(),
@@ -352,6 +360,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// Parallel reduce via D&C on O(1) slices.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C + join, O(1) split.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + Σ W(f)), Span O(lg |a| * max S(f)) — matches textbook
         fn reduce<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
         ) -> (reduced: T)
@@ -366,6 +375,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// Parallel map via D&C on O(1) slices.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C + join, O(1) split, O(n) rejoin.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Σ W(f(x))), Span O(|a| + max S(f(x))) — does not match textbook: map_dc_vec rejoins with a sequential push loop at every level; does not match old analysis: Work O(n) vs O(|a| lg |a|); the O(n) rejoin repeats at lg |a| levels
         fn map<U: StTInMtT, F: MtMapFn<T, U>>(
             &self, f: &F,
         ) -> (mapped: ArraySeqMtEphSliceS<U>)
@@ -381,6 +391,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// Parallel filter via D&C on O(1) slices.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C + join, O(1) split, O(n) rejoin.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Σ W(f(x))), Span O(|a| + max S(f(x))) — does not match textbook: filter_dc_vec rejoins with a sequential push loop at every level; does not match old analysis: Work O(n) vs O(|a| lg |a|); the O(n) rejoin repeats at lg |a| levels
         fn filter<F: MtPred<T>>(
             &self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
         ) -> (filtered: Self)
@@ -396,6 +407,7 @@ pub mod ArraySeqMtEphSlice {
         /// Parallel tabulate via D&C with join.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(n * W(f)), Span O(lg n + S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * W(f)), Span O(lg n * S(f)) — D&C + join, O(n) rejoin.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n + Σ W(f(i))), Span O(n + max S(f(i))) — does not match textbook: tabulate_dc_vec rejoins with a sequential push loop at every level; does not match old analysis: Work O(n * W(f)), Span O(lg n * S(f)) vs O(n lg n + Σ W(f(i))), O(n + max S(f(i))); the rejoin is sequential
         fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)
             requires
                 obeys_feq_clone::<T>(),
@@ -409,6 +421,7 @@ pub mod ArraySeqMtEphSlice {
         /// Parallel inclusive scan via D&C on O(1) slices.
         /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — D&C + join, O(1) split, sequential prefix adjustment O(n) at each level.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a|), Span O(|a|) — does not match textbook: scan_dc_vec copies the left result and adjusts the right result sequentially at every level, not a contraction scan
         fn scan<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
         ) -> (scanned: (Self, T))
@@ -427,18 +440,21 @@ pub mod ArraySeqMtEphSlice {
 
         /// - Definition 18.5 (isEmpty). True iff the sequence has length zero.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures empty <==> self.spec_len() == 0;
 
         /// - Definition 18.5 (isSingleton). True iff the sequence has length one.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_singleton(&self) -> (single: bool)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures single <==> self.spec_len() == 1;
 
         /// - Definition 18.13 (append). Concatenate two sequences.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: two sequential push loops, Span O(|a| + |b|) not O(1)
         fn append(a: &Self, b: &Self) -> (appended: Self)
             requires
                 a.spec_arrayseqmtephslice_wf(),
@@ -455,6 +471,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: sequential to_vec copy, Span O(|a|) not O(1)
         fn update(&self, index: usize, item: T) -> (updated: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
@@ -469,6 +486,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// - Definition 18.16 (inject). Update multiple positions at once.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: sequential copy then reverse update loop, Span not O(lg(degree(b)))
         fn inject(&self, updates: &Vec<(usize, T)>) -> (injected: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
@@ -483,6 +501,7 @@ pub mod ArraySeqMtEphSlice {
 
         /// - Definition 18.17 (ninject). Nondeterministic inject.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: delegates to sequential inject, Span not O(1)
         fn ninject(&self, updates: &Vec<(usize, T)>) -> (injected: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
@@ -518,17 +537,20 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn length(&self) -> (len: usize) {
             self.len
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn nth_cloned(&self, index: usize) -> (elem: T) {
             let v: &Vec<T> = arc_deref(&self.data);
             v[self.start + index].clone_plus()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn slice(&self, start: usize, length: usize) -> (sliced: Self) {
             let new_data = Arc::clone(&self.data);
             ArraySeqMtEphSliceS {
@@ -539,6 +561,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vec(data: Vec<T>) -> (seq: Self) {
             let len = data.len();
             ArraySeqMtEphSliceS {
@@ -549,6 +572,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty_seq: Self) {
             ArraySeqMtEphSliceS {
                 data: Arc::new(Vec::new()),
@@ -558,6 +582,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(item: T) -> (s: Self) {
             let mut v: Vec<T> = Vec::new();
             v.push(item);
@@ -569,6 +594,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
         fn new(length: usize, init_value: T) -> (new_seq: Self) {
             let mut v: Vec<T> = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -592,6 +618,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost
         fn to_vec(&self) -> (v: Vec<T>) {
             let mut v: Vec<T> = Vec::with_capacity(self.len);
             let mut i: usize = 0;
@@ -693,16 +720,19 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (empty: bool) {
             self.len == 0
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_singleton(&self) -> (single: bool) {
             self.len == 1
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: two sequential push loops, Span O(|a| + |b|) not O(1)
         fn append(a: &Self, b: &Self) -> (appended: Self) {
             let mut v: Vec<T> = Vec::with_capacity(a.len + b.len);
             let a_backing: &Vec<T> = arc_deref(&a.data);
@@ -743,6 +773,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: sequential to_vec copy, Span O(|a|) not O(1)
         fn update(&self, index: usize, item: T) -> (updated: Self) {
             // Veracity: NEEDED proof block
             let mut v = self.to_vec();
@@ -762,6 +793,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: sequential copy then reverse update loop, Span not O(lg(degree(b)))
         fn inject(&self, updates: &Vec<(usize, T)>) -> (injected: Self) {
             let ghost s = Seq::new(self.spec_len(), |i: int| self.spec_index(i));
             let ghost u = updates@;
@@ -842,6 +874,7 @@ pub mod ArraySeqMtEphSlice {
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: delegates to sequential inject, Span not O(1)
         fn ninject(&self, updates: &Vec<(usize, T)>) -> (injected: Self) {
             // Delegates to inject; ninject is nondeterministic and inject is a valid choice.
             let result = self.inject(updates);
@@ -1415,6 +1448,7 @@ pub mod ArraySeqMtEphSlice {
     /// - Primitive: flatten. Concatenate a sequence of sequences.
     /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(sum |a[i]|), Span O(lg |a| + max |a[i]|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(sum |a[i]|), Span O(lg^2 |a| + max |a[i]|) — ACCEPTED DIFFERENCE: Vec concat at each D&C level; O(1) rejoin needs PCell pre-allocated output
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + lg |a| * Σ |a[i]|), Span O(Σ |a[i]|) — does not match textbook: flatten_dc_vec rejoins with a sequential push loop at every level, so the top level alone copies half the output; does not match old analysis: Work O(sum |a[i]|), Span O(lg^2 |a| + max |a[i]|) vs O(|a| + lg |a| * Σ |a[i]|), O(Σ |a[i]|)
     pub fn flatten<T: StTInMtT>(
         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
     ) -> (flattened: ArraySeqMtEphSliceS<T>)

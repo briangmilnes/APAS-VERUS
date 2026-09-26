@@ -97,6 +97,7 @@ pub mod LinkedListStEph {
             recommends i < self.spec_len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -108,6 +109,7 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(index), Span O(index) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: O(index) vs O(1); Vec-backed set is a direct index write, no list traversal
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -116,18 +118,21 @@ pub mod LinkedListStEph {
                 success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(i), Span O(i)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: Vec-backed, O(1) random access not O(i) traversal
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: Vec-backed index, O(1) not list traversal O(i) (CS 20.7); equals CS 22.2
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(i), Span O(i)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — ACCEPTED DIFFERENCE: Vec-backed, O(j) clone loop not O(start+j) traversal
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — does not match textbook: Vec copy of the window, O(length) not O(1 + i) shared-suffix list subseq
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -140,6 +145,7 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: O(n) vs O(1); the body moves the Vec into the struct
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_linkedliststeph_wf(),
@@ -151,10 +157,12 @@ pub mod LinkedListStEph {
     pub trait LinkedListStEphRedefinableTrait<T>: LinkedListStEphBaseTrait<T> {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_linkedliststeph_wf(), empty_seq.spec_len() == 0;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(item: T) -> (singleton: Self)
             ensures
                 singleton.spec_linkedliststeph_wf(),
@@ -163,6 +171,7 @@ pub mod LinkedListStEph {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(Sigma W(f)), Span O(Sigma S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (both sequential)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + Σ W(f(i))), Span O(n + Σ S(f(i))) — matches textbook
         fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStEphS<T>)
             requires
                 n <= usize::MAX,
@@ -173,6 +182,7 @@ pub mod LinkedListStEph {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(Sigma W(f)), Span O(Sigma S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (both sequential)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(f(x))), Span O(|a| + Σ S(f(x))) — matches textbook
         fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStEphS<T>, f: &F) -> (mapped: LinkedListStEphS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -182,6 +192,7 @@ pub mod LinkedListStEph {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(|a|), Span O(|a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed, copies both sequences not just a
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: Vec-backed append copies b too, O(|a| + |b|) not O(|a|)
         fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -197,6 +208,7 @@ pub mod LinkedListStEph {
         ///   and completeness in a single statement.
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(Sigma W(f)), Span O(Sigma S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (both sequential)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(f(x))), Span O(|a| + Σ S(f(x))) — matches textbook
         fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires
@@ -215,6 +227,7 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ |a[i]|), Span O(|a| + Σ |a[i]|) — matches textbook
         fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> (flattened: LinkedListStEphS<T>)
             where T: Clone + Eq
             requires
@@ -224,6 +237,7 @@ pub mod LinkedListStEph {
 
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: clones full array, not O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: persistent copy, Work O(|a|) not O(1) (CS 22.2, the cited spec); equals the CS 20.7 list update O(1 + |a|)
         fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -236,14 +250,17 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + Σ W(f)), Span O(1 + Σ S(f)) — matches textbook
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -253,6 +270,7 @@ pub mod LinkedListStEph {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(Sigma W(f)), Span O(Sigma S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) (both sequential)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + Σ W(f)), Span O(1 + Σ S(f)) — matches textbook
         fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -265,6 +283,7 @@ pub mod LinkedListStEph {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(|a|), Span O(|a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — matches textbook
         fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStEphS<T>, T))
             where T: Clone + Eq
             requires
@@ -295,6 +314,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
         fn new(length: usize, init_value: T) -> (new_seq: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -303,6 +323,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
@@ -313,16 +334,19 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: Vec-backed index, O(1) not list traversal O(i) (CS 20.7)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — does not match textbook: Vec copy of the window, O(length) not O(1 + i) shared-suffix list subseq
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -351,6 +375,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vec(elts: Vec<T>) -> (seq: LinkedListStEphS<T>) {
             LinkedListStEphS { seq: elts }
         }
@@ -359,11 +384,13 @@ pub mod LinkedListStEph {
 
     impl<T> LinkedListStEphRedefinableTrait<T> for LinkedListStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty_seq: LinkedListStEphS<T>) {
             LinkedListStEphS { seq: Vec::new() }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(item: T) -> (singleton: LinkedListStEphS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
@@ -371,6 +398,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + Σ W(f(i))), Span O(n + Σ S(f(i))) — matches textbook
         fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStEphS<T>)
         {
             let mut seq = Vec::with_capacity(n);
@@ -390,6 +418,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(f(x))), Span O(|a| + Σ S(f(x))) — matches textbook
         fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStEphS<T>, f: &F) -> (mapped: LinkedListStEphS<U>)
         {
             let len = a.seq.len();
@@ -411,6 +440,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: Vec-backed append copies b too, O(|a| + |b|) not O(|a|)
         fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> (appended: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -459,6 +489,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ W(f(x))), Span O(|a| + Σ S(f(x))) — matches textbook
         fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -511,6 +542,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(total length), Span O(total length)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Σ |a[i]|), Span O(|a| + Σ |a[i]|) — matches textbook
         fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> (flattened: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -566,6 +598,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: persistent copy, Work O(|a|) not O(1) (CS 22.2, the cited spec); equals the CS 20.7 list update O(1 + |a|)
         fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> (updated: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -605,16 +638,19 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + Σ W(f)), Span O(1 + Σ S(f)) — matches textbook
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
@@ -653,6 +689,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + Σ W(f)), Span O(1 + Σ S(f)) — matches textbook
         fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
@@ -693,6 +730,7 @@ pub mod LinkedListStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — matches textbook
         fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStEphS<T>, T))
             where T: Clone + Eq
         {
@@ -777,6 +815,7 @@ pub mod LinkedListStEph {
 
         /// Returns an iterator over the list elements.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         pub fn iter(&self) -> (it: std::slice::Iter<'_, T>)
             ensures
                 IteratorSpec::remaining(&it) == self.seq@.as_ref(),
@@ -793,6 +832,7 @@ pub mod LinkedListStEph {
         type Item = &'a T;
         type IntoIter = std::slice::Iter<'a, T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 IteratorSpec::remaining(&it) == self.seq@.as_ref(),
@@ -807,6 +847,7 @@ pub mod LinkedListStEph {
         type Item = T;
         type IntoIter = IntoIter<T>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 IteratorSpec::remaining(&it) == self.seq@,
@@ -830,6 +871,7 @@ pub mod LinkedListStEph {
 
     impl<T: Clone + View> Clone for LinkedListStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost; does not match old analysis: Span O(1) vs O(|a|); Vec::clone copies elements sequentially
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -844,6 +886,7 @@ pub mod LinkedListStEph {
 
     impl<T: PartialEq + View> PartialEq for LinkedListStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — no textbook cost; does not match old analysis: Span O(1) vs O(|a|); Vec equality compares elements sequentially
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
