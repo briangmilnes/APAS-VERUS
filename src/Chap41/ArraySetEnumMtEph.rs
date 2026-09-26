@@ -192,6 +192,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 ref): Work O(u/w), Span O(u/w) -- allocates u/64 words.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u/w), Span O(u/w) -- allocates u/64 words.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — matches textbook
         fn new(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -201,6 +202,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential bit scan; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u), Span O(u) — does not match textbook: sequential bit-by-bit scan over the universe, CS 41.3 Span O(1); no stored size field
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetenummteph_wf(),
             ensures count == self@.len();
@@ -208,6 +210,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential scan, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u), Span O(u) — does not match textbook: sequential scan with Vec push, CS 41.3 Span O(1)
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
             requires self.spec_arraysetenummteph_wf(),
             ensures
@@ -216,6 +219,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 ref): Work O(u/w), Span O(u/w) -- same as new.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u/w), Span O(u/w) -- same as new.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — matches textbook
         fn empty(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -225,6 +229,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; matches APAS Work, Span sequential (PRAM assumes O(1) parallel)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — does not match textbook: sequential zero-fill of u/w words (new), CS 41.3 Span O(1)
         fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
@@ -235,6 +240,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + n), Span O(u + n) — ACCEPTED DIFFERENCE: PRAM gap; sequential init + insert loop
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w + n), Span O(u/w + n) — does not match textbook: direct bit set per element, less work than Ex 41.3 O(n lg n) but a sequential loop, Ex 41.3 reduce-union Span O(lg^2 n)
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
                 constructed.spec_arraysetenummteph_wf(),
@@ -243,6 +249,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + Σ W(f(x))), Span O(u + Σ W(f(x))) — ACCEPTED DIFFERENCE: PRAM gap; sequential loop; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u + Σ W(f(x))), Span O(u + Σ S(f(x))) — does not match textbook: sequential loop calls f on each member in turn in an Mt file; CS 41.3 Span O(1 + max S(f(x)))
         fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -255,6 +262,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential word-AND, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — does not match textbook: sequential word loop, CS 41.3 Span O(1)
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -268,6 +276,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential word-AND-NOT, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — does not match textbook: sequential word loop, CS 41.3 Span O(1)
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -281,6 +290,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential word-OR, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — does not match textbook: sequential word loop, CS 41.3 Span O(1)
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -294,6 +304,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) CS 41.3
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn find(&self, x: usize) -> (found: bool)
             requires self.spec_arraysetenummteph_wf(),
             ensures found == self@.contains(x);
@@ -301,6 +312,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: PRAM gap; ephemeral bit clear, APAS O(u) assumes copy
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: ephemeral in-place bit clear, CS 41.3 Work O(u) persistent copy
         fn delete(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures
@@ -311,6 +323,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: PRAM gap; ephemeral bit set, APAS O(u) assumes copy
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: ephemeral in-place bit set, CS 41.3 Work O(u) persistent copy
         fn insert(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures
@@ -341,6 +354,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — matches textbook
         fn new(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -377,6 +391,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u), Span O(u) — does not match textbook: sequential bit-by-bit scan over the universe, CS 41.3 Span O(1); does not match old analysis: O(1) vs O(u); there is no stored size field, the body loops over 0..u
         fn size(&self) -> (count: usize)
             ensures count == self@.len(),
         {
@@ -414,6 +429,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u), Span O(u) — does not match textbook: sequential scan with Vec push, CS 41.3 Span O(1)
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
         {
             let mut result_vec: Vec<usize> = Vec::new();
@@ -519,6 +535,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — matches textbook; does not match old analysis: O(1) vs O(u/w); calls new, which zero-fills u/w words
         fn empty(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -529,6 +546,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — does not match textbook: sequential zero-fill of u/w words (new), CS 41.3 Span O(1); does not match old analysis: O(1) vs O(u/w); calls new before the O(1) insert
         fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
@@ -547,6 +565,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w + n), Span O(u/w + n) — does not match textbook: direct bit set per element, less work than Ex 41.3 O(n lg n) but a sequential loop, Ex 41.3 reduce-union Span O(lg^2 n); does not match old analysis: O(n lg n) vs O(u/w + n); each element is an O(1) bit set, no tree insert
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
                 constructed.spec_arraysetenummteph_wf(),
@@ -587,6 +606,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u + Σ W(f(x))), Span O(u + Σ S(f(x))) — does not match textbook: sequential loop calls f on each member in turn in an Mt file; CS 41.3 Span O(1 + max S(f(x)))
         fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             ensures
                 filtered@.subset_of(self@),
@@ -685,6 +705,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — does not match textbook: sequential word loop, CS 41.3 Span O(1); does not match old analysis: O(n * m) vs O(u/w); one pass of word-AND over u/w words
         fn intersection(&self, other: &Self) -> (common: Self)
             ensures
                 common@ == self@.intersect(other@),
@@ -733,6 +754,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — does not match textbook: sequential word loop, CS 41.3 Span O(1); does not match old analysis: O(n * m) vs O(u/w); one pass of word-AND-NOT over u/w words
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures
                 remaining@ == self@.difference(other@),
@@ -781,6 +803,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(u/w), Span O(u/w) — does not match textbook: sequential word loop, CS 41.3 Span O(1); does not match old analysis: O(n * m) vs O(u/w); one pass of word-OR over u/w words
         fn union(&self, other: &Self) -> (combined: Self)
             ensures
                 combined@ == self@.union(other@),
@@ -829,6 +852,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook; does not match old analysis: O(n) vs O(1); one word read and bit test
         fn find(&self, x: usize) -> (found: bool)
             ensures found == self@.contains(x),
         {
@@ -843,6 +867,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: ephemeral in-place bit clear, CS 41.3 Work O(u) persistent copy; does not match old analysis: O(n) vs O(1); one word read, bit clear, and Vec set
         fn delete(&mut self, x: usize)
             ensures
                 self@ == old(self)@.remove(x),
@@ -890,6 +915,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — does not match textbook: ephemeral in-place bit set, CS 41.3 Work O(u) persistent copy; does not match old analysis: O(n) vs O(1); one word read, bit set, and Vec set
         fn insert(&mut self, x: usize)
             ensures
                 (x < old(self).spec_universe_size() ==> self@ == old(self)@.insert(x)),

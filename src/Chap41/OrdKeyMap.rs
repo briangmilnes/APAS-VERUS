@@ -739,6 +739,7 @@ pub mod OrdKeyMap {
         spec fn spec_ordkeymap_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self)
             requires
                 obeys_feq_fulls::<K, V>(),
@@ -753,16 +754,19 @@ pub mod OrdKeyMap {
                 empty@ == Map::<K::V, V::V>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn size(&self) -> (count: usize)
             requires self.spec_ordkeymap_wf(),
             ensures count == self@.dom().len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_ordkeymap_wf(),
             ensures is_empty == self@.dom().is_empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_find pays an O(n) deep-copy BSTParaStEph expose per level, and the tree is never rebalanced
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_ordkeymap_wf(), obeys_view_eq::<K>()
             ensures
@@ -772,6 +776,7 @@ pub mod OrdKeyMap {
                 };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; find plus BSTParaStEph delete and insert, each an O(n) deep-copy expose per level on a never-rebalanced tree
         fn insert(&mut self, k: K, v: V)
             requires
                 old(self).spec_ordkeymap_wf(),
@@ -785,6 +790,7 @@ pub mod OrdKeyMap {
                 self.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; find plus BSTParaStEph delete, each an O(n) deep-copy expose per level on a never-rebalanced tree
         fn delete(&mut self, k: &K)
             requires
                 old(self).spec_ordkeymap_wf(),
@@ -795,6 +801,7 @@ pub mod OrdKeyMap {
                 self.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_split pays an O(n) deep-copy expose per level; join_m is O(1) and never rebalances
         fn split(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             requires
                 self.spec_ordkeymap_wf(),
@@ -814,6 +821,7 @@ pub mod OrdKeyMap {
                 parts.0@.dom().disjoint(parts.2@.dom());
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m)^2 h), Span O((n+m)^2 h) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; two in_order walks, n + m finds in the other map O(n m h), and n + m sequential inserts into a growing, never-rebalanced result tree
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_ordkeymap_wf(),
@@ -828,6 +836,7 @@ pub mod OrdKeyMap {
                     ==> #[trigger] combined@[k] == other@[k];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n h), Span O(n m h + n h) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; in_order O(n h), n finds in other O(m h) each, and up to min(n, m) sorted inserts O(min(n, m)^2)
         fn intersect(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_ordkeymap_wf(),
@@ -838,6 +847,7 @@ pub mod OrdKeyMap {
                 forall|k: K::V| #[trigger] common@.contains_key(k) ==> common@[k] == self@[k];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m)^2 h + Σ W(combine)), Span O((n+m)^2 h + Σ S(combine)) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; two in_order walks, n + m finds in the other map O(n m h), and n + m sequential inserts into a growing, never-rebalanced result tree
         fn union_with<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: &F) -> (combined: Self)
             requires
                 self.spec_ordkeymap_wf(),
@@ -858,6 +868,7 @@ pub mod OrdKeyMap {
                         && #[trigger] combined@[k] == r@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n h + Σ W(combine)), Span O(n m h + n h + Σ S(combine)) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; in_order O(n h), n finds in other O(m h) each, and up to min(n, m) sorted inserts O(min(n, m)^2)
         fn intersect_with<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: &F) -> (common: Self)
             requires
                 self.spec_ordkeymap_wf(),
@@ -873,6 +884,7 @@ pub mod OrdKeyMap {
                         && common@[k] == r@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n^2), Span O(n m h + n^2) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; in_order O(n h), n finds in other O(m h) each, and up to n sorted inserts, each exposing (copying) the whole root, O(n^2)
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_ordkeymap_wf(),
@@ -883,6 +895,7 @@ pub mod OrdKeyMap {
                 forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_next exposes (deep-copies) each level and calls min_key, itself O(n h(T)), on a never-rebalanced tree
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             requires self.spec_ordkeymap_wf()
@@ -897,6 +910,7 @@ pub mod OrdKeyMap {
                     ==> !(TotalOrder::le(*k, t) && t@ != k@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_prev exposes (deep-copies) each level and calls max_key, itself O(n h(T)), on a never-rebalanced tree
         fn prev_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             requires self.spec_ordkeymap_wf()
@@ -908,6 +922,7 @@ pub mod OrdKeyMap {
                     ==> TotalOrder::le(t, v);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_rank reads stored sizes in O(1) but exposes (deep-copies) each level of a never-rebalanced tree
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires
@@ -920,6 +935,7 @@ pub mod OrdKeyMap {
                 ).len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_select reads stored sizes in O(1) but exposes (deep-copies) each level of a never-rebalanced tree
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             requires
@@ -933,6 +949,7 @@ pub mod OrdKeyMap {
                 ).len() == i as int;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; BSTParaStEph min_key exposes (deep-copies) each level of a never-rebalanced tree
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             requires self.spec_ordkeymap_wf()
@@ -942,6 +959,7 @@ pub mod OrdKeyMap {
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; BSTParaStEph max_key exposes (deep-copies) each level of a never-rebalanced tree
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             requires self.spec_ordkeymap_wf()
@@ -951,6 +969,7 @@ pub mod OrdKeyMap {
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; two ordkeymap_split calls, two ordkeymap_find calls, and at most two inserts, each an O(n) deep-copy expose per level
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_ordkeymap_wf()
             ensures
@@ -959,6 +978,7 @@ pub mod OrdKeyMap {
                 range.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(n) vs new; in_order O(n h(T)) to reach the i-th key, then ordkeymap_split, ordkeymap_find, and one insert, each O(n h(T))
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             requires
                 old(self).spec_ordkeymap_wf(),
@@ -971,12 +991,14 @@ pub mod OrdKeyMap {
                 split.1.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(n) vs new; BSTParaStEph in_order deep-copies both subtrees at every node, then n clones and pushes
         fn collect(&self) -> (entries: Vec<Pair<K, V>>)
             requires self.spec_ordkeymap_wf(),
             ensures
                 entries@.len() == self@.dom().len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)^2 + Σ W(f)), Span O(n h(T)^2 + Σ S(f)) — no textbook cost; does not match old analysis: O(n log n) vs new; delegates to BSTParaStEph filter, a deep-copy expose per node and a join_pair per rejected entry
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -995,6 +1017,7 @@ pub mod OrdKeyMap {
                 filtered.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + Σ W(f)), Span O(n^2 + Σ S(f)) — no textbook cost; does not match old analysis: O(n log n) vs new; in_order O(n h(T)), then n inserts in sorted order into a never-rebalanced tree, each exposing (copying) the whole root, O(i), so the result is a path of height n
         fn map_values<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
             requires
                 self.spec_ordkeymap_wf(),
@@ -1005,17 +1028,20 @@ pub mod OrdKeyMap {
                 mapped.spec_ordkeymap_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T) + Σ W(f)), Span O(n h(T) + Σ S(f)) — no textbook cost; does not match old analysis: O(n) vs new; BSTParaStEph in_order O(n h(T)), then a sequential fold
         fn reduce<F: Fn(&V, &V) -> V>(&self, f: F, id: &V) -> (reduced: V)
             requires
                 self.spec_ordkeymap_wf(),
                 forall|v1: &V, v2: &V| #[trigger] f.requires((v1, v2));
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — no textbook cost; does not match old analysis: O(n) vs new; in_order O(n h(T)), then n ArraySetStEph inserts, each an O(i) scan of an unsorted Vec
         fn domain(&self) -> (keys: ArraySetStEph<K>)
             requires self.spec_ordkeymap_wf()
             ensures keys@ =~= self@.dom(), keys.spec_arraysetsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 h + Σ W(f)), Span O(n^2 h + Σ S(f)) — no textbook cost; does not match old analysis: O(n log n) vs new; n = |keys|, h = result height ≤ n; keys come in unsorted ArraySetStEph order, and each insert into the never-rebalanced tree costs O(i h)
         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySetStEph<K>, f: &F) -> (table: Self)
             requires
                 keys.spec_arraysetsteph_wf(),
@@ -1037,6 +1063,7 @@ pub mod OrdKeyMap {
                         && table@[k] == result@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + n m), Span O(n^2 + n m) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |keys|; in_order O(n h(T)), n ArraySetStEph finds O(m) each, and up to n sorted inserts, each exposing (copying) the whole root, O(n^2)
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
             requires self.spec_ordkeymap_wf(), keys.spec_arraysetsteph_wf()
             ensures
@@ -1045,6 +1072,7 @@ pub mod OrdKeyMap {
                 forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k];
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + n m), Span O(n^2 + n m) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |keys|; in_order O(n h(T)), n ArraySetStEph finds O(m) each, and up to n sorted inserts, each exposing (copying) the whole root, O(n^2)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (remaining: Self)
             requires self.spec_ordkeymap_wf(), keys.spec_arraysetsteph_wf()
             ensures
@@ -1052,6 +1080,7 @@ pub mod OrdKeyMap {
                 remaining@.dom() =~= self@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k];
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(n) vs new; calls collect, whose BSTParaStEph in_order deep-copies both subtrees at every node
         fn iter(&self) -> (it: std::vec::IntoIter<Pair<K, V>>)
             requires self.spec_ordkeymap_wf()
             ensures
@@ -2377,6 +2406,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self)
         {
             let inner = ParamBST::<Pair<K, V>>::new();
@@ -2392,6 +2422,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len()        {
             let r = self.inner.size();
@@ -2403,6 +2434,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty()
         {
@@ -2415,12 +2447,14 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to ordkeymap_find
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_find pays an O(n) deep-copy BSTParaStEph expose per level, and the tree is never rebalanced
         fn find(&self, k: &K) -> (found: Option<V>)
         {
             ordkeymap_find(&self.inner, k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- find + BST delete/insert
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; find plus BSTParaStEph delete and insert, each an O(n) deep-copy expose per level on a never-rebalanced tree
         fn insert(&mut self, k: K, v: V)
         {
             let existing = self.find(&k);
@@ -2529,6 +2563,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- find + BST delete
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; find plus BSTParaStEph delete, each an O(n) deep-copy expose per level on a never-rebalanced tree
         fn delete(&mut self, k: &K)
         {
             let existing = self.find(k);
@@ -2563,6 +2598,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to ordkeymap_split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_split pays an O(n) deep-copy expose per level; join_m is O(1) and never rebalances
         fn split(&self, k: &K) -> (parts: (Self, Option<V>, Self))
         {
             let (left_bst, found, right_bst) = ordkeymap_split(&self.inner, k);
@@ -2646,6 +2682,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m)^2 h), Span O((n+m)^2 h) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; two in_order walks, n + m finds in the other map O(n m h), and n + m sequential inserts into a growing, never-rebalanced result tree
         fn union(&self, other: &Self) -> (combined: Self)
         {
             let ghost self_tree = self.inner@;
@@ -2916,6 +2953,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n h), Span O(n m h + n h) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; in_order O(n h), n finds in other O(m h) each, and up to min(n, m) sorted inserts O(min(n, m)^2)
         fn intersect(&self, other: &Self) -> (common: Self)
         {
             let ghost self_tree = self.inner@;
@@ -3051,6 +3089,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m)^2 h + Σ W(combine)), Span O((n+m)^2 h + Σ S(combine)) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; two in_order walks, n + m finds in the other map O(n m h), and n + m sequential inserts into a growing, never-rebalanced result tree
         fn union_with<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: &F) -> (combined: Self)
         {
             let ghost self_tree = self.inner@;
@@ -3380,6 +3419,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n h + Σ W(combine)), Span O(n m h + n h + Σ S(combine)) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; in_order O(n h), n finds in other O(m h) each, and up to min(n, m) sorted inserts O(min(n, m)^2)
         fn intersect_with<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: &F) -> (common: Self)
         {
             let ghost self_tree = self.inner@;
@@ -3573,6 +3613,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m h + n^2), Span O(n m h + n^2) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |other|, h = max height; in_order O(n h), n finds in other O(m h) each, and up to n sorted inserts, each exposing (copying) the whole root, O(n^2)
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let ghost self_tree = self.inner@;
@@ -3701,6 +3742,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to ordkeymap_next
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_next exposes (deep-copies) each level and calls min_key, itself O(n h(T)), on a never-rebalanced tree
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
@@ -3710,6 +3752,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to ordkeymap_prev
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_prev exposes (deep-copies) each level and calls max_key, itself O(n h(T)), on a never-rebalanced tree
         fn prev_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
@@ -3719,6 +3762,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to ordkeymap_rank
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_rank reads stored sizes in O(1) but exposes (deep-copies) each level of a never-rebalanced tree
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
@@ -3728,6 +3772,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to ordkeymap_select
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; ordkeymap_select reads stored sizes in O(1) but exposes (deep-copies) each level of a never-rebalanced tree
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
@@ -3737,6 +3782,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST min_key + key extraction
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; BSTParaStEph min_key exposes (deep-copies) each level of a never-rebalanced tree
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
@@ -3792,6 +3838,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST max_key + key extraction
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; BSTParaStEph max_key exposes (deep-copies) each level of a never-rebalanced tree
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
@@ -3847,6 +3894,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- two BST splits + two finds
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(lg n) vs new; two ordkeymap_split calls, two ordkeymap_find calls, and at most two inserts, each an O(n) deep-copy expose per level
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
         {
             // Split at k1: right_of_k1 has keys > k1.
@@ -3952,6 +4000,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + BST split
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(n) vs new; in_order O(n h(T)) to reach the i-th key, then ordkeymap_split, ordkeymap_find, and one insert, each O(n h(T))
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
         {
             let ghost old_tree = self.inner@;
@@ -4108,6 +4157,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to in_order
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(n) vs new; BSTParaStEph in_order deep-copies both subtrees at every node, then n clones and pushes
         fn collect(&self) -> (entries: Vec<Pair<K, V>>)
         {
             let sorted = self.inner.in_order();
@@ -4139,6 +4189,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + conditional BST inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)^2 + Σ W(f)), Span O(n h(T)^2 + Σ S(f)) — no textbook cost; does not match old analysis: O(n log n) vs new; delegates to BSTParaStEph filter, a deep-copy expose per node and a join_pair per rejected entry; the old line's "in_order + conditional BST inserts" describes code that is not there
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -4194,6 +4245,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + BST inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + Σ W(f)), Span O(n^2 + Σ S(f)) — no textbook cost; does not match old analysis: O(n log n) vs new; in_order O(n h(T)), then n inserts in sorted order into a never-rebalanced tree, each exposing (copying) the whole root, O(i), so the result is a path of height n
         fn map_values<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
         {
             let sorted = self.inner.in_order();
@@ -4287,6 +4339,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + fold
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T) + Σ W(f)), Span O(n h(T) + Σ S(f)) — no textbook cost; does not match old analysis: O(n) vs new; BSTParaStEph in_order O(n h(T)), then a sequential fold
         fn reduce<F: Fn(&V, &V) -> V>(&self, f: F, id: &V) -> (reduced: V)
         {
             let sorted = self.inner.in_order();
@@ -4311,6 +4364,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + key clones
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — no textbook cost; does not match old analysis: O(n) vs new; in_order O(n h(T)), then n ArraySetStEph inserts, each an O(i) scan of an unsorted Vec
         fn domain(&self) -> (keys: ArraySetStEph<K>)
         {
             let sorted = self.inner.in_order();
@@ -4379,6 +4433,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 h + Σ W(f)), Span O(n^2 h + Σ S(f)) — no textbook cost; does not match old analysis: O(n log n) vs new; n = |keys|, h = result height ≤ n; keys come in unsorted ArraySetStEph order, and each insert into the never-rebalanced tree costs O(i h)
         fn tabulate<F: Fn(&K) -> V>(keys: &ArraySetStEph<K>, f: &F) -> (table: Self)
         {
             // Veracity: NEEDED proof block
@@ -4539,6 +4594,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- in_order + conditional BST inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + n m), Span O(n^2 + n m) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |keys|; in_order O(n h(T)), n ArraySetStEph finds O(m) each, and up to n sorted inserts, each exposing (copying) the whole root, O(n^2)
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
         {
             let ghost old_tree = self.inner@;
@@ -4650,6 +4706,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- in_order + conditional BST inserts
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2 + n m), Span O(n^2 + n m) — no textbook cost; does not match old analysis: O(n * m) vs new; n = |self|, m = |keys|; in_order O(n h(T)), n ArraySetStEph finds O(m) each, and up to n sorted inserts, each exposing (copying) the whole root, O(n^2)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (remaining: Self)
         {
             let ghost old_tree = self.inner@;
@@ -4761,6 +4818,7 @@ pub mod OrdKeyMap {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — no textbook cost; does not match old analysis: O(n) vs new; calls collect, whose BSTParaStEph in_order deep-copies both subtrees at every node
         fn iter(&self) -> std::vec::IntoIter<Pair<K, V>> {
             let entries = self.collect();
             entries.into_iter()

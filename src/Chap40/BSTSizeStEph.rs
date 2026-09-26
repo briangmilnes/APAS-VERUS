@@ -87,6 +87,7 @@ pub mod BSTSizeStEph {
         spec fn spec_content(&self) -> Set<T>;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(key: T, priority: u64) -> (node: Self);
     }
 
@@ -123,6 +124,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new(key: T, priority: u64) -> (node: Self)
             ensures
                 node.key == key,
@@ -170,6 +172,7 @@ pub mod BSTSizeStEph {
 
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> (empty: Self)
             ensures
                 empty.spec_size() == 0,
@@ -177,14 +180,17 @@ pub mod BSTSizeStEph {
                 empty@ == Set::<T>::empty();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1) — reads augmented size field
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             ensures count as nat == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == (self.spec_size() == 0);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn height(&self) -> (height: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
@@ -193,6 +199,7 @@ pub mod BSTSizeStEph {
                 height as nat == self.spec_height();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn insert(&mut self, value: T, priority: u64)
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
@@ -206,6 +213,7 @@ pub mod BSTSizeStEph {
                 self.spec_size() >= old(self).spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook; does not match old analysis: O(n) vs O(lg n) expected; impl rotates the key down to a leaf (delete_link), and CS 38.11 gives delete O(lg n), so the APAS line's O(n) is also wrong
         fn delete(&mut self, key: &T)
             requires
                 old(self).spec_bstsizesteph_wf(),
@@ -217,6 +225,7 @@ pub mod BSTSizeStEph {
                 self.spec_size() <= old(self).spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires
                 self.spec_bstsizesteph_wf(),
@@ -227,6 +236,7 @@ pub mod BSTSizeStEph {
                 found is Some ==> *found.unwrap() == *target;
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn contains(&self, target: &T) -> (contains: bool)
             requires
                 self.spec_bstsizesteph_wf(),
@@ -235,6 +245,7 @@ pub mod BSTSizeStEph {
             ensures contains == self@.contains(*target);
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn minimum(&self) -> (minimum: Option<&T>)
             requires self.spec_bstsizesteph_wf(),
             ensures
@@ -242,6 +253,7 @@ pub mod BSTSizeStEph {
                 self.spec_size() > 0 ==> minimum is Some;
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn maximum(&self) -> (maximum: Option<&T>)
             requires self.spec_bstsizesteph_wf(),
             ensures
@@ -249,11 +261,13 @@ pub mod BSTSizeStEph {
                 self.spec_size() > 0 ==> maximum is Some;
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             requires self.spec_bstsizesteph_wf(),
             ensures ordered.spec_len() == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 Alg 40.1): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn rank(&self, key: &T) -> (rank: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
@@ -262,10 +276,12 @@ pub mod BSTSizeStEph {
                 rank as nat <= self.spec_size();
         /// - Alg Analysis: APAS (Ch40 Alg 40.1): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn select(&self, rank: usize) -> (selected: Option<&T>)
             ensures (rank == 0 || rank as nat > self.spec_size()) ==> selected is None;
         /// - Alg Analysis: APAS (Ch40 Ex 40.1): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — does not match textbook: collects the whole tree in order and rebuilds both halves with a linear min-priority scan per node; Ex 40.1 splits along one root-to-leaf path in O(lg n); does not match old analysis: O(log n) vs O(n lg n) expected; the impl line already says O(n log n)
         fn split_rank(&self, rank: usize) -> (split: (BSTSizeStEph<T>, BSTSizeStEph<T>))
             requires self.spec_bstsizesteph_wf(),
             ensures
@@ -275,9 +291,11 @@ pub mod BSTSizeStEph {
         // Internal associated functions.
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size_link(link: &Link<T>) -> (count: usize)
             ensures count as nat == Lnk::spec_size_link(link);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn update_size(node: &mut Node<T>)
             requires
                 Lnk::spec_size_link(&old(node).left) + Lnk::spec_size_link(&old(node).right) + 1 <= usize::MAX as nat,
@@ -288,6 +306,7 @@ pub mod BSTSizeStEph {
                 node.left == old(node).left,
                 node.right == old(node).right;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> (node: Link<T>)
             requires
                 Lnk::spec_size_link(&left) + Lnk::spec_size_link(&right) + 1 <= usize::MAX as nat,
@@ -296,6 +315,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_link_size_wf(&node) <==> (Lnk::spec_link_size_wf(&left) && Lnk::spec_link_size_wf(&right)),
                 Lnk::spec_content_link(&node) == Lnk::spec_content_link(&left).union(Lnk::spec_content_link(&right)).insert(key);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_left(link: &mut Link<T>)
             requires
                 Lnk::spec_link_size_wf(old(link)),
@@ -314,6 +334,7 @@ pub mod BSTSizeStEph {
                         == std::cmp::Ordering::Greater
                 );
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_right(link: &mut Link<T>)
             requires
                 Lnk::spec_link_size_wf(old(link)),
@@ -332,6 +353,7 @@ pub mod BSTSizeStEph {
                         == std::cmp::Ordering::Less
                 );
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn insert_link(link: &mut Link<T>, value: T, priority: u64)
             requires
                 Lnk::spec_size_link(old(link)) + 1 <= usize::MAX as nat,
@@ -347,6 +369,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_ordered_link(link),
             decreases *old(link);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn delete_link(link: &mut Link<T>, key: &T) -> (deleted: bool)
             requires
                 Lnk::spec_ordered_link(old(link)),
@@ -361,6 +384,7 @@ pub mod BSTSizeStEph {
                 Lnk::spec_size_link(link) + if deleted { 1nat } else { 0nat } == Lnk::spec_size_link(old(link)),
             decreases Lnk::spec_size_link(old(link));
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -373,18 +397,21 @@ pub mod BSTSizeStEph {
                 Lnk::spec_content_link(link).contains(*target) ==> found is Some,
             decreases *link;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn min_link(link: &Link<T>) -> (minimum: Option<&T>)
             ensures
                 link.is_none() ==> minimum.is_none(),
                 link.is_some() ==> minimum.is_some(),
             decreases *link;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn max_link(link: &Link<T>) -> (maximum: Option<&T>)
             ensures
                 link.is_none() ==> maximum.is_none(),
                 link.is_some() ==> maximum.is_some(),
             decreases *link;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height_link(link: &Link<T>) -> (h: usize)
             requires
                 Lnk::spec_size_link(link) < usize::MAX as nat,
@@ -392,20 +419,24 @@ pub mod BSTSizeStEph {
             ensures h as nat == Lnk::spec_height_link(link),
             decreases *link;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
             requires Lnk::spec_link_size_wf(link),
             ensures out.len() == old(out).len() + Lnk::spec_size_link(link),
             decreases *link;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn in_order_collect_with_priority(link: &Link<T>, out: &mut Vec<(T, u64)>)
             requires Lnk::spec_link_size_wf(link),
             ensures out.len() == old(out).len() + Lnk::spec_size_link(link),
             decreases *link;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (min_idx: usize)
             requires start < end, end <= items.len(),
             ensures start <= min_idx && min_idx < end;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, O(n^2) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — no textbook cost
         fn build_treap_from_vec(items: &Vec<(T, u64)>, start: usize, end: usize) -> (treap: Link<T>)
             requires start <= end, end <= items.len(),
             ensures
@@ -413,9 +444,11 @@ pub mod BSTSizeStEph {
                 Lnk::spec_link_size_wf(&treap),
             decreases end - start;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (filtered: Vec<(T, u64)>)
             ensures filtered.len() <= items.len();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn rank_link(link: &Link<T>, key: &T) -> (rank: usize)
             requires
                 Lnk::spec_size_link(link) < usize::MAX as nat,
@@ -423,6 +456,7 @@ pub mod BSTSizeStEph {
             ensures rank as nat <= Lnk::spec_size_link(link),
             decreases *link;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn select_link(link: &Link<T>, rank: usize) -> (selected: Option<&T>)
             ensures link.is_none() ==> selected.is_none(),
             decreases *link;
@@ -437,40 +471,51 @@ pub mod BSTSizeStEph {
         open spec fn spec_height(&self) -> nat { Lnk::spec_height_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> (empty: Self) { BSTSizeStEph { root: None } }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize) { Self::size_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (is_empty: bool) { self.size() == 0 }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn insert(&mut self, value: T, priority: u64) {
             Self::insert_link(&mut self.root, value, priority);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn delete(&mut self, key: &T) {
             Self::delete_link(&mut self.root, key);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn find(&self, target: &T) -> Option<&T> { Self::find_link(&self.root, target) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn contains(&self, target: &T) -> bool { self.find(target).is_some() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn minimum(&self) -> Option<&T> { Self::min_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn maximum(&self) -> Option<&T> { Self::max_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out: Vec<T> = Vec::new();
             Self::in_order_collect(&self.root, &mut out);
@@ -478,9 +523,11 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn rank(&self, key: &T) -> usize { Self::rank_link(&self.root, key) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn select(&self, rank: usize) -> Option<&T> {
             if rank == 0 || rank > self.size() {
                 None
@@ -490,6 +537,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, O(n^2) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — does not match textbook: collects the whole tree in order and rebuilds both halves with a linear min-priority scan per node; Ex 40.1 splits along one root-to-leaf path in O(lg n)
         fn split_rank(&self, rank: usize) -> (BSTSizeStEph<T>, BSTSizeStEph<T>) {
             if rank == 0 {
                 (Self::new(), self.clone())
@@ -511,6 +559,7 @@ pub mod BSTSizeStEph {
         // Internal associated functions.
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size_link(link: &Link<T>) -> (count: usize) {
             match link {
                 None => 0,
@@ -519,6 +568,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn update_size(node: &mut Node<T>) {
             let l = Self::size_link(&node.left);
             let r = Self::size_link(&node.right);
@@ -526,6 +576,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn make_node(key: T, priority: u64, left: Link<T>, right: Link<T>) -> (node: Link<T>) {
             let mut node = Node::new(key, priority);
             node.left = left;
@@ -535,6 +586,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_left(link: &mut Link<T>) {
             let ghost old_content = Lnk::spec_content_link(link);
             if let Some(mut x) = link.take() {
@@ -626,6 +678,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_right(link: &mut Link<T>) {
             let ghost old_content = Lnk::spec_content_link(link);
             if let Some(mut x) = link.take() {
@@ -715,6 +768,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn insert_link(link: &mut Link<T>, value: T, priority: u64)
             decreases *old(link),
         {
@@ -811,6 +865,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn delete_link(link: &mut Link<T>, key: &T) -> (deleted: bool)
             decreases Lnk::spec_size_link(old(link)),
         {
@@ -948,6 +1003,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             decreases *link,
         {
@@ -1012,6 +1068,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn min_link(link: &Link<T>) -> (minimum: Option<&T>)
             decreases *link,
         {
@@ -1025,6 +1082,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn max_link(link: &Link<T>) -> (maximum: Option<&T>)
             decreases *link,
         {
@@ -1038,6 +1096,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height_link(link: &Link<T>) -> (h: usize)
             decreases *link,
         {
@@ -1060,6 +1119,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
             decreases *link,
         {
@@ -1071,6 +1131,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn in_order_collect_with_priority(link: &Link<T>, out: &mut Vec<(T, u64)>)
             decreases *link,
         {
@@ -1082,6 +1143,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn find_min_priority_idx(items: &Vec<(T, u64)>, start: usize, end: usize) -> (min_idx: usize) {
             let mut min_idx = start;
             let mut i = start + 1;
@@ -1103,6 +1165,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, O(n^2) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — no textbook cost
         fn build_treap_from_vec(items: &Vec<(T, u64)>, start: usize, end: usize) -> (treap: Link<T>)
             decreases end - start,
         {
@@ -1118,6 +1181,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn filter_by_key(items: &Vec<(T, u64)>, key: &T) -> (filtered: Vec<(T, u64)>) {
             let mut filtered: Vec<(T, u64)> = Vec::new();
             let mut i: usize = 0;
@@ -1136,6 +1200,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn rank_link(link: &Link<T>, key: &T) -> (rank: usize)
             decreases *link,
         {
@@ -1158,6 +1223,7 @@ pub mod BSTSizeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn select_link(link: &Link<T>, rank: usize) -> Option<&T>
             decreases *link,
         {
@@ -1411,6 +1477,7 @@ pub mod BSTSizeStEph {
     }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
         requires Lnk::spec_ordered_link(a), Lnk::spec_ordered_link(b),
         ensures
@@ -1434,6 +1501,7 @@ pub mod BSTSizeStEph {
 
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
         requires Lnk::spec_ordered_link(link),
         ensures
@@ -1485,6 +1553,7 @@ pub mod BSTSizeStEph {
     impl<T: StT + Ord> BSTSizeStEph<T> {
         /// Returns a snapshot iterator over the tree elements in ascending key order.
         /// - Alg Analysis: Code review (Claude Fable 5.1): Work O(n), Span O(n) — in-order traversal.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         pub fn iter(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_bstsizesteph_wf(),
             ensures

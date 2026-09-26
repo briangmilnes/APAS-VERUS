@@ -93,6 +93,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             requires self.spec_avltreesetmtper_wf(),
@@ -100,6 +101,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: APAS O(lg n) span requires tree-based sequence concat (join); AVLTreeSeqMtPerS lacks concat, so O(n) materialization into Vec is unavoidable
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — does not match textbook: BSTParaMtEph collect_in_order deep-copies both subtrees at every node (expose) and runs sequentially, then from_vec is O(n); CS 41.4 Work O(|a|), Span O(lg |a|); does not match old analysis: O(n), O(n) vs new
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
             requires
@@ -112,11 +114,13 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_avltreesetmtper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_avltreesetmtper_wf();
@@ -124,6 +128,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C: split Vec, recurse via join(), union results
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2 lg n), Span O(n h^2) — does not match textbook: h = max height of the partial trees; from_vec_dc_per forks both halves with join but copies each half sequentially, and each BSTParaMtEph union costs O(n h^2) work and span; values_in_order adds O(n); Ex 41.3 Work O(n lg n), Span O(lg^2 n); does not match old analysis: O(n lg n), O(lg^2 n) vs new
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
             requires
                 seq@.len() <= usize::MAX - 2,
@@ -135,6 +140,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — ACCEPTED DIFFERENCE: Verus limitation; spec_fn not Send, blocks parallel filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)^2 + Σ W(f(x))), Span O(n h(T)^2 + Σ S(f(x))) — does not match textbook: BSTParaMtEph filter runs the sequential filter_inner, a deep-copy expose per node and a join_pair per rejected key; CS 41.4 Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x))); does not match old analysis: O(Σ W(f(x))), O(n + max S(f(x))) vs new
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn filter<F: Pred<T> + Clone>(
             &self,
@@ -158,6 +164,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n); parallel D&C via BSTParaMtEph
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |a|+|b|, h = max height; BSTParaMtEph intersect forks with ParaPair but pays an O(n) deep-copy expose and a sequential O(n h) split and join_pair per node; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); does not match old analysis: O(m·lg(1+n/m)), O(lg² n) vs O(n h^2)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
@@ -169,6 +176,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n); parallel D&C via BSTParaMtEph
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |a|+|b|, h = max height; BSTParaMtEph difference forks with ParaPair but pays an O(n) deep-copy expose and a sequential O(n h) split and join_pair per node; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); does not match old analysis: O(m·lg(1+n/m)), O(lg² n) vs O(n h^2)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
@@ -180,6 +188,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n); parallel D&C via BSTParaMtEph
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |a|+|b|, h = max height; BSTParaMtEph union forks with ParaPair but pays an O(n) deep-copy expose and a sequential O(n h) split per node; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); does not match old analysis: O(m·lg(1+n/m)), O(lg² n) vs O(n h^2)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union(&self, other: &Self) -> (combined: Self)
             requires
@@ -192,6 +201,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — does not match textbook: BSTParaMtEph find deep-copies both subtrees at each level (expose) and the tree is never rebalanced; CS 41.4 O(lg |a|); does not match old analysis: O(lg n) vs O(n h(T))
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn find(&self, x: &T) -> (found: bool)
             requires
@@ -202,6 +212,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — does not match textbook: the persistent delete first clones the whole tree, O(n), then BSTParaMtEph delete pays an O(n) deep-copy expose per level, and the tree is never rebalanced; CS 41.4 O(lg |a|); does not match old analysis: O(lg n) vs O(n h(T))
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&self, x: &T) -> (updated: Self)
             requires
@@ -212,6 +223,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) CS 41.4
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — does not match textbook: the persistent insert first clones the whole tree, O(n), then BSTParaMtEph insert pays an O(n) deep-copy expose per level in split, and the tree is never rebalanced; CS 41.4 O(lg |a|); does not match old analysis: O(lg n) vs O(n h(T))
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&self, x: T) -> (updated: Self)
             requires
@@ -372,12 +384,14 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
         {
             self.tree.size()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: APAS O(lg n) span requires tree-based sequence concat; AVLTreeSeqMtPerS lacks concat
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — does not match textbook: BSTParaMtEph collect_in_order deep-copies both subtrees at every node (expose) and runs sequentially, then from_vec is O(n); CS 41.4 Work O(|a|), Span O(lg |a|); does not match old analysis: O(n), O(n) vs new
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
         {
             let mut vals: Vec<T> = Vec::new();
@@ -412,18 +426,21 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty: Self)
         {
             AVLTreeSetMtPer { tree: ParamBST::new() }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(x: T) -> (tree: Self)
         {
             AVLTreeSetMtPer { tree: ParamBST::singleton(x) }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C via join() + union
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2 lg n), Span O(n h^2) — does not match textbook: h = max height of the partial trees; from_vec_dc_per forks both halves with join but copies each half sequentially, and each BSTParaMtEph union costs O(n h^2) work and span; values_in_order adds O(n); Ex 41.3 Work O(n lg n), Span O(lg^2 n); does not match old analysis: O(n lg n), O(lg^2 n) vs new
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
         {
             let vals = seq.values_in_order();
@@ -446,6 +463,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)^2 + Σ W(f(x))), Span O(n h(T)^2 + Σ S(f(x))) — does not match textbook: BSTParaMtEph filter runs the sequential filter_inner, a deep-copy expose per node and a join_pair per rejected key; CS 41.4 Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x))); does not match old analysis: O(n) vs new
         fn filter<F: Pred<T> + Clone>(
             &self,
             f: F,
@@ -457,6 +475,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |a|+|b|, h = max height; BSTParaMtEph intersect forks with ParaPair but pays an O(n) deep-copy expose and a sequential O(n h) split and join_pair per node; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); does not match old analysis: O(m·lg(1+n/m)) vs O(n h^2)
         fn intersection(&self, other: &Self) -> (common: Self)
         {
             let common_tree = self.tree.intersect(&other.tree);
@@ -464,6 +483,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |a|+|b|, h = max height; BSTParaMtEph difference forks with ParaPair but pays an O(n) deep-copy expose and a sequential O(n h) split and join_pair per node; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); does not match old analysis: O(m·lg(1+n/m)) vs O(n h^2)
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let remaining_tree = self.tree.difference(&other.tree);
@@ -471,6 +491,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h^2), Span O(n h^2) — does not match textbook: n = |a|+|b|, h = max height; BSTParaMtEph union forks with ParaPair but pays an O(n) deep-copy expose and a sequential O(n h) split per node; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n); does not match old analysis: O(m·lg(1+n/m)) vs O(n h^2)
         fn union(&self, other: &Self) -> (combined: Self)
         {
             let combined_tree = self.tree.union(&other.tree);
@@ -478,6 +499,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — does not match textbook: BSTParaMtEph find deep-copies both subtrees at each level (expose) and the tree is never rebalanced; CS 41.4 O(lg |a|); does not match old analysis: O(log n) vs O(n h(T))
         fn find(&self, x: &T) -> (found: bool)
         {
             let result = self.tree.find(x);
@@ -485,6 +507,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — does not match textbook: the persistent delete first clones the whole tree, O(n), then BSTParaMtEph delete pays an O(n) deep-copy expose per level, and the tree is never rebalanced; CS 41.4 O(lg |a|); does not match old analysis: O(log n) vs O(n h(T))
         fn delete(&self, x: &T) -> (updated: Self)
         {
             let mut tree = self.tree.clone();
@@ -496,6 +519,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n h(T)), Span O(n h(T)) — does not match textbook: the persistent insert first clones the whole tree, O(n), then BSTParaMtEph insert pays an O(n) deep-copy expose per level in split, and the tree is never rebalanced; CS 41.4 O(lg |a|); does not match old analysis: O(log n) vs O(n h(T))
         fn insert(&self, x: T) -> (updated: Self)
         {
             let mut tree = self.tree.clone();

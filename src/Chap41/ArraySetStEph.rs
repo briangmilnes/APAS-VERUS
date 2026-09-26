@@ -226,6 +226,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: stored count, not array scan
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetsteph_wf()
             ensures count == self@.len();
@@ -233,6 +234,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential clone of element array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential Vec clone, CS 41.4 Span O(lg |a|)
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
             requires self.spec_arraysetsteph_wf(),
             ensures
@@ -240,18 +242,21 @@ pub mod ArraySetStEph {
                 seq@.to_set() =~= self@;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: single-element array, not boolean array
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(x: T) -> (tree: Self)
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_arraysetsteph_wf();
 
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — ACCEPTED DIFFERENCE: sequential insert loop, each O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: n sequential inserts, each a linear find plus a full copy; Ex 41.3 Work O(n lg n)
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
             ensures
                 constructed@ =~= seq@.to_set(),
@@ -260,6 +265,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(x))), Span O(n + Σ W(f(x))) — ACCEPTED DIFFERENCE: sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + Σ W(f(x))), Span O(n + Σ S(f(x))) — does not match textbook: sequential loop, CS 41.4 Span O(lg |a| + max S(f(x)))
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -281,6 +287,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·m), Span O(n·m) — does not match textbook: unsorted array, a linear find in other per element; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n)
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -292,6 +299,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·m), Span O(n·m) — does not match textbook: unsorted array, a linear find in other per element; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n)
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -303,6 +311,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: nested linear scans
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·m), Span O(n·m) — does not match textbook: copies self, then a linear find in self per element of other; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n)
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -314,12 +323,14 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: linear scan, not indexed
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: linear scan of an unsorted array, CS 41.4 O(lg |a|)
         fn find(&self, x: &T) -> (found: bool)
             ensures found == self@.contains(x@);
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: copy with filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: rebuilds the array without x, CS 41.4 O(lg |a|)
         fn delete(&mut self, x: &T)
             requires
                 old(self).spec_arraysetsteph_wf(),
@@ -330,6 +341,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: find + copy
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: linear find, then copies the array to append x, CS 41.4 O(lg |a|)
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_arraysetsteph_wf(),
@@ -349,6 +361,7 @@ pub mod ArraySetStEph {
 
         /// Returns an iterator over the set elements.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         pub fn iter<'a>(&'a self) -> (it: std::slice::Iter<'a, T>)
             requires self.spec_arraysetsteph_wf()
             ensures
@@ -368,6 +381,7 @@ pub mod ArraySetStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self) -> (count: usize)
         {
             // Veracity: NEEDED proof block
@@ -378,6 +392,7 @@ pub mod ArraySetStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: sequential Vec clone, CS 41.4 Span O(lg |a|)
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
         {
             let seq = self.elements.clone();
@@ -393,6 +408,7 @@ pub mod ArraySetStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (empty: Self)
         {
             let empty = ArraySetStEph {
@@ -404,6 +420,7 @@ pub mod ArraySetStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(x: T) -> (tree: Self)
         {
             let ghost x_view = x@;
@@ -423,6 +440,7 @@ pub mod ArraySetStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — does not match textbook: n sequential inserts, each a linear find plus a full copy; Ex 41.3 Work O(n lg n); does not match old analysis: O(n lg n) vs O(n^2); insert on the unsorted array is O(n), not O(lg n)
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
         {
             if seq.length() == 0 {
@@ -471,6 +489,7 @@ pub mod ArraySetStEph {
 
         #[verifier::loop_isolation(false)]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: linear scan of an unsorted array, CS 41.4 O(lg |a|)
         fn find(&self, x: &T) -> (found: bool)
         {
             // Veracity: NEEDED assert
@@ -503,6 +522,7 @@ pub mod ArraySetStEph {
 
         #[verifier::loop_isolation(false)]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + Σ W(f(x))), Span O(n + Σ S(f(x))) — does not match textbook: sequential loop, CS 41.4 Span O(lg |a| + max S(f(x)))
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -606,6 +626,7 @@ pub mod ArraySetStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·m), Span O(n·m) — does not match textbook: unsorted array, a linear find in other per element; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n)
         fn intersection(&self, other: &Self) -> (common: Self)
         {
             let ghost old_view = self.elements@;
@@ -687,6 +708,7 @@ pub mod ArraySetStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·m), Span O(n·m) — does not match textbook: unsorted array, a linear find in other per element; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n)
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let ghost old_view = self.elements@;
@@ -769,6 +791,7 @@ pub mod ArraySetStEph {
 
         #[verifier::loop_isolation(false)]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·m), Span O(n·m) — does not match textbook: copies self, then a linear find in self per element of other; CS 41.4 Work O(m lg(1 + n/m)), Span O(lg n)
         fn union(&self, other: &Self) -> (combined: Self)
         {
             let ghost self_view = self.elements@;
@@ -893,6 +916,7 @@ pub mod ArraySetStEph {
 
         #[verifier::loop_isolation(false)]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: rebuilds the array without x, CS 41.4 O(lg |a|)
         fn delete(&mut self, x: &T)
         {
             let ghost old_view = self.elements@;
@@ -969,6 +993,7 @@ pub mod ArraySetStEph {
 
         #[verifier::loop_isolation(false)]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: linear find, then copies the array to append x, CS 41.4 O(lg |a|)
         fn insert(&mut self, x: T)
         {
             if !self.find(&x) {
