@@ -84,6 +84,7 @@ pub mod BalBinTreeStEph {
 
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn leaf() -> (l: Self)
             ensures l.spec_balbintreesteph_wf(),
                     l.spec_size() == 0,
@@ -94,6 +95,7 @@ pub mod BalBinTreeStEph {
 
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn node(left: Self, value: T, right: Self) -> (n: Self)
             ensures n.spec_balbintreesteph_wf(),
                     n.spec_size() == 1 + left.spec_size() + right.spec_size(),
@@ -105,12 +107,14 @@ pub mod BalBinTreeStEph {
 
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_leaf(&self) -> (b: bool)
             requires self.spec_balbintreesteph_wf(),
             ensures b == (self.spec_size() == 0);
 
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal, no stored size.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: no stored size, so size recurses over all n nodes sequentially; CS 23.2 length is Work O(1), Span O(1) (the APAS line's O(n) is not from the prose)
         fn size(&self) -> (count: usize)
             requires self.spec_balbintreesteph_wf(),
                      self.spec_size() <= usize::MAX,
@@ -118,6 +122,7 @@ pub mod BalBinTreeStEph {
 
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn height(&self) -> (h: usize)
             requires self.spec_balbintreesteph_wf(),
                      self.spec_height() <= usize::MAX,
@@ -126,6 +131,7 @@ pub mod BalBinTreeStEph {
         /// In-order traversal: left, root, right.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal with Vec building.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: each level Vec-appends the right result into the left, so an element is copied once per ancestor (O(n lg n) balanced, O(n²) degenerate); APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); old omits the per-level append copy
         fn in_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_balbintreesteph_wf(),
@@ -136,6 +142,7 @@ pub mod BalBinTreeStEph {
         /// Pre-order traversal: root, left, right.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal with Vec building.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: each level Vec-appends both child results into a fresh Vec, so an element is copied once per ancestor (O(n lg n) balanced, O(n²) degenerate); APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); old omits the per-level append copy
         fn pre_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_balbintreesteph_wf(),
@@ -146,6 +153,7 @@ pub mod BalBinTreeStEph {
         /// Post-order traversal: left, right, root.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal with Vec building.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: each level Vec-appends the right result into the left, so an element is copied once per ancestor (O(n lg n) balanced, O(n²) degenerate); APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); old omits the per-level append copy
         fn post_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_balbintreesteph_wf(),
@@ -232,18 +240,21 @@ pub mod BalBinTreeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn leaf() -> (l: Self)
         {
             BalBinTree::Leaf
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Box allocation.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn node(left: Self, value: T, right: Self) -> (n: Self)
         {
             BalBinTree::Node(Box::new(BalBinNode { left, value, right }))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — pattern match.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_leaf(&self) -> (b: bool)
         {
             match self {
@@ -253,6 +264,7 @@ pub mod BalBinTreeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive traversal of all n nodes; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: no stored size, so size recurses over all n nodes sequentially; CS 23.2 length is Work O(1), Span O(1) (the APAS line's O(n) is not from the prose)
         fn size(&self) -> (count: usize)
             decreases self.spec_size(),
         {
@@ -267,6 +279,7 @@ pub mod BalBinTreeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive traversal of all n nodes; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn height(&self) -> (h: usize)
             decreases self.spec_height(),
         {
@@ -281,6 +294,7 @@ pub mod BalBinTreeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive in-order traversal + append; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: each level Vec-appends the right result into the left, so an element is copied once per ancestor (O(n lg n) balanced, O(n²) degenerate); APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); old omits the per-level append copy
         fn in_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             decreases self.spec_size(),
@@ -299,6 +313,7 @@ pub mod BalBinTreeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive pre-order traversal + append; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: each level Vec-appends both child results into a fresh Vec, so an element is copied once per ancestor (O(n lg n) balanced, O(n²) degenerate); APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); old omits the per-level append copy
         fn pre_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             decreases self.spec_size(),
@@ -319,6 +334,7 @@ pub mod BalBinTreeStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive post-order traversal + append; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: each level Vec-appends the right result into the left, so an element is copied once per ancestor (O(n lg n) balanced, O(n²) degenerate); APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); old omits the per-level append copy
         fn post_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             decreases self.spec_size(),
@@ -342,6 +358,7 @@ pub mod BalBinTreeStEph {
         /// Returns an in-order iterator.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by in_order traversal.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls in_order() then wraps in iterator.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: dominated by in_order, which copies each element once per ancestor; APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); inherits the in_order append cost
         pub fn iter_in_order(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
@@ -356,6 +373,7 @@ pub mod BalBinTreeStEph {
         /// Returns a pre-order iterator.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by pre_order traversal.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls pre_order() then wraps in iterator.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: dominated by pre_order, which copies each element once per ancestor; APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); inherits the pre_order append cost
         pub fn iter_pre_order(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
@@ -370,6 +388,7 @@ pub mod BalBinTreeStEph {
         /// Returns a post-order iterator.
         /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by post_order traversal.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls post_order() then wraps in iterator.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n·h), Span O(n·h) — does not match textbook: dominated by post_order, which copies each element once per ancestor; APAS line O(n); does not match old analysis: old O(n) vs new O(n·h); inherits the post_order append cost
         pub fn iter_post_order(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
@@ -403,6 +422,7 @@ pub mod BalBinTreeStEph {
 
     /// The in-order and pre-order traversals of a tree are permutations of each other.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     pub proof fn lemma_in_order_pre_order_permutation<T>(tree: BalBinTree<T>)
         ensures tree.spec_in_order().to_multiset() =~= tree.spec_pre_order().to_multiset()
         decreases tree,
@@ -439,6 +459,7 @@ pub mod BalBinTreeStEph {
 
     /// The pre-order and post-order traversals of a tree are permutations of each other.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     pub proof fn lemma_pre_order_post_order_permutation<T>(tree: BalBinTree<T>)
         ensures tree.spec_pre_order().to_multiset() =~= tree.spec_post_order().to_multiset()
         decreases tree,
@@ -475,6 +496,7 @@ pub mod BalBinTreeStEph {
 
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — recursive deep clone.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     // veracity: no_requires
     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
         ensures c == *t
@@ -509,6 +531,7 @@ pub mod BalBinTreeStEph {
 
     impl<T: PartialEq> PartialEq for BalBinTree<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — recursive structural comparison.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (*self == *other)
             decreases self,
@@ -529,6 +552,7 @@ pub mod BalBinTreeStEph {
 
     impl<T: Clone> Clone for BalBinTree<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — delegates to clone_tree.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {
@@ -549,6 +573,7 @@ pub mod BalBinTreeStEph {
 
     impl<T: PartialEq> PartialEq for BalBinNode<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — compares subtrees recursively.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (*self == *other)
         {
@@ -562,6 +587,7 @@ pub mod BalBinTreeStEph {
 
     impl<T: Clone> Clone for BalBinNode<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones left/right subtrees recursively.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {

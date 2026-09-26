@@ -51,6 +51,7 @@ pub mod Algorithm21_5 {
     ///
     /// - Alg Analysis: APAS (Ch21 Alg 21.5): Work O(n^(3/2)), Span O(lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^(3/2)), Span O(n^(3/2)) — ACCEPTED DIFFERENCE: sequential tabulate+filter via ArraySeqStPer, span = work
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^(3/2)), Span O(n^(3/2)) — does not match textbook: Chap19 StPer tabulate and filter are sequential and each is_prime call has Span O(√i); APAS Span O(lg n)
     pub fn primes_bf(n: usize) -> (primes: ArraySeqStPerS<usize>)
         ensures
             n <= 2 ==> primes.spec_len() == 0,

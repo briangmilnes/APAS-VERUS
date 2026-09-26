@@ -32,6 +32,7 @@ pub mod Problem21_1 {
     /// ordered by x major, then y.
     /// - Alg Analysis: APAS (Ch21 Prob 21.1): Work O(n²), Span O(n²) (sequential due to imperative loops)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — matches textbook
     pub fn points2d(n: usize) -> (points: ArraySeqStPerS<Pair<usize, usize>>)
         requires
             n as int * (n as int - 1) <= usize::MAX as int,

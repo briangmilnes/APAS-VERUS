@@ -36,6 +36,7 @@ pub mod Problem21_3 {
     /// Generate points (x, y, z) with 0 ≤ x < n, 1 ≤ y ≤ n, 2 ≤ z ≤ n+1.
     /// - Alg Analysis: APAS (Ch21 Prob 21.3): Work O(n³), Span O(n³)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n³), Span O(n³)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³), Span O(n³) — matches textbook
     pub fn points3d_loops(n: usize) -> (points: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>)
         requires
             n + 2 <= usize::MAX,

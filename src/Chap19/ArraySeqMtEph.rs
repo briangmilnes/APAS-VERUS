@@ -141,6 +141,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — sequential vec::from_elem.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -153,6 +154,7 @@ pub mod ArraySeqMtEph {
 
         /// - Set the element at `index` to `item` in place (ephemeral mutation).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -164,6 +166,7 @@ pub mod ArraySeqMtEph {
         /// - Definition 18.1 (length). Return the number of elements.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
@@ -171,12 +174,14 @@ pub mod ArraySeqMtEph {
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — sequential clone loop.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -191,6 +196,7 @@ pub mod ArraySeqMtEph {
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — ACCEPTED DIFFERENCE: Vec-backed; Vec-backed, copies elements sequentially
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — does not match textbook: Vec-backed, copies length elements in a sequential loop; APAS O(1) slice
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -204,6 +210,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps Vec in struct, no copy.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmteph_wf(),
@@ -213,12 +220,14 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.1 (empty). empty = tabulate (lambda i.i) 0.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_arrayseqmteph_wf(), empty_seq.spec_len() == 0;
 
         /// - Algorithm 19.2 (singleton). singleton x = tabulate (lambda i.x) 1.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(item: T) -> (singleton: Self)
             where T: Clone + Eq
             requires obeys_feq_clone::<T>()
@@ -230,6 +239,7 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.4 (append). append a b = tabulate (select(a,b)) (|a|+|b|).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed; sequential tabulate, span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: sequential tabulate loop in an Mt module; APAS Span O(1)
         fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -244,6 +254,7 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.5 (filter). filter f a = flatten (map (deflate f) a).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C via filter_dc + join, but append is sequential
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f(x))), Span O(|a| + max S(f(x))) — does not match textbook: filter_dc copies both halves (subseq_copy) and appends sequentially at every level; APAS Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x))); does not match old analysis: old Work O(n) vs new O(|a| lg |a|); per-level O(n) copies over lg n levels
         fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq + Send + Sync + 'static
             requires
@@ -263,6 +274,7 @@ pub mod ArraySeqMtEph {
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a|), Span O(1)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: Vec-backed; clone entire Vec + set, sequential
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: Vec clone is a sequential O(|a|) copy; APAS CS 20.2 Span O(1), CS 22.2 Work O(1)
         fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -279,6 +291,7 @@ pub mod ArraySeqMtEph {
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed; sequential clone + loop
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: sequential copy loop and sequential update loop; APAS Span O(lg(degree(b)))
         fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
@@ -295,6 +308,7 @@ pub mod ArraySeqMtEph {
         ///   holds either the original value or a value from some update.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed; delegates to inject, sequential clone + loop
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: delegates to the sequential inject; APAS Span O(1)
         fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
@@ -309,18 +323,21 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.7 (isEmpty). isEmpty a = (|a| = 0).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Algorithm 19.7 (isSingleton). isSingleton a = (|a| = 1).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Algorithm 19.8 (iterate). Left fold over the sequence (iterative).
         /// - Alg Analysis: APAS (Ch19 Alg 19.8): iterate (iterative)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Sigma W(f)), Span O(|a| + Sigma S(f)) — matches textbook
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -331,6 +348,7 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.8 (iterate). iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
         /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(Sigma S(f)) (inherently sequential)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Sigma W(f)), Span O(|a| + Sigma S(f)) — matches textbook
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
             requires
@@ -343,6 +361,7 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.9 (reduce). Combine elements (iterative).
         /// - Alg Analysis: APAS (Ch19 Alg 19.9): reduce (iterative)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Sigma W(f)), Span O(|a| + Sigma S(f)) — does not match textbook: sequential left fold; APAS reduce (CS 20.4) Span O(lg |a| * max S(f))
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -355,6 +374,7 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.9 (reduce). reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(lg |a| * max S(f)): D&C fork-join via reduce_par
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f)), Span O(|a| + lg |a| * max S(f)) — does not match textbook: reduce_par copies both halves with sequential subseq_copy at every level; APAS Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f)); does not match old analysis: old Span O(lg |a| * max S(f)) vs new O(|a| + lg |a| * max S(f)); the O(n) copy per level dominates
         fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq + Send + Sync + 'static
             requires
@@ -368,6 +388,7 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.10 (scan). Prefix-reduce returning partial sums and total.
         /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: Vec-backed; sequential loop, span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: sequential loop in an Mt module (calls f twice per element); APAS Span O(lg |a|)
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone
             requires
@@ -383,6 +404,7 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.3 (map). map f a = tabulate (lambda i.f(a[i])) |a|.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(x))), Span O(n + max S(f(x))) — D&C via map_dc + join, concat_seqs is sequential O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f(x))), Span O(|a| + max S(f(x))) — does not match textbook: map_dc copies both halves and concatenates sequentially at every level; APAS Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x))); does not match old analysis: old Work O(Sigma W(f(x))) vs new O(|a| lg |a| + Sigma W(f(x))); per-level O(n) copies over lg n levels
         fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
             requires
@@ -395,6 +417,7 @@ pub mod ArraySeqMtEph {
         /// - Primitive: tabulate. Build a sequence by applying `f` to each index.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(i))), Span O(Sigma S(f(i))) — ACCEPTED DIFFERENCE: Vec-backed; sequential loop, span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length + Sigma W(f(i))), Span O(length + Sigma S(f(i))) — does not match textbook: sequential push loop in an Mt module; APAS Span O(1 + max S(f(i)))
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
             requires
                 length <= usize::MAX,
@@ -407,6 +430,7 @@ pub mod ArraySeqMtEph {
         /// - Alg Analysis: APAS (Ch19 Alg 19.15): Work O(|a| + sum |a[i]|), Span O(lg |a|)
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + sum |a[i]|), Span O(|a| + sum |a[i]|) — ACCEPTED DIFFERENCE: Vec-backed; nested sequential loops, span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + sum |a[i]|), Span O(|a| + sum |a[i]|) — does not match textbook: nested sequential copy loops; APAS Span O(lg |a|)
         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
             where T: Clone + Eq
             requires
@@ -417,6 +441,7 @@ pub mod ArraySeqMtEph {
         /// - Algorithm 19.5 (deflate). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
         /// - Alg Analysis: APAS (Ch19 Alg 19.5): deflate (part of filter)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + W(f)), Span O(1 + S(f)) — no textbook cost
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
             where T: Clone + Eq
             requires
@@ -444,6 +469,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
         fn new(length: usize, init_value: T) -> (new_seq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -453,6 +479,7 @@ pub mod ArraySeqMtEph {
 
         // Ephemeral: in-place mutation of a single element.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
@@ -463,16 +490,19 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — no textbook cost
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -501,6 +531,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length), Span O(length) — does not match textbook: Vec-backed, copies length elements in a sequential loop; APAS O(1) slice
         fn subseq(a: &ArraySeqMtEphS<T>, start: usize, length: usize) -> (subseq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -529,6 +560,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vec(elts: Vec<T>) -> (seq: ArraySeqMtEphS<T>) {
             ArraySeqMtEphS { seq: elts }
         }
@@ -538,6 +570,7 @@ pub mod ArraySeqMtEph {
         // Rust has no value of unbounded generic T, so the body is an
         // unreachable loop; `requires false` makes this dead code.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn empty() -> (empty_seq: ArraySeqMtEphS<T>) {
             Self::tabulate(
                 &(|_i: usize| -> (r: T)
@@ -554,6 +587,7 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.2: singleton x = tabulate (lambda i.x) 1.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(item: T) -> (singleton: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -576,6 +610,7 @@ pub mod ArraySeqMtEph {
         // Algorithm 19.4: append a b = tabulate (select(a,b)) (|a|+|b|)
         // where select(a,b) i = if i < |a| then a[i] else b[i-|a|].
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|+|b|), Span O(|a|+|b|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: sequential tabulate loop in an Mt module; APAS Span O(1)
         fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -614,6 +649,7 @@ pub mod ArraySeqMtEph {
         // Algorithm 19.5: parallel D&C filter via filter_dc.
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f(x))), Span O(|a| + max S(f(x))) — does not match textbook: filter_dc copies both halves (subseq_copy) and appends sequentially at every level; APAS Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x))); does not match old analysis: old Work O(n) vs new O(|a| lg |a|); per-level O(n) copies over lg n levels
         fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtEphS<T>)
             where T: Clone + Eq + Send + Sync + 'static
         {
@@ -636,6 +672,7 @@ pub mod ArraySeqMtEph {
         // Algorithm 19.6 (ephemeral): update via clone + set.
         // Clone the source (O(n)), then set at index (O(1)).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: Vec clone is a sequential O(|a|) copy; APAS CS 20.2 Span O(1), CS 22.2 Work O(1)
         fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -645,6 +682,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: sequential copy loop and sequential update loop; APAS Span O(lg(degree(b)))
         fn inject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -721,6 +759,7 @@ pub mod ArraySeqMtEph {
         // Definition 18.17 (ninject): delegates to inject. inject is a valid ninject because
         // every element of spec_inject(s, u) is either the original or came from some update.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + |b|), Span O(|a| + |b|) — does not match textbook: delegates to the sequential inject; APAS Span O(1)
         fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -744,18 +783,21 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.7: isEmpty a = (|a| = 0).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
         // Algorithm 19.7: isSingleton a = (|a| = 1).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
         // Algorithm 19.8: iterate f x a (iterative form).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Sigma W(f)), Span O(|a| + Sigma S(f)) — matches textbook
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
             // Veracity: NEEDED proof block
             let len = a.seq.len();
@@ -791,6 +833,7 @@ pub mod ArraySeqMtEph {
         // Algorithm 19.8: iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
         // Delegates to iterate_iter which has the full proof.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Sigma W(f)), Span O(|a| + Sigma S(f)) — matches textbook
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
         {
@@ -799,6 +842,7 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.9: reduce f id a (iterative form for single-threaded).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + Sigma W(f)), Span O(|a| + Sigma S(f)) — does not match textbook: sequential left fold; APAS reduce (CS 20.4) Span O(lg |a| * max S(f))
         // Veracity: NEEDED proof block
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
@@ -837,6 +881,7 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.9: reduce via D&C fork-join (delegates to reduce_par).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f)), Span O(|a| + lg |a| * max S(f)) — does not match textbook: reduce_par copies both halves with sequential subseq_copy at every level; APAS Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f)); does not match old analysis: old Work O(n), Span O(lg n) vs new; the O(n) copy per level adds lg n to work and dominates span
         fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq + Send + Sync + 'static
         {
@@ -859,6 +904,7 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.10: scan f id a (iterative form for single-threaded).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a|), Span O(|a|) — does not match textbook: sequential loop in an Mt module (calls f twice per element); APAS Span O(lg |a|)
         // Veracity: NEEDED proof block
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone
@@ -903,6 +949,7 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.3: map via D&C fork-join (delegates to map_dc).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f(x))), Span O(|a| + max S(f(x))) — does not match textbook: full subseq_copy, then map_dc copies both halves and concatenates sequentially at every level; APAS Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x))); does not match old analysis: old Work O(n) vs new O(|a| lg |a|); per-level O(n) copies over lg n levels
         fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
         {
@@ -928,6 +975,7 @@ pub mod ArraySeqMtEph {
 
         // Primitive: tabulate.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(length + Sigma W(f(i))), Span O(length + Sigma S(f(i))) — does not match textbook: sequential push loop in an Mt module; APAS Span O(1 + max S(f(i)))
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
         {
             let mut seq = Vec::with_capacity(length);
@@ -948,6 +996,7 @@ pub mod ArraySeqMtEph {
 
         // Primitive: flatten.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(total elements), Span O(total elements)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| + sum |a[i]|), Span O(|a| + sum |a[i]|) — does not match textbook: nested sequential copy loops; APAS Span O(lg |a|)
         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -1003,6 +1052,7 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.5: deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + W(f)), Span O(1 + S(f)) — no textbook cost
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -1038,6 +1088,7 @@ pub mod ArraySeqMtEph {
         /// Parallel map via D&C fork-join.
         /// - Alg Analysis: APAS (Ch19 Alg 19.3): parallel variant — map
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — D&C + join, but append is sequential O(n).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f(x))), Span O(|a| + max S(f(x))) — does not match textbook: two sequential subseq_copy calls and a sequential append at every level; APAS map Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x))); does not match old analysis: old Work O(|a|) vs new O(|a| lg |a|); per-level O(n) copies over lg n levels
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1094,6 +1145,7 @@ pub mod ArraySeqMtEph {
         /// Parallel divide-and-conquer filter. Called by trait method filter.
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f(x))), Span O(|a| + max S(f(x))) — no textbook cost; does not match old analysis: old Work O(n) vs new O(|a| lg |a|); two subseq_copy calls and a sequential append per level, lg n levels
         fn filter_dc<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: &F,
@@ -1271,6 +1323,7 @@ pub mod ArraySeqMtEph {
         /// Parallel filter via D&C fork-join.
         /// - Alg Analysis: APAS (Ch19 Alg 19.5): parallel variant — filter
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — D&C + join, but append is sequential O(n).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f(x))), Span O(|a| + max S(f(x))) — does not match textbook: two sequential subseq_copy calls and a sequential append at every level; APAS filter Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x))); does not match old analysis: old Work O(|a|) vs new O(|a| lg |a|); per-level O(n) copies over lg n levels
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: F,
@@ -1355,6 +1408,7 @@ pub mod ArraySeqMtEph {
         /// Parallel reduce via D&C fork-join (requires monoid).
         /// - Alg Analysis: APAS (Ch19 Alg 19.9): parallel variant — reduce
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(lg |a|).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f)), Span O(|a| + lg |a| * max S(f)) — does not match textbook: two sequential subseq_copy calls per level before the join; APAS reduce Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f)); does not match old analysis: old Work O(|a|), Span O(lg |a|) vs new; S(n) = S(n/2) + O(n) from the copies
         // Veracity: NEEDED proof block
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             // Veracity: NEEDED proof block
@@ -1448,6 +1502,7 @@ pub mod ArraySeqMtEph {
         /// Parallel D&C map with full element-level ensures.
         /// Takes owned data so join closures satisfy 'static.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|a| lg |a| + Sigma W(f(x))), Span O(|a| + max S(f(x))) — no textbook cost; does not match old analysis: old Work O(n) vs new O(|a| lg |a|); two subseq_copy calls and a sequential concat_seqs per level, lg n levels
         fn map_dc<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: ArraySeqMtEphS<T>,
             f: F,
@@ -1541,6 +1596,7 @@ pub mod ArraySeqMtEph {
         /// Sequential concatenation of two owned sequences. Moves elements from b
         /// into a's Vec via into_iter, avoiding Clone/Eq requirements.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|b|), Span O(|b|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|b|) amortized, Span O(|b|) — no textbook cost
         fn concat_seqs(a: ArraySeqMtEphS<T>, b: ArraySeqMtEphS<T>) -> (concatenated: ArraySeqMtEphS<T>)
             requires
                 a.seq@.len() + b.seq@.len() <= usize::MAX,

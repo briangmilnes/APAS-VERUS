@@ -50,6 +50,7 @@ pub mod Algorithm21_2 {
     /// - Implemented as: flatten (tabulate_x (flatten (tabulate_y (tabulate_z))))
     /// - Alg Analysis: APAS (Ch21 Alg 21.2): Work O(n³), Span O(lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n³), Span O(n³) — sequential StPer nested tabulate + flatten.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³), Span O(n³) — does not match textbook: Chap18 StPer tabulate and flatten are sequential loops; APAS Span O(lg n)
     pub fn points3d_tab_flat(n: usize) -> (points: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>)
         requires
             n + 2 <= usize::MAX,

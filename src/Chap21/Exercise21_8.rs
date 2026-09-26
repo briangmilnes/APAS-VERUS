@@ -58,6 +58,7 @@ pub mod Exercise21_8 {
 
     // Lemma: if divisor count is 0 in [from, to), then no element in that range divides n.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     proof fn lemma_zero_count_means_no_divisors(n: int, from: int, to: int)
         requires
             from <= to,
@@ -81,6 +82,7 @@ pub mod Exercise21_8 {
 
     // Lemma: if no element in [from, to) divides n, then divisor count is 0.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     proof fn lemma_no_divisors_means_zero_count(n: int, from: int, to: int)
         requires
             from <= to,
@@ -97,6 +99,7 @@ pub mod Exercise21_8 {
 
     // Lemma: spec_divisor_count is non-negative.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     proof fn lemma_divisor_count_nonneg(n: int, from: int, to: int)
         ensures spec_divisor_count(n, from, to) >= 0,
         decreases (if to > from { to - from } else { 0 }),
@@ -165,6 +168,7 @@ pub mod Exercise21_8 {
 
     /// - Alg Analysis: APAS (Ch21 Alg 21.4): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
     pub fn is_divisible(n: usize, i: usize) -> (divides: bool)
         requires i > 0
         ensures divides == (n as int % i as int == 0)
@@ -177,6 +181,7 @@ pub mod Exercise21_8 {
     /// - Uses tabulate + filter per the textbook.
     /// - Alg Analysis: APAS (Ch21 Alg 21.4): Work O(√n), Span O(lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(√n), Span O(√n) — sequential StEph tabulate + filter.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(√n), Span O(√n) — does not match textbook: Chap18 StEph tabulate and filter are sequential loops; APAS Span O(lg n)
     // veracity: no_requires
     pub fn is_prime(n: usize) -> (prime: bool)
         ensures prime == spec_is_prime(n as int)

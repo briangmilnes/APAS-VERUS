@@ -55,6 +55,7 @@ pub mod Algorithm21_1 {
 
     /// Lemma: sum_inner_lens is monotonically increasing.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     proof fn lemma_sum_inner_lens_mono<T>(ss: Seq<ArraySeqStPerS<T>>, a: int, b: int)
         requires 0 <= a <= b <= ss.len()
         ensures sum_inner_lens(ss, a) <= sum_inner_lens(ss, b)
@@ -67,6 +68,7 @@ pub mod Algorithm21_1 {
 
     /// Lemma: if all inner sequences have the same length m, then sum = k * m.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     proof fn lemma_sum_inner_lens_uniform<T>(ss: Seq<ArraySeqStPerS<T>>, k: int, m: int)
         requires
             0 <= k <= ss.len(),
@@ -95,6 +97,7 @@ pub mod Algorithm21_1 {
     /// Flatten a sequence of sequences into a single sequence.
     /// - Alg Analysis: APAS (Ch21 Alg 21.1): Work O(m), Span O(lg k) where m = total elements, k = number of inner sequences.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential two-pass implementation.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k + m), Span O(k + m) — does not match textbook: sequential length pass and sequential nested copy loops; APAS Span O(lg k)
     fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
         requires
             sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
@@ -159,6 +162,7 @@ pub mod Algorithm21_1 {
     /// - Generates all 2D points (x, y) where 0 ≤ x < n and 1 ≤ y < n.
     /// - Alg Analysis: APAS (Ch21 Alg 21.1): Work O(n²), Span O(lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — sequential StPer tabulate + flatten.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — does not match textbook: Chap18 StPer tabulate and flatten_inner are sequential loops; APAS Span O(lg n)
     pub fn points2d_tab_flat(n: usize) -> (points: ArraySeqStPerS<Pair<usize, usize>>)
         requires
             n <= usize::MAX,

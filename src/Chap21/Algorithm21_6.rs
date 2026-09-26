@@ -74,6 +74,7 @@ pub mod Algorithm21_6 {
     ///
     /// - Alg Analysis: APAS (Ch21 Alg 21.6): Work O(n lg n), Span O(lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — ACCEPTED DIFFERENCE: sequential tabulate+flatten+loop via ArraySeqStPer, span = work
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n), Span O(n lg n) — does not match textbook: sequential nested tabulate, flatten, sieve-marking loop (in place of ninject), and collection loop; APAS Span O(lg n)
     pub fn prime_sieve(n: usize) -> (primes: ArraySeqStPerS<usize>)
         requires n < usize::MAX,
         ensures

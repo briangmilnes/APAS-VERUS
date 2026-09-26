@@ -43,6 +43,7 @@ pub mod Exercise21_9 {
 
     /// Every composite m has a divisor d with 2 <= d <= sqrt(m).
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     proof fn lemma_composite_has_small_divisor(m: int)
         requires
             m > 1,
@@ -86,6 +87,7 @@ pub mod Exercise21_9 {
     /// Formally: if m is composite and 2 <= m <= n, then there exist i, j with
     /// 2 <= i, i * i <= n, j >= 2, i * j == m.
     /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(0), Span O(0) — no textbook cost; proof function, erased before execution
     pub proof fn lemma_composites_covered_by_small_multiples(m: int, n: int)
         requires
             n >= 2,
