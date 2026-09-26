@@ -96,12 +96,14 @@ broadcast use {
 
     pub trait OBSTStPerTrait<T: StT>: Sized + View<V = OBSTStPerV<T>> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self)
             ensures
                 empty@.keys.len() == 0,
                 empty@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
             ensures
@@ -109,23 +111,28 @@ broadcast use {
                 constructed@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
             ensures
                 constructed@.keys =~= key_probs@,
                 constructed@.memo =~= Map::<Pair<usize, usize>, Probability>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n^3) expected (O(n) clone of self plus obst_rec_st_per) — does not match textbook: sequential memoized recursion and sequential min loop; APAS Span O(n lg n)
         fn optimal_cost(&self) -> (cost: Probability);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn keys(&self) -> (keys: &Vec<KeyProb<T>>)
             ensures keys@ =~= self@.keys;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn num_keys(&self) -> (count: usize)
             ensures count == self@.keys.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (count: usize)
             ensures count == self@.memo.len();
     }
@@ -135,6 +142,7 @@ broadcast use {
 
     impl<T: StT> OBSTStPerTrait<T> for OBSTStPerS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self) {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -145,6 +153,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) (sequential push loop) — no textbook cost
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
             let n = keys.len();
             let mut key_probs: Vec<KeyProb<T>> = Vec::new();
@@ -170,6 +179,7 @@ broadcast use {
 
         // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -179,6 +189,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n^3) expected (O(n) clone of self plus obst_rec_st_per) — does not match textbook: sequential memoized recursion and sequential min loop; APAS Span O(n lg n)
         fn optimal_cost(&self) -> (cost: Probability) {
             if self.keys.len() == 0 {
                 return Probability::zero();
@@ -192,12 +203,15 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn keys(&self) -> (keys: &Vec<KeyProb<T>>) { &self.keys }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn num_keys(&self) -> (count: usize) { self.keys.len() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (count: usize) {
             // The vstd `len` axiom holds under the Pair key model.
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -208,6 +222,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(n lg n) assumes parallel
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n^3) expected (O(n^2) memo states (i, l), each an O(l) probability sum and an O(l) split loop) — does not match textbook: sequential split loop and recursion; APAS Span O(n lg n)
     fn obst_rec_st_per<T: StT>(s: &mut OBSTStPerS<T>, i: usize, l: usize) -> (cost: Probability)
         requires
             i + l <= old(s)@.keys.len(),
@@ -323,6 +338,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
     }
 
@@ -331,6 +347,7 @@ broadcast use {
     impl<T: StT> Display for KeyProb<T> {
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
     }
 
@@ -349,6 +366,7 @@ broadcast use {
     impl<T: StT> Display for OBSTStPerS<T> {
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
                 f,
@@ -365,6 +383,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — move Vec into iterator
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn into_iter(self) -> Self::IntoIter { self.keys.into_iter() }
     }
 

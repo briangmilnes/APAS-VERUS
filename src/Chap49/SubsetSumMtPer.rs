@@ -92,6 +92,7 @@ pub mod SubsetSumMtPer {
 
         /// Create new subset sum solver.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self)
         where
             T: Default
@@ -102,6 +103,7 @@ pub mod SubsetSumMtPer {
 
         /// Create from multiset.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> (subset_sum: Self)
             ensures
                 subset_sum.spec_subsetsummtper_wf(),
@@ -110,17 +112,20 @@ pub mod SubsetSumMtPer {
         /// Solve subset sum for the given target.
         /// - Alg Analysis: APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k·|S|), Span O(|S|) — parallel recursive memoized with join; matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k|S|^2) expected, Span O(|S|^2) expected (memo clear plus subset_sum_rec) — does not match textbook: subset_sum_rec clones the O(|S|) Vec multiset twice per branching call, and racing branches can miss the memo [see subset_sum_rec]; does not match old analysis: W k|S|, S |S| vs new; the old line omits the per-call clones
         fn subset_sum(&self, target: i32) -> (found: bool)
             where T: Into<i32> + Copy,
             requires self.spec_subsetsummtper_wf();
 
         /// Get the multiset.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn multiset(&self) -> (ms: &ArraySeqMtPerS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
         /// Get memoization table size.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -129,6 +134,7 @@ pub mod SubsetSumMtPer {
 
     /// Create Arc-wrapped memo lock with empty map.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn new_arc_memo(
         val: HashMap<Pair<usize, i32>, bool>,
     ) -> (memo: Arc<RwLock<HashMap<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
@@ -139,6 +145,7 @@ pub mod SubsetSumMtPer {
 
     /// Clone Arc memo (reference count increment).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn clone_arc_memo<T: MtVal>(
         s: &SubsetSumMtPerS<T>,
     ) -> (cloned: Arc<RwLock<HashMap<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
@@ -151,6 +158,7 @@ pub mod SubsetSumMtPer {
     /// Recursive memoized parallel subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k|S|^2) expected, Span O(|S|^2) expected (O(k|S|) states; each branching call clones the O(|S|) Vec multiset twice before join; depth |S|); memo is read before and written after the join, so concurrent branches can recompute a shared state (worst case Work O(2^|S| |S|)) — does not match textbook: per-call multiset clones add a factor |S| to work and span; racing memo; does not match old analysis: W k|S|, S |S| vs new; the old line omits the clones and the race
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy>(
         multiset: &ArraySeqMtPerS<T>,
         memo: &Arc<RwLock<HashMap<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,
@@ -242,6 +250,7 @@ pub mod SubsetSumMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> Self
         where
             T: Default,
@@ -255,6 +264,7 @@ pub mod SubsetSumMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         // Veracity: NEEDED proof block
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
@@ -265,6 +275,7 @@ pub mod SubsetSumMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(|S|) — clones + memoized recursive DP with parallel join; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k|S|^2) expected, Span O(|S|^2) expected (memo clear plus subset_sum_rec) — does not match textbook: per-call O(|S|) multiset clones in subset_sum_rec, racing memo; does not match old analysis: W k|S|, S |S| vs new; the old line omits the clones
         fn subset_sum(&self, target: i32) -> (found: bool)
             where T: Into<i32> + Copy,
         {
@@ -284,9 +295,11 @@ pub mod SubsetSumMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn multiset(&self) -> (ms: &ArraySeqMtPerS<T>) { &self.multiset }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (count: usize) {
             let handle = self.memo.acquire_read();
             let size = handle.borrow().len();

@@ -91,6 +91,7 @@ pub mod StructChainedHashTable {
         /// Inserts key-value into chain, updating if key exists, appending if not.
         /// Returns (new_chain, existed) where existed is true if key was already present.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive scan of chain; n = chain length.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = chain length (recursion rebuilds each node up to the match) — no textbook cost
         // veracity: no_requires
         fn chain_insert<Key: Eq + View + Clone, Value>(
             chain: Option<Box<Node<Key, Value>>>,
@@ -152,6 +153,7 @@ pub mod StructChainedHashTable {
 
         /// Looks up key in chain, returning value if found.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive scan of chain; n = chain length.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = chain length — no textbook cost
         fn chain_lookup<Key: Eq + View + Clone, Value: Eq + Clone>(
             chain: &Option<Box<Node<Key, Value>>>,
             key: &Key,
@@ -203,6 +205,7 @@ pub mod StructChainedHashTable {
 
         /// Removes all nodes matching key, returns updated chain and whether any found.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive scan of chain; n = chain length.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = chain length (always walks the whole chain, rebuilding kept nodes) — no textbook cost
         // veracity: no_requires
         fn chain_delete<Key: Eq + View + Clone, Value>(
             chain: Option<Box<Node<Key, Value>>>,
@@ -260,10 +263,12 @@ pub mod StructChainedHashTable {
             }
 
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty list.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
             fn new() -> (entry: Self) { ChainList { head: None } }
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive scan for duplicate key, n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chain_insert on one chain) — matches textbook
             fn insert(&mut self, key: Key, value: Value)
                 // Veracity: NEEDED proof block (speed hint)
                 ensures spec_chain_to_map(self.head).dom().contains(key),
@@ -274,6 +279,7 @@ pub mod StructChainedHashTable {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive scan of chain, n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chain_lookup on one chain) — matches textbook
             fn lookup(&self, key: &Key) -> (found: Option<Value>)
             {
                 // Veracity: NEEDED proof block
@@ -284,6 +290,7 @@ pub mod StructChainedHashTable {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive scan + rebuild, n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chain_delete on one chain) — matches textbook
             fn delete(&mut self, key: &Key) -> (deleted: bool)
                 ensures
                     !deleted ==> spec_chain_to_map(self.head) == spec_chain_to_map(old(self).head),
@@ -295,6 +302,7 @@ pub mod StructChainedHashTable {
 
             /// Delegates to ChainList's Clone impl.
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones entire chain; n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = chain length (recursive node clone) — no textbook cost
             fn clone_entry(&self) -> (cloned: Self) {
                 self.clone()
             }
@@ -359,6 +367,7 @@ pub mod StructChainedHashTable {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n) worst, Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — hash, clone chain, insert into clone, set back.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (clone of one chain plus chain_insert; O(n) worst) — matches textbook
             fn insert(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: Key, value: Value) {
                 // Veracity: NEEDED proof block
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
@@ -407,6 +416,7 @@ pub mod StructChainedHashTable {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1+α) expected, Span O(1+α) — hash, index bucket, scan chain.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected — matches textbook
             fn lookup(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let result = chain_lookup(&table.table[index].head, key);
@@ -434,6 +444,7 @@ pub mod StructChainedHashTable {
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n) worst, Span O(n).
             // Veracity: NEEDED proof block
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — hash, clone chain, delete from clone, set back.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (clone of one chain plus chain_delete; O(n) worst) — matches textbook
             fn delete(table: &mut HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -489,6 +500,7 @@ pub mod StructChainedHashTable {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m').
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') — traverses all chains, creates m' lists, reinserts.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m + m') expected, Span O(n + m + m') expected (sequential collect, allocate, n inserts) — matches textbook
             fn resize(
                 table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>,
                 new_size: usize,
@@ -848,6 +860,7 @@ pub mod StructChainedHashTable {
         {
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to stored hash function.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn hash_index(table: &HashTable<Key, Value, ChainList<Key, Value>, Metrics, H>, key: &Key) -> (index: usize) {
                 call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
             }

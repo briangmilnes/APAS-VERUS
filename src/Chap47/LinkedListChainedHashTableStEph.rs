@@ -55,6 +55,7 @@ pub mod LinkedListChainedHashTableStEph {
 
         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all list elements.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = entry length — no textbook cost
         fn clone_linked_list_entry<Key: Eq + Clone, Value: Eq + Clone>(
             entry: &LinkedListStEphS<(Key, Value)>,
         ) -> (cloned: LinkedListStEphS<(Key, Value)>)
@@ -91,10 +92,12 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty LinkedListStEphS construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn new() -> (entry: Self) { LinkedListStEphS { seq: Vec::new() } }
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan for duplicate key, n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (scan, Vec::remove, push on the backing Vec) — matches textbook
             fn insert(&mut self, key: Key, value: Value)
                 ensures
                     self.seq@.len() >= 1,
@@ -122,6 +125,7 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan of chain, n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (scan of one chain) — matches textbook
             fn lookup(&self, key: &Key) -> (found: Option<Value>) {
                 let mut i: usize = 0;
                 while i < self.seq.len()
@@ -137,6 +141,7 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan + Vec::remove, n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (scan and Vec::remove on one chain) — matches textbook
             fn delete(&mut self, key: &Key) -> (deleted: bool)
                 ensures
                     !deleted ==> self.seq@ == old(self).seq@,
@@ -160,6 +165,7 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// Element-wise clone avoiding Verus tuple-Clone limitation.
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all chain elements.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = chain length — no textbook cost
             fn clone_entry(&self) -> (cloned: Self) {
                 let mut new_seq: Vec<(Key, Value)> = Vec::new();
                 let mut i: usize = 0;
@@ -181,6 +187,7 @@ pub mod LinkedListChainedHashTableStEph {
         {
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n) worst, Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (hash, clone bucket, scan, remove, push, set; O(n) worst) — matches textbook
             fn insert(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -286,6 +293,7 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — hash, backward scan bucket for last-wins match.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (hash, backward scan of one bucket) — matches textbook
             fn lookup(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let bucket_len = table.table[index].seq.len();
@@ -352,6 +360,7 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n) worst, Span O(n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (hash, clone bucket, rebuild it without key, set; O(n) worst) — matches textbook
             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -487,6 +496,7 @@ pub mod LinkedListChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m').
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' lists, reinserts.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m + m') expected, Span O(n + m + m') expected (sequential collect, allocate, n inserts) — matches textbook
             fn resize(
                 table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>,
                 new_size: usize,
@@ -666,6 +676,7 @@ pub mod LinkedListChainedHashTableStEph {
         {
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to stored hash function.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn hash_index(table: &HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
                 call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
             }

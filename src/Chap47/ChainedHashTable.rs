@@ -163,6 +163,7 @@ pub mod ChainedHashTable {
             /// Computes the hash index for a key.
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method; cost depends on hash function.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook; does not match old analysis: N/A vs O(1); all three impls make one call_hash_fn call
             fn hash_index(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (index: usize)
                 requires
                     spec_hashtable_wf(table),

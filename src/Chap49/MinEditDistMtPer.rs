@@ -99,6 +99,7 @@ pub mod MinEditDistMtPer {
 
         /// Create new minimum edit distance solver.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self)
         where
             T: Default
@@ -110,6 +111,7 @@ pub mod MinEditDistMtPer {
 
         /// Create from source and target sequences.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> (edit_dist: Self)
             ensures
                 edit_dist.spec_mineditdistmtper_wf(),
@@ -119,6 +121,7 @@ pub mod MinEditDistMtPer {
         /// Compute minimum edit distance.
         /// - Alg Analysis: APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|+|T|) — parallel recursive memoized with join; matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S||T|(|S| + |T|)) expected, Span O((|S| + |T|)^2) expected (memo clear plus min_edit_distance_rec) — does not match textbook: min_edit_distance_rec clones both Vec sequences twice per mismatch call, and racing branches can miss the memo [see min_edit_distance_rec]; does not match old analysis: W |S||T|, S |S| + |T| vs new; the old line omits the per-call clones
         fn min_edit_distance(&self) -> (dist: usize)
             requires
                 self.spec_mineditdistmtper_wf(),
@@ -126,16 +129,19 @@ pub mod MinEditDistMtPer {
 
         /// Get the source sequence.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn source(&self) -> (s: &ArraySeqMtPerS<T>)
             ensures s.spec_len() == self.spec_source_len();
 
         /// Get the target sequence.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn target(&self) -> (t: &ArraySeqMtPerS<T>)
             ensures t.spec_len() == self.spec_target_len();
 
         /// Get memoization table size.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -144,6 +150,7 @@ pub mod MinEditDistMtPer {
 
     /// Create Arc-wrapped memo lock.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn new_arc_memo(
         val: HashMap<Pair<usize, usize>, usize>,
     ) -> (memo: Arc<RwLock<HashMap<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
@@ -155,6 +162,7 @@ pub mod MinEditDistMtPer {
 
     /// Clone Arc memo (reference count increment).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn clone_arc_memo<T: MtVal>(
         s: &MinEditDistMtPerS<T>,
     ) -> (cloned: Arc<RwLock<HashMap<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
@@ -167,6 +175,7 @@ pub mod MinEditDistMtPer {
     /// Recursive memoized parallel minimum edit distance solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|+|T|)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S||T|(|S| + |T|)) expected, Span O((|S| + |T|)^2) expected (O(|S||T|) states; each mismatch call clones both Vec sequences twice, O(|S| + |T|), before join; depth |S| + |T|); memo is read before and written after the join, so concurrent branches can recompute a shared state (worst case exponential Work) — does not match textbook: per-call sequence clones add a factor |S| + |T| to work and span; racing memo; does not match old analysis: W |S||T|, S |S| + |T| vs new; the old line omits the clones and the race
     fn min_edit_distance_rec<T: MtVal>(
         source: &ArraySeqMtPerS<T>,
         target: &ArraySeqMtPerS<T>,
@@ -283,6 +292,7 @@ pub mod MinEditDistMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> Self
         where
             T: Default,
@@ -297,6 +307,7 @@ pub mod MinEditDistMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         // Veracity: NEEDED proof block
         fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -308,6 +319,7 @@ pub mod MinEditDistMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) — clones + memoized recursive DP with parallel join; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S||T|(|S| + |T|)) expected, Span O((|S| + |T|)^2) expected (memo clear plus min_edit_distance_rec) — does not match textbook: per-call sequence clones in min_edit_distance_rec, racing memo; does not match old analysis: W |S||T|, S |S| + |T| vs new; the old line omits the clones
         fn min_edit_distance(&self) -> (dist: usize)
         {
             {
@@ -324,12 +336,15 @@ pub mod MinEditDistMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn source(&self) -> (s: &ArraySeqMtPerS<T>) { &self.source }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn target(&self) -> (t: &ArraySeqMtPerS<T>) { &self.target }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (count: usize) {
             let handle = self.memo.acquire_read();
             let size = handle.borrow().len();

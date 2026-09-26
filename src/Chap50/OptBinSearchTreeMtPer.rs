@@ -89,31 +89,38 @@ broadcast use {
         spec fn spec_optbinsearchtreemtper_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self)
             ensures empty@.keys.len() == 0, empty.spec_optbinsearchtreemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
             ensures constructed@.keys.len() == keys@.len(), constructed.spec_optbinsearchtreemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
             ensures constructed@.keys =~= key_probs@, constructed.spec_optbinsearchtreemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n lg n) expected (sequential O(n) prefix sums, memo clear, obst_rec) — does not match textbook: the memo is read before and written after the parallel split reduction, so concurrent branches can recompute a shared state; O(n^3) work holds only when lookups hit [see obst_rec]
         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static
             requires self.spec_optbinsearchtreemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>)
             ensures keys@ =~= self@.keys;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn num_keys(&self) -> (count: usize)
             ensures count == self@.keys.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -122,6 +129,7 @@ broadcast use {
 
     /// - Alg Analysis: APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — parallel min reduction over split points via join, O(1) prefix sum lookup
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n lg n) expected (O(n^2) states, O(1) prefix-sum lookup, O(l)-work O(lg l)-span split reduction each; S(l) <= lg l + max_k (S(k) + S(l - k - 1))) — does not match textbook: the memo is read before and written after the reduction, so concurrent branches can recompute a shared state; O(n^3) work holds only when lookups hit (worst case exponential)
     fn obst_rec(
         memo: &Arc<RwLock<HashMap<Pair<usize, usize>, Probability>, OptBSTMtPerMemoInv>>,
         prefix_sums: &Arc<Vec<Probability>>,
@@ -177,6 +185,7 @@ broadcast use {
     /// Parallel divide-and-conquer min reduction over split points k in [lo, hi).
     /// Returns the minimum of obst_rec(i, k) + obst_rec(i+k+1, l-k-1) for k in [lo, hi).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(l), Span O(lg l)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(hi - lo), Span O(lg(hi - lo)), excluding the obst_rec calls (each leaf runs its two obst_rec calls one after the other) — no textbook cost
     fn parallel_min_split_cost(
         memo: &Arc<RwLock<HashMap<Pair<usize, usize>, Probability>, OptBSTMtPerMemoInv>>,
         prefix_sums: &Arc<Vec<Probability>>,
@@ -265,6 +274,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Vec, wrap in Arc + Arc<RwLock>
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self) {
             // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -275,6 +285,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — iterate keys/probs to build KeyProb vec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) (sequential push loop) — no textbook cost
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
             let mut key_probs: Vec<KeyProb<T>> = Vec::new();
             let mut idx: usize = 0;
@@ -298,6 +309,7 @@ broadcast use {
 
         // Veracity: NEEDED proof block (speed hint)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wrap existing vec in Arc
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -307,6 +319,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — precomputes prefix sums, calls obst_rec with parallel min reduction
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n lg n) expected (sequential O(n) prefix sums, memo clear, obst_rec) — does not match textbook: racing memo lets concurrent branches recompute shared states; O(n^3) work holds only when lookups hit [see obst_rec]
         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static {
             let keys_ref = arc_deref(&self.keys);
             let keys_len = keys_ref.len();
@@ -343,15 +356,18 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — return reference to Arc field
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>) { &self.keys }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — deref Arc, return Vec len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn num_keys(&self) -> (count: usize) {
             let keys = arc_deref(&self.keys);
             keys.len()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock, return hash map len
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (count: usize) {
             let rwlock = arc_deref(&self.memo);
             let handle = rwlock.acquire_read();
@@ -444,6 +460,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter over Arc<Vec>
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
     }
 
@@ -458,6 +475,7 @@ broadcast use {
     impl<T: MtVal + Display> Display for KeyProb<T> {
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
     }
 
@@ -480,6 +498,7 @@ broadcast use {
     impl<T: MtVal> Display for OBSTMtPerS<T> {
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             let memo_handle = self.memo.acquire_read();
             let memo_size = memo_handle.borrow().len();
@@ -494,6 +513,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — unwrap or clone Vec from Arc
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) (O(1) when the Arc is unique) — matches textbook
         fn into_iter(self) -> Self::IntoIter {
             match Arc::try_unwrap(self.keys) {
                 | Ok(vec) => vec.into_iter(),

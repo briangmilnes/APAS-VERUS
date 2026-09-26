@@ -54,6 +54,7 @@ pub mod VecChainedHashTableStEph {
 
         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all pairs.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = pairs.len() — no textbook cost
         fn clone_vec_pairs<Key: Eq + Clone, Value: Eq + Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
             requires
                 obeys_feq_clone::<Key>(),
@@ -88,12 +89,14 @@ pub mod VecChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty Vec construction.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn new() -> (entry: Self)
                 ensures entry@.len() == 0,
             { Vec::new() }
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (scan, Vec::remove, push on one chain; O(n) worst) — matches textbook
             fn insert(&mut self, key: Key, value: Value)
                 ensures
                     self@.len() >= 1,
@@ -121,6 +124,7 @@ pub mod VecChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan of chain, n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (scan of one chain) — matches textbook
             fn lookup(&self, key: &Key) -> (found: Option<Value>) {
                 let mut i: usize = 0;
                 while i < self.len()
@@ -136,6 +140,7 @@ pub mod VecChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (scan and Vec::remove on one chain) — matches textbook
             fn delete(&mut self, key: &Key) -> (deleted: bool)
                 ensures
                     !deleted ==> self@ == old(self)@,
@@ -159,6 +164,7 @@ pub mod VecChainedHashTableStEph {
 
             /// Element-wise clone avoiding Verus tuple-Clone limitation.
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all pairs.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = chain length — no textbook cost
             fn clone_entry(&self) -> (cloned: Self) {
                 let mut new_vec: Vec<(Key, Value)> = Vec::new();
                 let mut i: usize = 0;
@@ -181,6 +187,7 @@ pub mod VecChainedHashTableStEph {
         {
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (hash, clone bucket, scan, remove, push, set; O(n) worst) — matches textbook
             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -284,6 +291,7 @@ pub mod VecChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — hash, backward scan bucket for last-wins match.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (hash, backward scan of one bucket) — matches textbook
             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let bucket_len = table.table[index].len();
@@ -352,6 +360,7 @@ pub mod VecChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (hash, clone bucket, rebuild it without key, set; O(n) worst) — matches textbook
             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -496,6 +505,7 @@ pub mod VecChainedHashTableStEph {
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m').
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' chains, reinserts.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m + m') expected, Span O(n + m + m') expected (sequential collect, allocate, n inserts) — matches textbook
             fn resize(
                 table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>,
                 new_size: usize,
@@ -674,6 +684,7 @@ pub mod VecChainedHashTableStEph {
         {
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to stored hash function.
+            /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
             fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
                 call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
             }

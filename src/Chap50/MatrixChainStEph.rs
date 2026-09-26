@@ -173,6 +173,7 @@ broadcast use {
         spec fn spec_matrixchainsteph_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
@@ -180,6 +181,7 @@ broadcast use {
                 mc.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures
                 mc@.dimensions =~= dimensions@,
@@ -187,6 +189,7 @@ broadcast use {
                 mc.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- copies dim_pairs into Vec<MatrixDim>
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
@@ -194,6 +197,7 @@ broadcast use {
                 mc.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) -- memoized DP, n^2 subproblems each O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n^3) expected (memo clear plus matrix_chain_rec) — does not match textbook: sequential memoized recursion and split loop; APAS (Ch50, same bounds as OBST) Span O(n lg n)
         fn optimal_cost(&mut self) -> (cost: usize)
             requires
                 spec_dims_bounded(old(self)@.dimensions),
@@ -205,14 +209,17 @@ broadcast use {
                     else { spec_chain_cost(old(self)@.dimensions, 0, (old(self)@.dimensions.len() - 1) as int, 0) };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn dimensions(&self) -> (dims: &Vec<MatrixDim>)
             ensures dims@ =~= self@.dimensions;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn num_matrices(&self) -> (n: usize)
             ensures n == self@.dimensions.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clears memo HashMap
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) (O(1) set plus HashMap::clear of up to O(n^2) memo entries) — no textbook cost; does not match old analysis: O(n) vs O(n^2); the memo holds O(n^2) pairs (i, j)
         fn set_dimension(&mut self, index: usize, dim: MatrixDim)
             requires index < old(self)@.dimensions.len(),
             ensures
@@ -221,6 +228,7 @@ broadcast use {
                 self.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clears memo HashMap
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) (O(1) set plus HashMap::clear of up to O(n^2) memo entries) — no textbook cost; does not match old analysis: O(n) vs O(n^2); the memo holds O(n^2) pairs (i, j)
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize)
             requires index < old(self)@.dimensions.len(),
             ensures
@@ -230,6 +238,7 @@ broadcast use {
                 self.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clears memo HashMap
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) (HashMap::clear of up to O(n^2) memo entries) — no textbook cost; does not match old analysis: O(n) vs O(n^2); the memo holds O(n^2) pairs (i, j)
         fn clear_memo(&mut self)
             ensures
                 self@.dimensions =~= old(self)@.dimensions,
@@ -237,10 +246,12 @@ broadcast use {
                 self.spec_matrixchainsteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (n: usize)
             ensures n == self@.memo.len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)
             requires
                 i < self@.dimensions.len(),
@@ -252,6 +263,7 @@ broadcast use {
                 cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) -- memoized DP, n^2 subproblems each O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n^3) expected (O(n^2) memo states (i, j), each an O(j - i) split loop; n = j - i + 1) — does not match textbook: the split loop and both recursive calls run sequentially; APAS Span O(n lg n)
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> (cost: usize)
             requires
                 i <= j,
@@ -277,6 +289,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
@@ -292,6 +305,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures
                 mc@.dimensions =~= dimensions@,
@@ -307,6 +321,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) (sequential push loop) — no textbook cost
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
@@ -335,6 +350,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)
         {
             let left_rows = self.dimensions[i].rows;
@@ -345,6 +361,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n^3) expected (O(n^2) memo states (i, j), each an O(j - i) split loop) — does not match textbook: the split loop and both recursive calls run sequentially; APAS Span O(n lg n)
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> (cost: usize)
             decreases j - i,
         {
@@ -397,6 +414,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^3) expected, Span O(n^3) expected (memo clear plus matrix_chain_rec) — does not match textbook: sequential memoized recursion and split loop; APAS Span O(n lg n)
         fn optimal_cost(&mut self) -> (cost: usize)
         {
             if self.dimensions.len() <= 1 {
@@ -409,31 +427,37 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn dimensions(&self) -> (dims: &Vec<MatrixDim>)
             ensures dims@ =~= self@.dimensions,
         { &self.dimensions }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn num_matrices(&self) -> (n: usize)
             ensures n == self@.dimensions.len(),
         { self.dimensions.len() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) (O(1) set plus HashMap::clear of up to O(n^2) memo entries) — no textbook cost; does not match old analysis: O(n) vs O(n^2); the memo holds O(n^2) pairs (i, j)
         fn set_dimension(&mut self, index: usize, dim: MatrixDim) {
             self.dimensions.set(index, dim);
             self.memo.clear();
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) (O(1) set plus HashMap::clear of up to O(n^2) memo entries) — no textbook cost; does not match old analysis: O(n) vs O(n^2); the memo holds O(n^2) pairs (i, j)
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize) {
             self.dimensions.set(index, MatrixDim { rows, cols });
             self.memo.clear();
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) (HashMap::clear of up to O(n^2) memo entries) — no textbook cost; does not match old analysis: O(n) vs O(n^2); the memo holds O(n^2) pairs (i, j)
         fn clear_memo(&mut self) { self.memo.clear(); }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn memo_size(&self) -> (n: usize)
             ensures n == self@.memo.len(),
         {
@@ -504,6 +528,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
     }
 
@@ -513,6 +538,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
     }
 
@@ -521,6 +547,7 @@ broadcast use {
     impl Display for MatrixDim {
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 
@@ -539,6 +566,7 @@ broadcast use {
     impl Display for MatrixChainStEphS {
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
                 f,
@@ -555,6 +583,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — move Vec into iterator
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn into_iter(self) -> Self::IntoIter { self.dimensions.into_iter() }
     }
 

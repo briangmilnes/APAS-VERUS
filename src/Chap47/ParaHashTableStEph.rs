@@ -340,22 +340,27 @@ pub mod ParaHashTableStEph {
         /// Abstract map view of this entry's key-value content.
         spec fn spec_entry_to_map(&self) -> Map<Key, Value>;
         /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: N/A vs O(1); every impl (Vec, LinkedListStEphS, ChainList, FlatEntry) builds an empty entry
         fn new() -> (entry: Self)
             ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chain impls scan for a duplicate key; FlatEntry O(1)) — matches textbook
         fn insert(&mut self, key: Key, value: Value)
             ensures self.spec_entry_to_map().dom().contains(key);
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
         /// - Alg Analysis: APAS (Ch47 Alg 47.4): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chain impls scan the chain; FlatEntry O(1)) — matches textbook
         fn lookup(&self, key: &Key) -> (found: Option<Value>);
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1 + α) expected, Span O(1 + α) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chain impls scan and remove; FlatEntry O(1)) — matches textbook
         fn delete(&mut self, key: &Key) -> (deleted: bool)
             ensures !deleted ==> self.spec_entry_to_map() == old(self).spec_entry_to_map();
         /// Element-wise clone that avoids Verus tuple-Clone limitation.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies all chain entries.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n), n = entries in this chain, O(1 + alpha) expected (FlatEntry O(1)) — no textbook cost
         fn clone_entry(&self) -> (cloned: Self);
     }
 
@@ -384,6 +389,7 @@ pub mod ParaHashTableStEph {
         /// Takes a hash function that maps (&Key, table_size) to a bucket index.
         /// - Alg Analysis: APAS (Ch47 ref): Work O(m), Span O(m) where m is initial size.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m), Span O(m) — matches textbook
         fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 initial_size > 0,
@@ -441,6 +447,7 @@ pub mod ParaHashTableStEph {
         /// Inserts a key-value pair into the hash table.
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chained impls; flat impls O(1/(1 - alpha)) expected) — matches textbook
         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             requires
                 Self::spec_parahashtablesteph_wf(old(table)),
@@ -461,6 +468,7 @@ pub mod ParaHashTableStEph {
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
         /// - Alg Analysis: APAS (Ch47 Alg 47.4): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chained impls; flat impls O(1/(1 - alpha)) expected) — matches textbook
         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
                 Self::spec_parahashtablesteph_wf(table),
@@ -473,6 +481,7 @@ pub mod ParaHashTableStEph {
         /// Deletes a key from the hash table if it exists.
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1 + α) expected, Span O(1 + α) expected
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1 + alpha) expected, Span O(1 + alpha) expected (chained impls; flat impls O(1/(1 - alpha)) expected) — matches textbook
         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             requires
                 Self::spec_parahashtablesteph_wf(old(table)),
@@ -487,6 +496,7 @@ pub mod ParaHashTableStEph {
 
         /// Accessor for metrics field.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             requires Self::spec_parahashtablesteph_wf(table),
             ensures m == &table.metrics,
@@ -496,6 +506,7 @@ pub mod ParaHashTableStEph {
         /// Load factor α = load/size.
         /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS; field reads only.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             requires Self::spec_parahashtablesteph_wf(table),
             ensures
@@ -514,6 +525,7 @@ pub mod ParaHashTableStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
         ///   m is old size, m' is new size.
         /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method; cost depends on implementation.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m + m') expected, Span O(n + m + m') expected — matches textbook; does not match old analysis: N/A vs O(n + m + m'); every impl collects n pairs from m slots, allocates m' slots, and reinserts sequentially
         fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 new_size > 0,
@@ -534,6 +546,7 @@ pub mod ParaHashTableStEph {
 
     /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single element clone.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     pub fn clone_elem<T: Eq + Clone>(x: &T) -> (c: T)
         requires obeys_feq_clone::<T>(),
         ensures c == *x,
@@ -550,6 +563,7 @@ pub mod ParaHashTableStEph {
     /// Calls the hash function and returns a bucket index.
     /// Closure specs bridge the exec hash_fn to the ghost spec_hash via spec_hash_fn_valid.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash function call.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
         requires
             table_size > 0,
