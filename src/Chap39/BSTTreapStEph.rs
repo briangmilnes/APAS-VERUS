@@ -213,6 +213,7 @@ pub mod BSTTreapStEph {
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new()                       -> (empty_tree: Self)
         where
             Self: Sized,
@@ -222,14 +223,17 @@ pub mod BSTTreapStEph {
                 empty_tree.spec_bst();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size(&self)                 -> (sz: usize)
             ensures sz as nat == self.spec_size();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self)             -> (empty: bool)
             ensures empty == (self.spec_size() == 0);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn height(&self)               -> (h: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
@@ -237,6 +241,7 @@ pub mod BSTTreapStEph {
             ensures h as nat == self.spec_height();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn insert(&mut self, value: T, priority: u64)
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
@@ -251,6 +256,7 @@ pub mod BSTTreapStEph {
                 old(self).spec_bst() ==> self.spec_bst();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn delete(&mut self, target: &T)
             requires
                 old(self).spec_bsttreapsteph_wf(),
@@ -262,6 +268,7 @@ pub mod BSTTreapStEph {
                 old(self).spec_bst() ==> self.spec_bst();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn find(&self, target: &T)     -> (found: Option<&T>)
             requires
                 self.spec_bsttreapsteph_wf(),
@@ -272,6 +279,7 @@ pub mod BSTTreapStEph {
                 found.is_some() ==> *found.unwrap() == *target;
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn contains(&self, target: &T) -> (found: bool)
             requires
                 self.spec_bsttreapsteph_wf(),
@@ -280,6 +288,7 @@ pub mod BSTTreapStEph {
             ensures found == self.spec_contains(*target);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn minimum(&self)              -> (min_val: Option<&T>)
             ensures match (min_val, self.spec_min()) {
                 (Some(rv), Some(sv)) => *rv == sv,
@@ -288,6 +297,7 @@ pub mod BSTTreapStEph {
             };
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn maximum(&self)              -> (max_val: Option<&T>)
             ensures match (max_val, self.spec_max()) {
                 (Some(rv), Some(sv)) => *rv == sv,
@@ -296,15 +306,18 @@ pub mod BSTTreapStEph {
             };
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — does not match textbook: in_order_vec appends each right-subtree Vec into its parent's Vec, O(subtree size) per node; does not match old analysis: O(n) vs new; Vec::append copies
         fn in_order(&self)             -> (ordered: ArraySeqStPerS<T>)
             ensures ordered.spec_len() == self.spec_in_order().len();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — does not match textbook: pre_order_vec appends both child Vecs into its parent's Vec, O(subtree size) per node; does not match old analysis: O(n) vs new; Vec::append copies
         fn pre_order(&self)            -> (preordered: ArraySeqStPerS<T>)
             ensures preordered.spec_len() == self.spec_pre_order().len();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new_node(key: T, priority: u64) -> (n: Node<T>)
             ensures
                 Self::spec_link_size_wf(&Some(Box::new(n))),
@@ -312,11 +325,13 @@ pub mod BSTTreapStEph {
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size_link(link: &Link<T>) -> (sz: usize)
             ensures sz as nat == Self::spec_size_link(link);
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn update_size(node: &mut Box<Node<T>>)
             requires 1 + Self::spec_size_link(&old(node).left) + Self::spec_size_link(&old(node).right) <= usize::MAX as nat,
             ensures
@@ -326,6 +341,7 @@ pub mod BSTTreapStEph {
                 node.right == old(node).right;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_left(x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
             requires
                 Self::spec_link_size_wf(&Some(x)),
@@ -337,6 +353,7 @@ pub mod BSTTreapStEph {
                 forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_right(x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
             requires
                 Self::spec_link_size_wf(&Some(x)),
@@ -348,12 +365,14 @@ pub mod BSTTreapStEph {
                 forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn clone_link(link: &Link<T>) -> (c: Link<T>)
             ensures
                 Self::spec_size_link(&c) == Self::spec_size_link(link),
                 Self::spec_link_size_wf(link) ==> Self::spec_link_size_wf(&c);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height_link(link: &Link<T>) -> (h: usize)
             requires
                 Self::spec_size_link(link) < usize::MAX as nat,
@@ -361,6 +380,7 @@ pub mod BSTTreapStEph {
             ensures h as nat == Self::spec_height_link(link);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn insert_link(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
             requires
                 Self::spec_size_link(&link) + 1 <= usize::MAX as nat,
@@ -376,6 +396,7 @@ pub mod BSTTreapStEph {
                 Self::spec_bst_link(&link) ==> Self::spec_bst_link(&inserted);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn delete_link(link: Link<T>, target: &T) -> (deleted: Link<T>)
             requires
                 Self::spec_link_size_wf(&link),
@@ -387,6 +408,7 @@ pub mod BSTTreapStEph {
                 Self::spec_bst_link(&link) ==> Self::spec_bst_link(&deleted);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             requires
                 Self::spec_bst_link(link),
@@ -396,6 +418,7 @@ pub mod BSTTreapStEph {
                 found.is_some() ==> *found.unwrap() == *target;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
             ensures match (min_val, Self::spec_min_link(link)) {
                 (Some(rv), Some(sv)) => *rv == sv,
@@ -404,6 +427,7 @@ pub mod BSTTreapStEph {
             };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
             ensures match (max_val, Self::spec_max_link(link)) {
                 (Some(rv), Some(sv)) => *rv == sv,
@@ -412,10 +436,12 @@ pub mod BSTTreapStEph {
             };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — no textbook cost; does not match old analysis: O(n) vs new; Vec::append copies each right-subtree result into the parent's Vec
         fn in_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
             ensures ordered@.len() == Self::spec_in_order_link(link).len();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — no textbook cost; does not match old analysis: O(n) vs new; Vec::append copies both child results into the parent's Vec
         fn pre_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
             ensures ordered@.len() == Self::spec_pre_order_link(link).len();
 
@@ -430,11 +456,13 @@ pub mod BSTTreapStEph {
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn param_new() -> (tree: Self)
             ensures tree@.len() == 0, tree.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(key: T) -> (tree: Self)
             requires vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent_st::<T>(),
             ensures
@@ -443,6 +471,7 @@ pub mod BSTTreapStEph {
 
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: clone_with_view copies the whole tree before the O(1) destructure; does not match old analysis: O(1) vs new; clone_link is O(n)
         fn expose(&self) -> (exposed: ExposedTreap<T>)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -465,6 +494,7 @@ pub mod BSTTreapStEph {
 
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg(|t1|+|t2|)) expected, Span O(lg(|t1|+|t2|)) expected — matches textbook
         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -486,18 +516,21 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn param_size(&self) -> (count: usize)
             requires self.spec_parambsttreapsteph_wf(),
             ensures count == self@.len();
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn param_is_empty(&self) -> (empty: bool)
             requires self.spec_parambsttreapsteph_wf(),
             ensures empty == (self@.len() == 0);
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: clone_with_view copies the whole tree before the O(lg n) split and join; does not match old analysis: O(lg |t|) vs new
         fn param_insert(&mut self, key: T)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(), view_ord_consistent_st::<T>(),
@@ -509,6 +542,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: clone_with_view copies the whole tree, and join_pair_inner_st visits every node of the right part; does not match old analysis: O(lg |t|) vs new
         fn param_delete(&mut self, key: &T)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -521,6 +555,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — does not match textbook: each level clones its whole subtree with clone_with_view before recursing; does not match old analysis: O(lg |t|) vs new
         fn param_find(&self, key: &T) -> (found: Option<T>)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -532,6 +567,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: clone_with_view copies the whole tree before the O(lg n) split_inner_st; does not match old analysis: O(lg |t|) vs new
         fn param_split(&self, key: &T) -> (parts: (Self, bool, Self))
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -549,6 +585,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|t_1| + |t_2|) expected, Span O(|t_1| + |t_2|) expected — does not match textbook: clones t_1, and join_pair_inner_st visits every node of t_2; does not match old analysis: O(lg(|t_1| + |t_2|)) vs new
         fn param_join_pair(&self, other: Self) -> (joined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -565,6 +602,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m + n) expected, Span O(m + n) expected, m = |t1|, n = |t2| — does not match textbook: clones both trees (O(m + n)) before the sequential union_inner_st; does not match old analysis: O(m lg(n/m)) vs new; the clones dominate
         fn param_union(&self, other: &Self) -> (combined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -578,6 +616,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m lg^2(m+n)) expected, Span O(n + m lg^2(m+n)) expected, m = |t1|, n = |t2| — does not match textbook: clones both trees, sequential intersect_inner_st with join_pair_inner_st per missing key; does not match old analysis: O(m lg(n/m)) vs new
         fn param_intersect(&self, other: &Self) -> (common: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -591,6 +630,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m lg^2(m+n)) expected, Span O(n + m lg^2(m+n)) expected, m = |t1|, n = |t2| — does not match textbook: clones both trees, sequential difference_inner_st with join_pair_inner_st per found key; does not match old analysis: O(m lg(n/m)) vs new
         fn param_difference(&self, other: &Self) -> (diff: Self)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -604,6 +644,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n + Σ W(f)) expected, Span O(n lg n + Σ S(f)) expected — does not match textbook: sequential; join_pair_inner_st per rejected key visits its whole right result; does not match old analysis: O(|t|) vs new
         fn param_filter<F: Fn(&T) -> bool>(
             &self,
             predicate: F,
@@ -627,6 +668,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(lg |t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + Σ W(f)), Span O(n + Σ S(f)) — does not match textbook: St sequential recursion after an O(n) clone; APAS span O(lg |t|)
         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -638,6 +680,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(|t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             requires
                 vstd::laws_cmp::obeys_cmp::<T>(),
@@ -802,57 +845,70 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new() -> Self { BSTTreapStEph { root: None } }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook; does not match old analysis: O(n) vs new; size_link reads the cached root size
         fn size(&self) -> usize { Self::size_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn is_empty(&self) -> bool { self.size() == 0 }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn height(&self) -> usize {
             Self::height_link(&self.root)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn insert(&mut self, value: T, priority: u64) {
             self.root = Self::insert_link(self.root.take(), value, priority);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn delete(&mut self, target: &T) {
             self.root = Self::delete_link(self.root.take(), target);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn find(&self, target: &T) -> Option<&T> {
             Self::find_link(&self.root, target)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn contains(&self, target: &T) -> bool {
             self.find(target).is_some()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn minimum(&self) -> Option<&T> { Self::min_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn maximum(&self) -> Option<&T> { Self::max_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — does not match textbook: in_order_vec appends each right-subtree Vec into its parent's Vec; does not match old analysis: O(n) vs new; Vec::append copies
         fn in_order(&self) -> ArraySeqStPerS<T> {
             ArraySeqStPerS::from_vec(Self::in_order_vec(&self.root))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — does not match textbook: pre_order_vec appends both child Vecs into its parent's Vec; does not match old analysis: O(n) vs new; Vec::append copies
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             ArraySeqStPerS::from_vec(Self::pre_order_vec(&self.root))
         }
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn new_node(key: T, priority: u64) -> (n: Node<T>) {
             let n = Node {
                 key,
@@ -870,6 +926,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn size_link(link: &Link<T>) -> (sz: usize) {
             match link.as_ref() {
                 None => 0,
@@ -879,6 +936,7 @@ l@.disjoint(r@)
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn update_size(node: &mut Box<Node<T>>) {
             let l = Self::size_link(&node.left);
             let r = Self::size_link(&node.right);
@@ -886,6 +944,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_left(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>) {
             let ghost bst_input = Self::spec_bst_link(&Some(x));
             let ghost xk = x.key;
@@ -965,6 +1024,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn rotate_right(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>) {
             let ghost bst_input = Self::spec_bst_link(&Some(x));
             let ghost xk = x.key;
@@ -1043,6 +1103,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn clone_link(link: &Link<T>) -> (c: Link<T>)
             decreases *link,
         {
@@ -1063,6 +1124,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
         fn height_link(link: &Link<T>) -> (h: usize)
             // Veracity: NEEDED proof block
             decreases *link,
@@ -1088,6 +1150,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         // Veracity: NEEDED proof block
         fn insert_link(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
             decreases link,
@@ -1188,6 +1251,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn delete_link(link: Link<T>, target: &T) -> (deleted: Link<T>)
             decreases Self::spec_size_link(&link),
         {
@@ -1341,6 +1405,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             decreases *link,
         {
@@ -1401,6 +1466,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
             decreases *link,
         {
@@ -1414,6 +1480,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
         fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
             decreases *link,
         {
@@ -1427,6 +1494,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — no textbook cost; does not match old analysis: O(n) vs new; Vec::append copies each right-subtree result into the parent's Vec
         fn in_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
             decreases *link,
         {
@@ -1443,6 +1511,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — no textbook cost; does not match old analysis: O(n) vs new; Vec::append copies both child results into the parent's Vec
         fn pre_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
             decreases *link,
         {
@@ -1470,12 +1539,14 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn param_new() -> (tree: Self) {
             BSTTreapStEph { root: None }
         // Veracity: NEEDED proof block
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn singleton(key: T) -> (tree: Self) {
             let priority = priority_for_st(&key);
             make_node_treap_st(
@@ -1488,6 +1559,7 @@ l@.disjoint(r@)
 
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: clone_with_view copies the whole tree before the O(1) destructure; does not match old analysis: O(1) vs new; clone_link is O(n)
         fn expose(&self) -> (exposed: ExposedTreap<T>) {
             // Veracity: NEEDED proof block
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
@@ -1499,6 +1571,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — matches textbook
         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self) {
             match exposed {
                 // Veracity: NEEDED proof block
@@ -1518,6 +1591,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook; does not match old analysis: O(n) vs new; size_link reads the cached root size
         fn param_size(&self) -> (count: usize) {
 // Veracity: UNNEEDED proof block             // Veracity: NEEDED proof block
             proof {
@@ -1528,11 +1602,13 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — matches textbook
         fn param_is_empty(&self) -> (empty: bool) {
             self.param_size() == 0
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: clone_with_view copies the whole tree before the O(lg n) split and join; does not match old analysis: O(lg n) expected vs new
         fn param_insert(&mut self, key: T) {
             // Veracity: NEEDED proof block
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
@@ -1553,6 +1629,7 @@ l@.disjoint(r@)
 // Veracity: NEEDED proof block
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: clone_with_view copies the whole tree, and join_pair_inner_st visits every node of the right part; does not match old analysis: O(lg n) expected vs new
         fn param_delete(&mut self, key: &T) {
             // Veracity: NEEDED proof block
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
@@ -1579,6 +1656,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — does not match textbook: each level clones its whole subtree with clone_with_view before recursing; does not match old analysis: O(lg n) expected vs new
         fn param_find(&self, key: &T) -> (found: Option<T>)
             decreases self@.len(),
         {
@@ -1652,6 +1730,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — does not match textbook: clone_with_view copies the whole tree before the O(lg n) split_inner_st; does not match old analysis: O(lg n) expected vs new
         fn param_split(&self, key: &T) -> (parts: (Self, bool, Self)) {
             // Veracity: NEEDED proof block
             // Veracity: NEEDED proof block
@@ -1661,6 +1740,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|t_1| + |t_2|) expected, Span O(|t_1| + |t_2|) expected — does not match textbook: clones t_1, and join_pair_inner_st visits every node of t_2; does not match old analysis: O(lg n) expected vs new
         fn param_join_pair(&self, other: Self) -> (joined: Self) {
             // Veracity: NEEDED proof block
             proof {
@@ -1673,6 +1753,7 @@ l@.disjoint(r@)
 // Veracity: NEEDED proof block (speed hint)
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m + n) expected, Span O(m + n) expected, m = |t1|, n = |t2| — does not match textbook: clones both trees (O(m + n)) before the sequential union_inner_st; does not match old analysis: O(n lg n) vs new; the clones dominate
         fn param_union(&self, other: &Self) -> (combined: Self) {
             // Veracity: NEEDED proof block
             proof {
@@ -1687,6 +1768,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m lg^2(m+n)) expected, Span O(n + m lg^2(m+n)) expected, m = |t1|, n = |t2| — does not match textbook: clones both trees, sequential intersect_inner_st with join_pair_inner_st per missing key; does not match old analysis: O(n lg n) vs new
         fn param_intersect(&self, other: &Self) -> (common: Self) {
             // Veracity: NEEDED proof block (speed hint)
             // Veracity: NEEDED proof block
@@ -1701,6 +1783,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m lg^2(m+n)) expected, Span O(n + m lg^2(m+n)) expected, m = |t1|, n = |t2| — does not match textbook: clones both trees, sequential difference_inner_st with join_pair_inner_st per found key; does not match old analysis: O(n lg n) vs new
         fn param_difference(&self, other: &Self) -> (diff: Self) {
             // Veracity: NEEDED proof block
             proof {
@@ -1713,6 +1796,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n + Σ W(f)) expected, Span O(n lg n + Σ S(f)) expected — does not match textbook: sequential; join_pair_inner_st per rejected key visits its whole right result
         fn param_filter<F: Fn(&T) -> bool>(
             &self,
             predicate: F,
@@ -1725,6 +1809,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + Σ W(f)), Span O(n + Σ S(f)) — does not match textbook: St sequential recursion after an O(n) clone; APAS span O(lg |t|)
         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T) {
             // Veracity: NEEDED proof block
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
@@ -1733,6 +1818,7 @@ l@.disjoint(r@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — matches textbook
         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
             // Veracity: NEEDED proof block
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
@@ -1913,6 +1999,7 @@ l@.disjoint(r@)
     /// Clone a StT element with a cmp_spec-preserving postcondition.
     // veracity: no_requires
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
         ensures c@ == x@,
     {
@@ -1924,6 +2011,7 @@ l@.disjoint(r@)
 
     /// Clone a BSTTreapStEph with view preservation.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; does not match old analysis: O(1) vs new; tree.clone() is clone_link, a full recursive copy
     // Veracity: NEEDED proof block
     fn clone_with_view<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (cloned: BSTTreapStEph<T>)
         requires spec_param_wf_link(&tree.root), tree.spec_bsttreapsteph_wf(),
@@ -1942,6 +2030,7 @@ l@.disjoint(r@)
     /// Hash-based priority for treap heap ordering.
     #[verifier::external_body]
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn priority_for_st<T: StT + Ord + IsLtTransitive>(key: &T) -> (p: u64) {
         let mut hasher = std::collections::hash_map::DefaultHasher::new();
         let mut buf = String::new();
@@ -1954,6 +2043,7 @@ l@.disjoint(r@)
 
     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
     ) -> (node: BSTTreapStEph<T>)
@@ -1997,6 +2087,7 @@ l@.disjoint(r@)
 
     /// Read the priority of a tree's root node (i64::MIN for empty).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn tree_priority_st<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (p: u64)
         requires tree.spec_bsttreapsteph_wf(),
         ensures true,
@@ -2009,6 +2100,7 @@ l@.disjoint(r@)
 
     /// Expose a tree into its constituent parts. Consumes the tree.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
         requires
             vstd::laws_cmp::obeys_cmp::<T>(),
@@ -2049,6 +2141,7 @@ l@.disjoint(r@)
     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg(|t1|+|t2|)) expected, Span O(lg(|t1|+|t2|)) expected — matches textbook
     // Veracity: NEEDED proof block
     #[verifier::spinoff_prover]
     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
@@ -2129,6 +2222,7 @@ l@.disjoint(r@)
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(lg n) expected, Span O(lg n) expected — no textbook cost
     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
         tree: BSTTreapStEph<T>, key: &T,
     ) -> (parts: (BSTTreapStEph<T>, bool, BSTTreapStEph<T>))
@@ -2293,6 +2387,7 @@ l@.disjoint(r@)
 
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|t2| + lg^2(|t1|+|t2|)) expected, Span O(|t2| + lg^2(|t1|+|t2|)) expected — does not match textbook: a union-style recursion (split t1 at each root of t2) whose (empty, r_right) calls visit every node of t2, not Alg 38.4; does not match old analysis: O(lg(|t1|+|t2|)) vs new
     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
     // Veracity: NEEDED proof block
@@ -2404,6 +2499,7 @@ l@.disjoint(r@)
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m lg(n/m + 1) + m) expected, Span O(m lg(n/m + 1) + m) expected, m = |a|, n = |b| — does not match textbook: sequential recursion (APAS span O(lg n)); work matches CS 38.11 when |a| <= |b|; does not match old analysis: O(n lg n) vs new
     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (combined: BSTTreapStEph<T>)
@@ -2498,6 +2594,7 @@ l@.disjoint(r@)
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m lg^2(m+n)) expected, Span O(m lg^2(m+n)) expected, m = |a|, n = |b| — does not match textbook: sequential, and join_pair_inner_st per missing key costs O(|right result| + lg^2); does not match old analysis: O(n lg n) vs new
     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (common: BSTTreapStEph<T>)
@@ -2603,6 +2700,7 @@ l@.disjoint(r@)
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m lg^2(m+n)) expected, Span O(m lg^2(m+n)) expected, m = |a|, n = |b| — does not match textbook: sequential, and join_pair_inner_st per found key costs O(|right result| + lg^2); does not match old analysis: O(n lg n) vs new
     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (remaining: BSTTreapStEph<T>)
@@ -2836,6 +2934,7 @@ l@.disjoint(r@)
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n + Σ W(f)) expected, Span O(n lg n + Σ S(f)) expected — no textbook cost
     fn filter_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(&T) -> bool>(
         tree: BSTTreapStEph<T>,
         predicate: &F,
@@ -3017,6 +3116,7 @@ l@.disjoint(r@)
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + Σ W(f)), Span O(n + Σ S(f)) — no textbook cost
     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
         tree: BSTTreapStEph<T>, op: &F, identity: T,
     ) -> (reduced: T)
@@ -3048,6 +3148,7 @@ l@.disjoint(r@)
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost
     fn collect_in_order_st<T: StT + Ord + IsLtTransitive>(
         tree: BSTTreapStEph<T>, out: &mut Vec<T>,
     )
@@ -3099,6 +3200,7 @@ l@.disjoint(r@)
     impl<T: StT + Ord + IsLtTransitive> BSTTreapStEph<T> {
         /// Returns a snapshot iterator over the tree elements in ascending key order.
         /// - Alg Analysis: Code review (Claude Fable 5.1): Work O(n), Span O(n) — in-order traversal.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n lg n) expected — no textbook cost; does not match old analysis: O(n) vs new; in_order uses the appending in_order_vec
         pub fn iter(&self) -> (it: std::vec::IntoIter<T>)
             requires self.spec_bsttreapsteph_wf(),
             ensures
