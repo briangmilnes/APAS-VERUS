@@ -106,6 +106,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (g: Self)
             requires valid_key_type_Edge::<V>()
             ensures
@@ -116,6 +117,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|V| + |E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(|V| + |E|), Span O(|V| + |E|) vs new; impl moves the two sets into the struct, no copy
         fn from_sets(vertices: SetStEph<V>, edges: SetStEph<Edge<V>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V|
@@ -128,28 +130,33 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn edges(&self) -> (e: &SetStEph<Edge<V>>)
             ensures e@ =~= self@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn sizeV(&self) -> (n: usize)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.V.len();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn sizeE(&self) -> (n: usize)
             requires valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires
                 spec_graphview_wf(self@),
@@ -160,6 +167,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires
                 spec_graphview_wf(self@),
@@ -171,6 +179,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|u_set| x |E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|u_set| x |E|), Span O(|u_set| x |E|) -- nested iteration
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|u_set| × |E|), Span O(|u_set| × |E|) — no textbook cost
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires
                 spec_graphview_wf(self@),
@@ -182,12 +191,14 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
         /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn degree(&self, v: &V) -> (n: usize)
             requires
                 spec_graphview_wf(self@),
@@ -206,6 +217,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (g: UnDirGraphStEph<V>)
             ensures g.spec_undirgraphsteph_wf()
         {
@@ -213,6 +225,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
             ensures g.spec_undirgraphsteph_wf()
         {
@@ -220,24 +233,30 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn edges(&self) -> (e: &SetStEph<Edge<V>>) { &self.E }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn sizeV(&self) -> (n: usize) { self.V.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn sizeE(&self) -> (n: usize) { self.E.size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) ||
             self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of edges
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let mut ng: SetStEph<V> = SetStEph::empty();
             let edges_iter = self.E.iter();
@@ -312,6 +331,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |E|), Span O(|S| * |E|) -- iterates vertices, calls ng for each
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|S| × |E|), Span O(|S| × |E|) — no textbook cost
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let u_iter = vertices.iter();
@@ -382,11 +402,13 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool) {
             feq(&e.0, v) || feq(&e.1, v)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn degree(&self, v: &V) -> (n: usize) { self.ng(v).size() }
     }
 

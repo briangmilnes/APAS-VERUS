@@ -99,6 +99,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (g: Self)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -109,6 +110,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(|V| + |E|), Span O(|V| + |E|) vs new; impl moves the two sets into the struct, no copy
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V, l: L::V|
@@ -122,16 +124,19 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>)
             ensures e@ =~= self@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential map
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn edges(&self) -> (edges: SetStEph<Edge<V>>)
             requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
             ensures
@@ -139,12 +144,14 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -154,6 +161,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures
@@ -164,6 +172,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V|
@@ -171,6 +180,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn ng(&self, v: &V) -> (ng: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures ng@ == self.spec_ng(v@), ng.spec_setsteph_wf();
@@ -186,6 +196,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (g: LabUnDirGraphStEph<V, L>)
             ensures g.spec_labundirgraphsteph_wf()
         {
@@ -193,6 +204,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)
             ensures g.spec_labundirgraphsteph_wf()
         {
@@ -200,12 +212,15 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>) { &self.labeled_edges }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let mut edges: SetStEph<Edge<V>> = SetStEph::empty();
             let le_iter = self.labeled_edges.iter();
@@ -267,9 +282,11 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) {
             let _ = self.vertices.insert(v1.clone_plus());
             let _ = self.vertices.insert(v2.clone_plus());
@@ -281,6 +298,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>) {
             let le_iter = self.labeled_edges.iter();
             let ghost le_seq = into_iter_hash_keys(le_iter);
@@ -341,6 +359,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool) {
             let le_iter = self.labeled_edges.iter();
             let ghost le_seq = into_iter_hash_keys(le_iter);
@@ -402,6 +421,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — no textbook cost
         fn ng(&self, v: &V) -> (ng: SetStEph<V>) {
             let mut ng: SetStEph<V> = SetStEph::empty();
             let le_iter = self.labeled_edges.iter();

@@ -102,6 +102,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (g: Self)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -112,6 +113,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |A|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(|V| + |A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; does not match old analysis: Work O(|V| + |A|), Span O(|V| + |A|) vs new; impl moves the two sets into the struct, no copy
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V, l: L::V|
@@ -125,28 +127,33 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>)
             ensures a@ =~= self@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
             ensures arcs@ == self.spec_arcs();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn add_labeled_arc(&mut self, from: V, to: V, label: L)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -155,6 +162,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures
@@ -163,6 +171,7 @@ verus!
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
@@ -170,6 +179,7 @@ verus!
         /// out-neighbors
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_plus@ == self.spec_n_plus(v@);
@@ -177,6 +187,7 @@ verus!
         /// in-neighbors
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — ACCEPTED DIFFERENCE: St sequential, APAS Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_minus@ == self.spec_n_minus(v@);
@@ -192,6 +203,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn empty() -> (g: LabDirGraphStEph<V, L>)
             ensures g.spec_labdirgraphsteph_wf()
         {
@@ -199,6 +211,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)
             ensures g.spec_labdirgraphsteph_wf()
         {
@@ -206,12 +219,15 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>) { &self.labeled_arcs }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>) {
             let mut arcs: SetStEph<Edge<V>> = SetStEph::empty();
             let la_iter = self.labeled_arcs.iter();
@@ -270,9 +286,11 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
             let _ = self.vertices.insert(from.clone_plus());
             let _ = self.vertices.insert(to.clone_plus());
@@ -280,6 +298,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>) {
             let la_iter = self.labeled_arcs.iter();
             let ghost la_seq = into_iter_hash_keys(la_iter);
@@ -332,6 +351,7 @@ verus!
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn has_arc(&self, from: &V, to: &V) -> (b: bool) {
             let la_iter = self.labeled_arcs.iter();
             let ghost la_seq = into_iter_hash_keys(la_iter);
@@ -388,6 +408,7 @@ verus!
 
         /// out-neighbors
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let la_iter = self.labeled_arcs.iter();
@@ -453,6 +474,7 @@ verus!
 
         /// in-neighbors
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|A|), Span O(|A|) — no textbook cost
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let la_iter = self.labeled_arcs.iter();
