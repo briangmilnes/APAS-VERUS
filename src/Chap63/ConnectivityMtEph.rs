@@ -76,12 +76,14 @@ pub mod ConnectivityMtEph {
         /// Count connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: star_contract_mt's partition and quotient build have sequential merges, linear span and an extra lg factor of work per round; APAS O((n+m) lg n), O(lg² n); does not match old analysis: O((n+m) lg n), O(lg² n) vs new; same cause
         fn count_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: star_contract_mt's partition and quotient build have sequential merges, linear span and an extra lg factor of work per round, and the expand closure is a sequential O(n) loop; APAS O((n+m) lg n), O(lg² n); does not match old analysis: O((n+m) lg n), O(lg² n) vs new; same cause
         fn connected_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
@@ -91,12 +93,14 @@ pub mod ConnectivityMtEph {
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — star_contract_mt with base/expand closures; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: star_contract_mt's partition and quotient build have sequential merges, linear span and an extra lg factor of work per round; APAS O((n+m) lg n), O(lg² n); does not match old analysis: O((n+m) lg n), O(lg² n) vs new; same cause
         fn count_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — star_contract_mt with base/expand closures; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: star_contract_mt's partition and quotient build have sequential merges, linear span and an extra lg factor of work per round, and the expand closure is a sequential O(n) loop; APAS O((n+m) lg n), O(lg² n); does not match old analysis: O((n+m) lg n), O(lg² n) vs new; same cause
         fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
@@ -115,6 +119,7 @@ pub mod ConnectivityMtEph {
     /// - Alg Analysis: APAS (Ch63 Ex 63.3): Work O((n+m) lg n), Span O(lg² n) (edge-set, parallel)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: star_contract_mt's partition and quotient build have sequential merges, linear span and an extra lg factor of work per round; APAS O((n+m) lg n), O(lg² n); does not match old analysis: O((n+m) lg n), O(m) vs new; same cause
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -139,6 +144,7 @@ pub mod ConnectivityMtEph {
     /// - Alg Analysis: APAS (Ch63 Ex 63.4): Work O((n+m) lg n), Span O(lg² n) (edge-set, parallel)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: star_contract_mt's partition and quotient build have sequential merges, linear span and an extra lg factor of work per round, and the expand closure is a sequential O(n) loop; APAS O((n+m) lg n), O(lg² n); does not match old analysis: O((n+m) lg n), O(n lg n) vs new; same cause
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -162,6 +168,7 @@ pub mod ConnectivityMtEph {
     /// Compose maps (P . C): for each (u -> v) in P, output (u -> C[v]).
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|P|), Span O(|P|) — currently sequential despite "parallel" name
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|P|) expected, Span O(|P|) expected — no textbook cost
     fn compose_maps_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         partition_map: &HashMap<V, V>,
         component_map: &HashMap<V, V>,
@@ -203,6 +210,7 @@ pub mod ConnectivityMtEph {
     /// - Alg Analysis: APAS (Ch63 Alg 63.2): Work O((n+m) lg n), Span O(lg^2 n) (parallel)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(m) — delegates to star_contract_mt (inherits merge bottleneck)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: star_contract_mt's partition and quotient build have sequential merges, linear span and an extra lg factor of work per round; APAS O((n+m) lg n), O(lg² n); does not match old analysis: O((n+m) lg n), O(m) vs new; same cause
     pub fn count_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
@@ -224,6 +232,7 @@ pub mod ConnectivityMtEph {
     /// - Alg Analysis: APAS (Ch63 Alg 63.3): Work O((n+m) lg n), Span O(lg^2 n) (parallel)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n); parallel star contraction
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(n lg n) — delegates to star_contract_mt (inherits compose bottleneck)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n+m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: star_contract_mt's partition and quotient build have sequential merges, linear span and an extra lg factor of work per round, and the expand closure is a sequential O(n) loop; APAS O((n+m) lg n), O(lg² n); does not match old analysis: O((n+m) lg n), O(n lg n) vs new; same cause
     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

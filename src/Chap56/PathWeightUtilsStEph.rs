@@ -62,11 +62,13 @@ pub mod PathWeightUtilsStEph {
 
         /// - Alg Analysis: APAS (Ch56 Def 56.1): computes path weight (sum of edge weights along a path).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — definition, k = path length
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k), Span O(k) — no textbook cost; k = |path|, one checked add per edge in a sequential loop; Def 56.1 defines the weight but states no cost
         fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStEphS<ArraySeqStEphS<i64>>) -> (weight: Option<i64>)
             ensures weight == Self::spec_path_weight_int(path, weights, 0, 0);
 
         /// - Alg Analysis: APAS (Ch56 Def 56.1): computes path weight (sum of edge weights along a path).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — definition, k = path length
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k), Span O(k) — no textbook cost; k = |path|, one dist_add per edge in a sequential loop; Def 56.1 defines the weight but states no cost
         fn path_weight_float(
             path: &ArraySeqStPerS<usize>,
             weights: &ArraySeqStEphS<ArraySeqStEphS<WrappedF64>>,
@@ -80,6 +82,7 @@ pub mod PathWeightUtilsStEph {
         ) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — definition, k = path length
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k), Span O(k) — no textbook cost; k = |path|, O(1) check per edge in a sequential loop
         fn validate_subpath_property_int(
             path: &ArraySeqStPerS<usize>,
             distances: &ArraySeqStEphS<i64>,
@@ -88,6 +91,7 @@ pub mod PathWeightUtilsStEph {
             ensures valid == Self::spec_validate_subpath_int(path, distances, weights, 0);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — definition, k = path length
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k), Span O(k) — no textbook cost; k = |path|, O(1) check per edge in a sequential loop
         fn validate_subpath_property_float(
             path: &ArraySeqStPerS<usize>,
             distances: &ArraySeqStEphS<WrappedF64>,
@@ -127,6 +131,7 @@ pub mod PathWeightUtilsStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|path|), Span O(|path|) — no textbook cost; one checked add per edge in a sequential loop
     fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStEphS<ArraySeqStEphS<i64>>) -> (weight: Option<i64>) {
         let k = path.length();
         if k < 2 {
@@ -161,6 +166,7 @@ pub mod PathWeightUtilsStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|path|), Span O(|path|) — no textbook cost; one dist_add per edge in a sequential loop
     fn path_weight_float(
         path: &ArraySeqStPerS<usize>,
         weights: &ArraySeqStEphS<ArraySeqStEphS<WrappedF64>>,
@@ -232,6 +238,7 @@ pub mod PathWeightUtilsStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — iterates path edges checking sub-path property; k = path length.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k), Span O(k) — no textbook cost; k = |path|, O(1) check per edge in a sequential loop
     fn validate_subpath_property_int(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStEphS<i64>,
@@ -276,6 +283,7 @@ pub mod PathWeightUtilsStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — iterates path edges checking sub-path property; k = path length.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k), Span O(k) — no textbook cost; k = |path|, O(1) check per edge in a sequential loop
     fn validate_subpath_property_float(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStEphS<WrappedF64>,

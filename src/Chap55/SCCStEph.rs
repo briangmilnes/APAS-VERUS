@@ -69,6 +69,7 @@ pub mod SCCStEph {
         /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O(|V| + |E|), Span O(|V| + |E|) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|E| + |V| h)), Span O(|V| (|E| + |V| h)) — does not match textbook: transpose_graph does a Vec remove and insert (O(|V|) shifts) per edge, O(|V| |E|), and dfs_reach inserts each vertex into an AVLTreeSetStEph component, O(c h) per insert on the ParamBST, h ≤ |V|; the finish order is built with AVLTreeSeqStEph::from_vec, O(|V| lg |V|); CS 55.8 / Ex 55.8 O(|V| + |E|); does not match old analysis: O(|V| + |E|) vs new
         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<usize>>)
             requires
                 spec_toposortsteph_wf(graph),
@@ -83,6 +84,7 @@ pub mod SCCStEph {
 
     /// Computes the finish order for SCC (decreasing finish times).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — full DFS producing finish-time ordering; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| lg |V| + |E|), Span O(|V| lg |V| + |E|) — does not match textbook: linear finish-order DFS and reversal, then AVLTreeSeqStEph::from_vec inserting one element at a time, O(|V| lg |V|); Alg 55.13 decreasingFinish / Ex 55.6 O(|V| + |E|); does not match old analysis: O(|V|+|E|) vs O(|V| lg |V| + |E|)
     fn compute_finish_order(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (finish_order: AVLTreeSeqStEphS<usize>)
         requires
             spec_toposortsteph_wf(graph),
@@ -189,6 +191,7 @@ pub mod SCCStEph {
 
     /// Transposes a directed graph (reverses all edges).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — iterates all edges once to build transposed adj lists; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |V| |E|), Span O(|V| + |V| |E|) — no textbook cost; does not match old analysis: O(|V|+|E|) vs O(|V| + |V| |E|); each edge does adj_vecs.remove(v) and adj_vecs.insert(v, temp), each shifting up to |V| entries of the outer Vec
     fn transpose_graph(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (transposed: ArraySeqStEphS<ArraySeqStEphS<usize>>)
         requires spec_toposortsteph_wf(graph),
         ensures
@@ -334,6 +337,7 @@ pub mod SCCStEph {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — checks all edges for valid indices; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — no textbook cost; never called
     // veracity: no_requires
     fn check_wf_adj_list_eph(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (valid: bool)
         ensures valid ==> spec_toposortsteph_wf(graph),
@@ -392,6 +396,7 @@ pub mod SCCStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS collecting reachable component; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(c + E_c + c^2 h), Span O(c + E_c + c^2 h) — no textbook cost; does not match old analysis: O(|V|+|E|) vs new; c = vertices newly reached, E_c = their out-edges; O(1) visited checks, but one AVLTreeSetStEph insert per reached vertex, O(c h) each on the ParamBST, h ≤ c
     fn dfs_reach(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -541,6 +546,7 @@ pub mod SCCStEph {
         /// Finds strongly connected components in a directed graph.
         // Veracity: NEEDED proof block
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's: two DFS passes + transpose; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|E| + |V| h)), Span O(|V| (|E| + |V| h)) — does not match textbook: compute_finish_order O(|V| lg |V| + |E|), transpose_graph O(|V| |E|) from Vec remove/insert per edge, dfs_reach O(c^2 h) per component of size c (AVLTreeSetStEph inserts), h ≤ |V|; CS 55.8 / Ex 55.8 O(|V| + |E|); does not match old analysis: O(|V|+|E|) vs new
         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> AVLTreeSeqStEphS<AVLTreeSetStEph<usize>>
         {
             let finish_order = compute_finish_order(graph);

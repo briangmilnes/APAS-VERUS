@@ -329,6 +329,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch55 Ex 55.6): Work O(|V| + |E|), Span O(|V| + |E|) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| lg |V| + |E|), Span O(|V| lg |V| + |E|) — does not match textbook: the O(|V| + |E|) finish-order DFS and Vec reversal are linear, but the result is built with AVLTreeSeqStEph::from_vec, which inserts one element at a time, O(|V| lg |V|); Ex 55.6 O(|V| + |E|); does not match old analysis: O(|V| + |E|) vs O(|V| lg |V| + |E|)
         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)
             requires
                 spec_toposortsteph_wf(graph),
@@ -345,6 +346,7 @@ broadcast use {
     /// Recursive DFS that appends vertices in finish order.
     /// Also used by SCCStEph::compute_finish_order.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — no textbook cost; over all calls with a shared visited array each vertex is expanded once and each edge causes one O(1) call; Vec push amortized O(1)
     pub fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -689,6 +691,7 @@ broadcast use {
     /// Recursive DFS with cycle detection via rec_stack.
     /// Returns true if no cycle found, false if cycle detected.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS with ancestor tracking; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — no textbook cost; O(1) bool-array visited and rec_stack, each vertex expanded once; not called outside its own recursion
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -789,6 +792,7 @@ broadcast use {
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS + cycle check + reverse; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| lg |V| + |E|), Span O(|V| lg |V| + |E|) — does not match textbook: CycleDetectStEph::has_cycle O(|V| + |E|), then topo_sort, whose AVLTreeSeqStEph::from_vec costs O(|V| lg |V|); Ex 55.6 O(|V| + |E|); does not match old analysis: O(|V|+|E|) vs O(|V| lg |V| + |E|)
     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (topo_order: Option<AVLTreeSeqStEphS<usize>>)
         requires
             spec_toposortsteph_wf(graph),
@@ -814,6 +818,7 @@ broadcast use {
     impl TopoSortStEphTrait for TopoSortStEph {
         /// Returns sequence of vertices in topological order.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS finish order + reverse; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| lg |V| + |E|), Span O(|V| lg |V| + |E|) — does not match textbook: O(|V|) tabulate, O(|V| + |E|) dfs_finish_order over all starts, O(|V|) reversal, then AVLTreeSeqStEph::from_vec inserting one element at a time, O(|V| lg |V|); Ex 55.6 O(|V| + |E|); does not match old analysis: O(|V|+|E|) vs O(|V| lg |V| + |E|)
         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)
         {
             let n = graph.length();

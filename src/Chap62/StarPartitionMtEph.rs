@@ -114,6 +114,7 @@ pub mod StarPartitionMtEph {
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg(n + m)), Span O(lg(n + m)) — all 6 loops parallel D&C
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n + m lg m) expected, Span O(n + m) expected — does not match textbook: every D&C helper merges its right half into the left sequentially (O(k) per level), so work gains a lg factor and span is linear; APAS O(n + m), O(lg n); does not match old analysis: Span O(lg(n + m)) vs new; sequential merges
         fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
@@ -129,6 +130,7 @@ pub mod StarPartitionMtEph {
     /// Deterministic hash-based coin flip from (seed, index).
     /// Replaces sequential RNG with a parallelizable hash function.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash computation.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     #[verifier::external_body]
     fn hash_coin(seed: u64, index: usize) -> bool {
         use std::hash::{Hash, Hasher};
@@ -143,6 +145,7 @@ pub mod StarPartitionMtEph {
     ///
     /// Work O(n), Span O(lg n) — parallel hash-based coin generation via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(n), O(lg n) vs new; each level inserts the right half's map into the left one sequentially, O(k)
     fn hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         seed: u64,
@@ -279,6 +282,7 @@ pub mod StarPartitionMtEph {
     /// For each edge in [start, end), classifies tail-to-head edges and collects them.
     /// Work O(m), Span O(lg m) — binary fork-join via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg m) — D&C fork-join over m edges; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(m), O(lg m) vs new; each level pushes the right half's Vec onto the left one sequentially, O(k)
     fn build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<Vec<Edge<V>>>,
         coin_flips: Arc<HashMap<V, bool>>,
@@ -468,6 +472,7 @@ pub mod StarPartitionMtEph {
     ///
     /// Work O(n), Span O(lg n) — binary fork-join via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k), Span O(k), k = end - start — no textbook cost; does not match old analysis: O(n), O(lg n) vs new; each level pushes the right half's Vec onto the left one sequentially, O(k)
     fn build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         start: usize,
@@ -575,6 +580,7 @@ pub mod StarPartitionMtEph {
     /// Maps each vertex to its position in the vertex sequence.
     /// Work O(n lg n), Span O(lg n) — binary fork-join via ParaPair!, sequential merge.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: Span O(lg n) vs new; the sequential merge of the right half, O(k) per level, is on the critical path
     fn build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         start: usize,
@@ -756,6 +762,7 @@ pub mod StarPartitionMtEph {
     /// Deduplicates naturally (HashMap last-write-wins; any center is acceptable per APAS).
     /// Work O(m lg m), Span O(lg m) — binary fork-join via ParaPair!, sequential merge.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg m), Span O(lg m) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: Span O(lg m) vs new; the sequential merge of the right half, O(k) per level, is on the critical path
     fn build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         th_edges: Arc<Vec<(usize, V)>>,
         vertices: Arc<Vec<V>>,
@@ -975,6 +982,7 @@ pub mod StarPartitionMtEph {
     /// Replaces sequential Loop 4 (clone) + Loop 5 (inject) with a single parallel pass.
     /// Work O(n), Span O(lg n) — binary fork-join via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(n), O(lg n) vs new; each level pushes the right half's Vec onto the left one sequentially, O(k)
     fn build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         satellite_map: Arc<HashMap<V, V>>,
@@ -1243,6 +1251,7 @@ pub mod StarPartitionMtEph {
     ///
     /// Work O(n lg n), Span O(lg n) — binary fork-join via ParaPair!, sequential merge.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: Span O(lg n) vs new; the sequential merge of the right half, O(k) per level, is on the critical path
     fn build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         p_vec: Arc<Vec<V>>,
@@ -1451,6 +1460,7 @@ pub mod StarPartitionMtEph {
     /// A vertex is a center if p_vec[j] == vertices[j] (self-pointing).
     /// Work O(n), Span O(lg n) — binary fork-join via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join filtering self-pointing vertices; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(n), O(lg n) vs new; each level merges the halves with SetStEph::union, a sequential O(k) copy
     fn build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         p_vec: Arc<Vec<V>>,
@@ -1550,6 +1560,7 @@ pub mod StarPartitionMtEph {
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg(n + m)), Span O(lg(n + m)) — all 6 loops parallel D&C
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n + m lg m) expected, Span O(n + m) expected — does not match textbook: every D&C helper merges its right half into the left sequentially (O(k) per level), so work gains a lg factor and span is linear; APAS O(n + m), O(lg n); does not match old analysis: Span O(lg(n + m)) vs new; sequential merges
     #[verifier::rlimit(20)]
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,

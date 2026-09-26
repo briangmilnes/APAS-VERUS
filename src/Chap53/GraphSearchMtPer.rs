@@ -64,11 +64,13 @@ pub mod GraphSearchMtPer {
 
     impl<V: StTInMtT + Ord + TotalOrder + 'static> GraphSearchMtPerTrait<V> for SearchResult<V> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: O((|V|+|E|) log |V|) vs new; delegates to graph_search_explore (sequential loops); h = AVLTreeSetMtPer (ParamBST) height ≤ |V|, each set union/difference costs O(n h^2) work and span
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
         { crate::Chap53::GraphSearchMtPer::GraphSearchMtPer::graph_search(graph, source, strategy, Ghost(vertex_universe)) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: O((|V|+|E|) log |V|) vs new; delegates to graph_search_explore (sequential loops); h = AVLTreeSetMtPer (ParamBST) height ≤ |V|, each set union/difference costs O(n h^2) work and span
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
         {
@@ -76,6 +78,7 @@ pub mod GraphSearchMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: O((|V|+|E|) log |V|) vs new; delegates to graph_search_explore (sequential loops); h = AVLTreeSetMtPer (ParamBST) height ≤ |V|, each set union/difference costs O(n h^2) work and span
         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>,
         { crate::Chap53::GraphSearchMtPer::GraphSearchMtPer::reachable(graph, source, Ghost(vertex_universe)) }
@@ -92,6 +95,7 @@ pub mod GraphSearchMtPer {
 
     impl<V: StTInMtT + Ord + TotalOrder + 'static> SelectionStrategy<V> for SelectAll {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|frontier|), Span O(|frontier|) — clones entire frontier.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|F|), Span O(|F|) — no textbook cost; ParamBST clone deep-copies the frontier tree
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) { (frontier.clone(), false) }
     }
 
@@ -106,6 +110,7 @@ pub mod GraphSearchMtPer {
 
     pub trait SelectionStrategy<V: StTInMtT + Ord + TotalOrder + 'static> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work varies by strategy, Span varies by strategy — abstract selection from frontier.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|F| h), Span O(|F| h) — no textbook cost; does not match old analysis: varies by strategy vs O(|F| h); bound over the two impls, SelectAll O(|F|) clone and SelectOne O(|F| h) to_seq; never called by graph_search_explore
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool))
             requires
                 obeys_feq_clone::<V>(),
@@ -117,6 +122,7 @@ pub mod GraphSearchMtPer {
     pub trait GraphSearchMtPerTrait<V: StTInMtT + Ord + TotalOrder + 'static> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: Θ((|V|+|E|) log |V|) vs new; h = AVLTreeSetMtPer (ParamBST) height ≤ |V|; one O((|V| + d(v)) h^2) union per frontier vertex plus an O(|V| h^2) union and difference per round; the MtPer set ops have span = work
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -133,6 +139,7 @@ pub mod GraphSearchMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: Θ((|V|+|E|) log |V|) vs new; h = AVLTreeSetMtPer (ParamBST) height ≤ |V|; one O((|V| + d(v)) h^2) union per frontier vertex plus an O(|V| h^2) union and difference per round; the MtPer set ops have span = work
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -150,6 +157,7 @@ pub mod GraphSearchMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential control flow; uses SelectAll (BFS).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: Θ((|V|+|E|) log |V|) vs new; h = AVLTreeSetMtPer (ParamBST) height ≤ |V|; one O((|V| + d(v)) h^2) union per frontier vertex plus an O(|V| h^2) union and difference per round; the MtPer set ops have span = work
         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -169,6 +177,7 @@ pub mod GraphSearchMtPer {
 
     impl<V: StTInMtT + Ord + TotalOrder + 'static> SelectionStrategy<V> for SelectOne {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — picks first element.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|F| h), Span O(|F| h) — no textbook cost; does not match old analysis: O(log |F|) vs O(|F| h); to_seq materializes the whole frontier (in_order, deep-copy expose per node) to read element 0
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) {
             if frontier.size() == 0 {
                 (AVLTreeSetMtPer::empty(), false)
@@ -193,6 +202,7 @@ pub mod GraphSearchMtPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_multi; sequential despite Mt module (no join).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: O((|V|+|E|) log |V|) vs new; O(1) singleton then graph_search_multi; h = AVLTreeSetMtPer (ParamBST) height ≤ |V|
     pub fn graph_search<V: StTInMtT + Ord + TotalOrder + 'static, G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -216,6 +226,7 @@ pub mod GraphSearchMtPer {
 
     /// Graph exploration loop (Algorithm 53.4).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — ≤|V| rounds with AVL set ops; sequential despite Mt module (no join).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: O((|V|+|E|) log |V|) vs new; h = AVLTreeSetMtPer (ParamBST) height ≤ |V|; ≤ |V| rounds, each an O(|V| h^2) visited union and frontier difference; each frontier vertex does an O((|V| + d(v)) h^2) union into new_neighbors in a sequential loop; strategy is never called, every round takes the whole frontier; excludes Σ W(graph(v))
     #[verifier::exec_allows_no_decreases_clause]
     fn graph_search_explore<V: StTInMtT + Ord + TotalOrder + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
         graph: &G,
@@ -314,6 +325,7 @@ pub mod GraphSearchMtPer {
 
     /// Generic graph search starting from multiple sources (Exercise 53.3).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_explore; sequential despite Mt module.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: O((|V|+|E|) log |V|) vs new; delegates to graph_search_explore; h = AVLTreeSetMtPer (ParamBST) height ≤ |V|
     pub fn graph_search_multi<V: StTInMtT + Ord + TotalOrder + 'static, G, S>(
         graph: &G,
         sources: AVLTreeSetMtPer<V>,
@@ -341,6 +353,7 @@ pub mod GraphSearchMtPer {
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
     /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((|V|^2 + |E|) h^2), Span O((|V|^2 + |E|) h^2) — no textbook cost; does not match old analysis: Θ((|V|+|E|) log |V|) vs new; delegates to graph_search; h = AVLTreeSetMtPer (ParamBST) height ≤ |V|
     pub fn reachable<V: StTInMtT + Ord + TotalOrder + 'static, G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,

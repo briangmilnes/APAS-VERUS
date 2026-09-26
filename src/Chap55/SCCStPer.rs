@@ -66,6 +66,7 @@ pub mod SCCStPer {
         /// Finds strongly connected components in a directed graph (Algorithm 55.18)
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's algorithm; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|E| + |V| h)), Span O(|V| (|E| + |V| h)) — does not match textbook: transpose_graph does a Vec remove and insert (O(|V|) shifts) per edge, O(|V| |E|), and dfs_reach inserts each vertex into a persistent AVLTreeSetStPer component, O(c h) per insert, h ≤ |V|; CS 55.8 / Ex 55.8 O(|V| + |E|); does not match old analysis: O(|V|+|E|) vs new
         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (components: AVLTreeSeqStPerS<AVLTreeSetStPer<usize>>)
             requires
                 spec_toposortstper_wf(graph),
@@ -80,6 +81,7 @@ pub mod SCCStPer {
 
     /// Recursive DFS that appends vertices in finish order.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — no textbook cost; over all calls with a shared Vec<bool> visited each vertex is expanded once and each edge causes one O(1) call; Vec push amortized O(1)
     fn dfs_finish_order(
         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited: &mut Vec<bool>,
@@ -185,6 +187,7 @@ pub mod SCCStPer {
 
     /// Computes the finish order for SCC (decreasing finish times).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — full DFS + reverse; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — matches textbook
     fn compute_finish_order(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (finish_order: AVLTreeSeqStPerS<usize>)
         requires
             spec_toposortstper_wf(graph),
@@ -280,6 +283,7 @@ pub mod SCCStPer {
 
     /// Transposes a directed graph (reverses all edges).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — iterates all edges; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |V| |E|), Span O(|V| + |V| |E|) — no textbook cost; does not match old analysis: O(|V|+|E|) vs O(|V| + |V| |E|); each edge does adj_vecs.remove(v) and adj_vecs.insert(v, temp), each shifting up to |V| entries of the outer Vec
     fn transpose_graph(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (transposed: ArraySeqStPerS<ArraySeqStPerS<usize>>)
         requires spec_toposortstper_wf(graph),
         ensures
@@ -424,6 +428,7 @@ pub mod SCCStPer {
 
     /// Runtime check that all neighbor indices are valid vertex indices.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — checks all edges; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — no textbook cost; never called
     // veracity: no_requires
     fn check_wf_adj_list_per(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (valid: bool)
         ensures valid ==> spec_toposortstper_wf(graph),
@@ -486,6 +491,7 @@ pub mod SCCStPer {
     /// DFS reachability using Vec<bool> for termination and persistent set
     /// for component accumulation (same pattern as DFSStPer::dfs_recursive).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS collecting component; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(c + E_c + c^2 h), Span O(c + E_c + c^2 h) — no textbook cost; does not match old analysis: O(|V|+|E|) vs new; c = vertices newly reached, E_c = their out-edges; O(1) visited checks, but one persistent AVLTreeSetStPer insert per reached vertex (tree copy plus ParamBST insert), O(c h) each, h ≤ c
     fn dfs_reach(
         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
         visited_bool: &mut Vec<bool>,
@@ -606,6 +612,7 @@ pub mod SCCStPer {
     impl SCCStPerTrait for SCCStPer {
         /// Finds strongly connected components in a directed graph.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — Kosaraju's: finish-order DFS + transpose + component DFS; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|E| + |V| h)), Span O(|V| (|E| + |V| h)) — does not match textbook: compute_finish_order O(|V| + |E|), transpose_graph O(|V| |E|) from Vec remove/insert per edge, dfs_reach O(c^2 h) per component of size c (persistent AVLTreeSetStPer inserts), h ≤ |V|; CS 55.8 / Ex 55.8 O(|V| + |E|); does not match old analysis: O(|V|+|E|) vs new
         fn scc(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> AVLTreeSeqStPerS<AVLTreeSetStPer<usize>>
         {
             let finish_order = compute_finish_order(graph);

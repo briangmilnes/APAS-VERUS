@@ -58,6 +58,7 @@ pub mod BellmanFordStEphI64 {
         /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) seq-based; n rounds, O(m) per round with array seqs
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) — does not match textbook: in_neighbors_weighed scans all m arcs for each of n vertices, so a round costs O(n m) not O(m); sequential loops, APAS span O(n lg n); does not match old analysis: O(nm), O(nm) vs new; per-vertex arc scan
         fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)
             requires
@@ -74,6 +75,7 @@ pub mod BellmanFordStEphI64 {
 
     /// Clamp an i128 weight to i64 range.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn clamp_weight(w: i128) -> (clamped: i64)
         ensures
@@ -89,6 +91,7 @@ pub mod BellmanFordStEphI64 {
     /// Safe distance addition: compute d + w via i128 to avoid overflow.
     /// Returns UNREACHABLE on positive overflow, i64::MIN on negative overflow.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     fn add_distance(d: i64, w: i64) -> (sum: i64)
         requires d != UNREACHABLE,
         ensures
@@ -105,6 +108,7 @@ pub mod BellmanFordStEphI64 {
 
     /// Reconstruct predecessor array from converged distances.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — no textbook cost
     fn reconstruct_predecessors(
         graph: &WeightedDirGraphStEphI128<usize>,
         distances: &Vec<i64>,
@@ -190,6 +194,7 @@ pub mod BellmanFordStEphI64 {
     /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
     /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) seq-based; n rounds, O(m) per round with array seqs
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) — does not match textbook: in_neighbors_weighed scans all m arcs for each of n vertices, so a round costs O(n m) not O(m); sequential loops, APAS span O(n lg n); does not match old analysis: O(nm), O(nm) vs new; per-vertex arc scan
     pub fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
         -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)
         requires

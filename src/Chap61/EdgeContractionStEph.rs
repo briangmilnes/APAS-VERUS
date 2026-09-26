@@ -68,6 +68,7 @@ pub mod EdgeContractionStEph {
         /// APAS: Work O(|E|), Span O(|E|)
         /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — ACCEPTED DIFFERENCE: sequential loops over matching + vertices + edges; APAS Alg 61.6 is full recursive contraction
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|) expected, Span O(|V| + |E|) expected — does not match textbook: one sequential contraction step, while APAS Alg 61.6 W O(n), S O(lg² n) is the whole recursive contraction of a cycle
         fn edge_contract<V: HashOrd>(
             graph: &UnDirGraphStEph<V>,
             matching: &SetStEph<Edge<V>>,
@@ -77,6 +78,7 @@ pub mod EdgeContractionStEph {
         /// Single round of sequential edge contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — greedy matching + contraction; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|) expected, Span O(|V| + |E|) expected — matches textbook
         fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>
             requires Self::spec_edgecontractionsteph_wf(graph);
     }
@@ -92,6 +94,7 @@ pub mod EdgeContractionStEph {
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — ACCEPTED DIFFERENCE: sequential loops over matching + vertices + edges; APAS Alg 61.6 is full recursive contraction
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|) expected, Span O(|V| + |E|) expected — does not match textbook: one sequential contraction step, while APAS Alg 61.6 W O(n), S O(lg² n) is the whole recursive contraction of a cycle
     pub fn edge_contract<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,
@@ -183,6 +186,7 @@ pub mod EdgeContractionStEph {
     /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|) expected, Span O(|V| + |E|) expected — matches textbook
     pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (contracted: UnDirGraphStEph<V>)
         requires
             spec_graphview_wf(graph@),

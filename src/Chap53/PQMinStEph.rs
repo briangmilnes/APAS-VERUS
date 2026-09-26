@@ -71,6 +71,7 @@ pub mod PQMinStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h^2), Span O(|V| (|V| + |E|) h^2) — no textbook cost; does not match old analysis: Θ(|V|² + |E| log |V|) vs new; h = AVLTreeSetStEph (ParamBST) height ≤ |V|; each edge scanned does an O(|V| h) find and an O(|V| h^2) singleton union into the frontier; each round an O(|V| h) to_seq for the min and O(|V| h^2) union and difference
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -100,6 +101,7 @@ pub mod PQMinStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h^2), Span O(|V| (|V| + |E|) h^2) — no textbook cost; does not match old analysis: Θ(|V|² + |E| log |V|) vs new; h = AVLTreeSetStEph (ParamBST) height ≤ |V|; each edge scanned does an O(|V| h) find and an O(|V| h^2) singleton union into the frontier; each round an O(|V| h) to_seq for the min and O(|V| h^2) union and difference
         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -138,12 +140,14 @@ pub mod PQMinStEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to pq_min_multi; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h^2), Span O(|V| (|V| + |E|) h^2) — no textbook cost; does not match old analysis: O(|V|^2 + |E| log |V|) vs new; delegates to free pq_min; h = AVLTreeSetStEph (ParamBST) height ≤ |V|
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P,
         {
          pq_min(graph, source, priority_fn, Ghost(vertex_universe)) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to free fn pq_min_multi; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h^2), Span O(|V| (|V| + |E|) h^2) — no textbook cost; does not match old analysis: O(|V|^2 + |E| log |V|) vs new; delegates to free pq_min_multi; h = AVLTreeSetStEph (ParamBST) height ≤ |V|
         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P,
         {
@@ -153,6 +157,7 @@ pub mod PQMinStEph {
     /// Priority-first search from single source (Section 53.4).
     /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — delegates to pq_min_multi.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h^2), Span O(|V| (|V| + |E|) h^2) — no textbook cost; does not match old analysis: Θ(|V|² + |E| log |V|) vs new; O(1) singleton then pq_min_multi; h = AVLTreeSetStEph (ParamBST) height ≤ |V|
     pub fn pq_min<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -186,6 +191,7 @@ pub mod PQMinStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — AVL to_seq + nth(0) for min; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|F| h), Span O(|F| h) — no textbook cost; does not match old analysis: O(log |F|) vs O(|F| h); to_seq materializes the whole frontier (in_order, deep-copy expose per node) to read element 0; never called
     fn pq_find_min_priority<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder>(
         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
     ) -> (min_vertex: Option<V>)
@@ -214,6 +220,7 @@ pub mod PQMinStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — |V| rounds × (find_min O(log V) + neighbor scan O(deg) × AVL insert O(log V)); St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h^2), Span O(|V| (|V| + |E|) h^2) — no textbook cost; does not match old analysis: O(|V|^2 + |E| log |V|) vs new; h = AVLTreeSetStEph (ParamBST) height ≤ |V|; ≤ |V| rounds, each an O(|V| h) to_seq for the min, O(|V| h^2) difference and union; each out-edge an O(|V| h) find and O(|V| h^2) singleton union; final priorities loop O(|V|^2 h^2)
     #[verifier::exec_allows_no_decreases_clause]
     fn pq_explore<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
         graph: &G,
@@ -477,6 +484,7 @@ pub mod PQMinStEph {
 
     /// Priority-first search from multiple sources (Section 53.4).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to pq_explore; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|) h^2), Span O(|V| (|V| + |E|) h^2) — no textbook cost; does not match old analysis: O(|V|^2 + |E| log |V|) vs new; builds the initial frontier by |sources| singleton unions, O(|V|^2 h^2), then pq_explore; h = AVLTreeSetStEph (ParamBST) height ≤ |V|
     pub fn pq_min_multi<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G, PF>(
         graph: &G,
         sources: AVLTreeSetStEph<V>,

@@ -72,6 +72,7 @@ pub mod JohnsonMtEphF64 {
         /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|.
         /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(mn lg n), Span O(m lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(mn lg n), Span O(m lg n); parallel: n Dijkstra calls via join
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³ + n² m + n m³), Span O(n³ + n² m + m³) — does not match textbook: sequential Bellman-Ford O(n² m + n³) on the augmented graph dominates the span, and each Dijkstra is O(n m + m³); does not match old analysis: O(mn lg n), O(m lg n) vs new; same causes
         fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>) -> (apsp: AllPairsResultStEphF64)
             requires
                 graph@.V.len() > 0,
@@ -93,6 +94,7 @@ pub mod JohnsonMtEphF64 {
     /// d(u,v) = d'(u,v) - h(u) + h(v), using float arithmetic directly.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn adjust_distance(d_prime: WrappedF64, h_u: WrappedF64, h_v: WrappedF64) -> (adjusted: WrappedF64)
         ensures
@@ -113,6 +115,7 @@ pub mod JohnsonMtEphF64 {
     ///
     /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(mn lg n), Span O(m lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(mn lg n), Span O(m lg n); parallel: BF O(nm) then n x Dijkstra in parallel
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n³ + n² m + n m³), Span O(n³ + n² m + m³) — does not match textbook: sequential Bellman-Ford O(n² m + n³) on the augmented graph dominates the span, and each Dijkstra is O(n m + m³); does not match old analysis: O(mn lg n), O(m lg n) vs new; same causes
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphF64<usize>) -> (apsp: AllPairsResultStEphF64)
         requires
             graph@.V.len() > 0,
@@ -159,6 +162,7 @@ pub mod JohnsonMtEphF64 {
     /// Parallel Dijkstra execution using recursive divide-and-conquer with ParaPair!
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * m log n), Span O(m log n) where k = end - start.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k (n m + m³) + k n lg k), Span O(n m + m³ + (n + m) lg k + k n) — no textbook cost; does not match old analysis: O(k m log n), O(m log n) vs new; each leaf Dijkstra is O(n m + m³), each level clones the graph O(n + m), and append clones every n-length row (O(k n) at the root)
     fn parallel_dijkstra_all(
         graph: &WeightedDirGraphStEphF64<usize>,
         potentials: &ArraySeqStEphS<WrappedF64>,
@@ -276,6 +280,7 @@ pub mod JohnsonMtEphF64 {
     /// Add dummy source vertex s with zero-weight edges to all vertices in G.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — iterates over vertices and edges.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m) expected, Span O(n + m) expected — no textbook cost
     fn add_dummy_source(graph: &WeightedDirGraphStEphF64<usize>, n: usize) -> (augmented_and_idx: (WeightedDirGraphStEphF64<usize>, usize))
         requires
             n > 0,
@@ -368,6 +373,7 @@ pub mod JohnsonMtEphF64 {
     /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(m), Span O(m).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m) expected, Span O(n + m) expected — does not match textbook: also rebuilds the n-vertex set, and the arc loop is sequential; APAS line O(m)
     fn reweight_graph(
         graph: &WeightedDirGraphStEphF64<usize>,
         potentials: &ArraySeqStEphS<WrappedF64>,
@@ -467,6 +473,7 @@ pub mod JohnsonMtEphF64 {
     /// Create result for negative cycle case.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — builds n x n distance and predecessor matrices.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n²), Span O(n²) — no textbook cost
     fn create_negative_cycle_result(n: usize) -> (neg_cycle_apsp: AllPairsResultStEphF64)
         requires
             n < usize::MAX,

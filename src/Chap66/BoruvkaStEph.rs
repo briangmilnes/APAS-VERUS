@@ -97,6 +97,7 @@ pub mod BoruvkaStEph {
 
     /// Deterministic coin flip from seed and vertex iteration index.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single XOR + mask.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn coin_flip(seed: u64, index: usize) -> (flip: bool)
         ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)
@@ -125,6 +126,7 @@ pub mod BoruvkaStEph {
         /// Find vertex bridges for Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m) expected, Span O(m) expected — does not match textbook: sequential loop over the edges; APAS Span O(lg m)
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
         ) -> (bridges: HashMap<V, (V, WrappedF64, usize)>)
@@ -136,6 +138,7 @@ pub mod BoruvkaStEph {
         /// Bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass over vertices with coin flips; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — does not match textbook: three sequential passes over the vertices; APAS Span O(lg n)
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             bridges: &HashMap<V, (V, WrappedF64, usize)>,
@@ -151,6 +154,7 @@ pub mod BoruvkaStEph {
         /// APAS: Work O(m log n), Span O(m log n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — ACCEPTED DIFFERENCE: sequential, span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg n) expected, Span O((n + m) lg n) expected — does not match textbook: sequential rounds of O(n + m) each, APAS Span O(lg³ n); work equals APAS O(m lg n) for connected graphs; the O(lg n) round bound assumes the positional coins (seed ^ index) & 1 act as fair independent coins
         fn boruvka_mst<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -174,6 +178,7 @@ pub mod BoruvkaStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^3 n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — ACCEPTED DIFFERENCE: sequential, span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg n) expected, Span O((n + m) lg n) expected — does not match textbook: sequential rounds of O(n + m) each, APAS Span O(lg² n); work equals APAS O(m lg n) for connected graphs; the O(lg n) round bound assumes the positional coins (seed ^ index) & 1 act as fair independent coins
         fn boruvka_mst_with_seed<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -192,6 +197,7 @@ pub mod BoruvkaStEph {
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m) expected, Span O(m) expected — no textbook cost
         fn mst_weight<V: StT + Hash + Ord + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
@@ -212,6 +218,7 @@ pub mod BoruvkaStEph {
         ///
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m) expected, Span O(m) expected — does not match textbook: sequential loop over the edges; APAS Span O(lg m)
         /// - Sequential: Work O(m), Span O(m) — sequential iteration over edges.
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
@@ -273,6 +280,7 @@ pub mod BoruvkaStEph {
         ///
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — does not match textbook: three sequential passes over the vertices; APAS Span O(lg n)
         /// - Sequential: Work O(n), Span O(n) — sequential iteration over vertices.
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
@@ -345,6 +353,7 @@ pub mod BoruvkaStEph {
         ///
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg n) expected, Span O((n + m) lg n) expected — does not match textbook: sequential rounds of O(n + m) each, APAS Span O(lg² n); work equals APAS O(m lg n) for connected graphs; the O(lg n) round bound assumes the positional coins (seed ^ index) & 1 act as fair independent coins
         /// - Sequential: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each O(m).
         #[verifier::exec_allows_no_decreases_clause]
         fn boruvka_mst<V: HashOrd + Copy>(
@@ -441,6 +450,7 @@ pub mod BoruvkaStEph {
         ///
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n) — ACCEPTED DIFFERENCE: St sequential, APAS parallel
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg n) expected, Span O((n + m) lg n) expected — does not match textbook: delegates to the sequential boruvka_mst, APAS Span O(lg² n); work equals APAS O(m lg n) for connected graphs
         /// - Sequential: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
         fn boruvka_mst_with_seed<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,

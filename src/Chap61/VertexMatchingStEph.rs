@@ -56,12 +56,14 @@ pub mod VertexMatchingStEph {
         /// Greedy vertex matching algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|) expected, Span O(|E|) expected — matches textbook
         fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
             requires Self::spec_vertexmatchingsteph_wf(graph);
 
         /// Sequential version of parallel matching.
         /// APAS: Work O(|E|), Span O(|E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|^2), Span O(|E|^2) — coin flip + per-edge scan of all edges; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|²), Span O(|E|²) — does not match textbook: each heads edge scans all |E| edges for adjacent heads instead of only its incident edges; APAS O(|E|)
         fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>>
             requires Self::spec_vertexmatchingsteph_wf(graph);
     }
@@ -74,6 +76,7 @@ pub mod VertexMatchingStEph {
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(|E|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(|E|) — agrees with APAS
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|) expected, Span O(|E|) expected — matches textbook
     pub fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> (matching: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
@@ -111,6 +114,7 @@ pub mod VertexMatchingStEph {
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|²), Span Θ(|E|²)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|²), Span O(|E|²) — does not match textbook: each heads edge scans all |E| edges for adjacent heads instead of only its incident edges; APAS O(|E|)
     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> (matching: SetStEph<Edge<V>>)
         requires
             valid_key_type_Edge::<V>(),

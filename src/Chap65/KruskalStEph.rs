@@ -297,6 +297,7 @@ pub mod KruskalStEph {
     ///
     /// - Alg Analysis: APAS (Ch65 Alg 65.2): Work O(m lg n), Span O(m lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m² + m lg n), Span O(m² + m lg n) — does not match textbook: sort_edges_by_weight is a selection sort, O(m²), where APAS sorts in O(m lg n); the union-find phase is O(m lg n); does not match old analysis: O(m lg n) vs new; selection sort
     /// - Claude-Opus-4.6: Work O(m lg m), Span O(m lg m) — sorting dominates.
     #[verifier::rlimit(50)]
     pub fn kruskal_mst<V: HashOrd>(
@@ -418,6 +419,7 @@ pub mod KruskalStEph {
     /// Compute total MST weight.
     /// - Alg Analysis: APAS: (no cost stated) — utility function
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|MST|), Span O(|MST|) — no textbook cost
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
@@ -451,6 +453,7 @@ pub mod KruskalStEph {
     /// A valid MST of n vertices should have n-1 edges.
     /// - Alg Analysis: APAS: (no cost stated) — validation utility
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn verify_mst_size<V: HashOrd>(
         n_vertices: usize,

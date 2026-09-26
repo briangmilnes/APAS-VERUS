@@ -80,6 +80,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — initializes distance and predecessor arrays.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; an n-step push loop and an O(n) ArraySeqStPer::new
         fn new(n: usize, source: usize) -> (empty: Self)
             requires source < n,
             ensures
@@ -90,6 +91,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index lookup.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
             requires self.spec_ssspresultstperf64_wf(),
             ensures
@@ -98,6 +100,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index update (persistent: returns new struct).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; consumes self and sets the Vec in place, no copy
         fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self)
             requires self.spec_ssspresultstperf64_wf(),
             ensures
@@ -110,6 +113,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index lookup.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>)
             requires self.spec_ssspresultstperf64_wf(),
             ensures
@@ -119,6 +123,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index update (persistent: returns new struct).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; consumes self and sets the Vec in place, no copy
         fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
             requires self.spec_ssspresultstperf64_wf(),
             ensures
@@ -131,6 +136,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — comparison with sentinel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_reachable(&self, v: usize) -> (reachable: bool)
             requires self.spec_ssspresultstperf64_wf(),
             ensures
@@ -139,6 +145,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — predecessor chain traversal + reversal.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; predecessor walk capped at n steps, then a reversal
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
             requires self.spec_ssspresultstperf64_wf();
     }
@@ -159,6 +166,7 @@ broadcast use {
         open spec fn spec_source(&self) -> usize { self.source }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills distance + predecessor arrays.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; an n-step push loop and an O(n) ArraySeqStPer::new
         fn new(n: usize, source: usize) -> (empty: Self)
         {
             let unreach = unreachable_dist();
@@ -185,6 +193,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn get_distance(&self, v: usize) -> (dist: WrappedF64) {
             if v >= self.distances.length() {
                 return unreachable_dist();
@@ -193,6 +202,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; consumes self and sets the Vec in place, no copy
         fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self)
         {
             if v >= self.distances.seq.len() { return self; }
@@ -206,6 +216,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>) {
             if v >= self.predecessors.length() {
                 return None;
@@ -215,6 +226,7 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; consumes self and sets the Vec in place, no copy
         fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
         {
             if v >= self.predecessors.seq.len() { return self; }
@@ -228,12 +240,14 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — comparison with sentinel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_reachable(&self, v: usize) -> (reachable: bool) {
             let dist = self.get_distance(v);
             dist.is_finite()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — follows predecessor chain then reverses; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — no textbook cost; predecessor walk capped at |V| steps, then a reversal
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) { return None; }
             let n = self.predecessors.length();

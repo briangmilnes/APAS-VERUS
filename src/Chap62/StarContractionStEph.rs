@@ -73,6 +73,7 @@ pub mod StarContractionStEph {
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
         /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — ACCEPTED DIFFERENCE: sequential recursive contraction, span = work
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case, plus the costs of base and expand — does not match textbook: the greedy sequential partition has no constant-fraction guarantee (a star can lose one vertex per round, so up to n rounds), each round costs O(n + c m) because every center scans all edges, and rounds are sequential; APAS O((n + m) lg n), O(lg² n); does not match old analysis: O((n + m) lg n) vs new; same causes
         fn star_contract<V, R, F, G>(
             graph: &UnDirGraphStEph<V>, base: &F, expand: &G,
             Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
@@ -105,6 +106,7 @@ pub mod StarContractionStEph {
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive star contraction halving vertices; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: the greedy sequential partition has no constant-fraction guarantee (up to n rounds), each round costs O(n + c m) because every center scans all edges, and rounds are sequential; APAS O((n + m) lg n), O(lg² n); does not match old analysis: O((n + m) lg n) vs new; the rounds do not halve the vertices
         fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
             requires
                 Self::spec_starcontractionsteph_wf(graph),
@@ -123,6 +125,7 @@ pub mod StarContractionStEph {
     /// (`single_edge_partition`). A graph whose edges are all self-loops is a
     /// base case.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive: O(n + m) per level × O(lg n) levels; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case, plus the costs of base and expand — no textbook cost; does not match old analysis: O((n + m) lg n) vs new; a greedy round costs O(n + c m), not O(n + m), and removes at least one vertex but not a constant fraction, so up to n rounds
     fn star_contract_rec<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
@@ -234,6 +237,7 @@ pub mod StarContractionStEph {
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — ACCEPTED DIFFERENCE: sequential recursive contraction, span = work
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case, plus the costs of base and expand — does not match textbook: the greedy sequential partition has no constant-fraction guarantee (a star can lose one vertex per round, so up to n rounds), each round costs O(n + c m) because every center scans all edges, and rounds are sequential; APAS O((n + m) lg n), O(lg² n); does not match old analysis: O((n + m) lg n) vs new; same causes
     ///
     /// Arguments:
     /// - graph: The undirected graph to contract
@@ -289,6 +293,7 @@ pub mod StarContractionStEph {
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential loop over all edges.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m) expected, Span O(n + m) expected — no textbook cost; does not match old analysis: O(m) vs new; centers.clone() adds O(n)
     fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         centers: &SetStEph<V>,
@@ -393,6 +398,7 @@ pub mod StarContractionStEph {
     /// Find an edge whose endpoints differ, or report that every edge is a self-loop.
     ///
     /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(m), Span O(m) — sequential scan of the edge set.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m), Span O(m) — no textbook cost
     pub(crate) fn find_non_loop_edge<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
     ) -> (found: Option<(V, V)>)
@@ -433,6 +439,7 @@ pub mod StarContractionStEph {
     /// u, and every other vertex is its own center. Removes exactly one vertex.
     ///
     /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — one sequential pass over the vertices.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — no textbook cost
     pub(crate) fn single_edge_partition<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         u: &V,
@@ -515,6 +522,7 @@ pub mod StarContractionStEph {
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O((n + m) lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n); delegates to star_contract
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: delegates to star_contract, whose greedy sequential partition allows up to n rounds of O(n + c m) each; APAS O((n + m) lg n); does not match old analysis: O((n + m) lg n) vs new; same cause
     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (vertices: SetStEph<V>)
         requires
             spec_graphview_wf(graph@),

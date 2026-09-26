@@ -76,10 +76,12 @@ broadcast use {
         spec fn spec_stacksteph_wf(&self) -> bool;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self)
             ensures empty.spec_stacksteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) amortized, Span O(1) amortized — no textbook cost
         fn push(&mut self, item: T)
             requires
                 old(self).spec_stacksteph_wf(),
@@ -87,19 +89,23 @@ broadcast use {
             ensures self.spec_stacksteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn pop(&mut self) -> (popped: Option<T>)
             requires old(self).spec_stacksteph_wf()
             ensures self.spec_stacksteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn peek(&self) -> (top: Option<&T>)
             requires self.spec_stacksteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_stacksteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn size(&self) -> (count: usize)
             requires self.spec_stacksteph_wf();
     }
@@ -113,16 +119,19 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec allocation.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn new() -> (empty: Self)
             ensures empty@ == Seq::<T>::empty(),
         { StackStEph { elements: Vec::new() } }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — Vec push.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1) amortized, Span O(1) amortized — no textbook cost
         fn push(&mut self, item: T)
             ensures self@ == old(self)@.push(item),
         { self.elements.push(item); }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec pop.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn pop(&mut self) -> (popped: Option<T>)
             ensures
                 old(self)@.len() > 0 ==> popped == Some(old(self)@.last()) && self@ == old(self)@.drop_last(),
@@ -131,6 +140,7 @@ broadcast use {
         { self.elements.pop() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec last.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn peek(&self) -> (top: Option<&T>)
             ensures
                 self@.len() > 0 ==> (top matches Option::Some(_)),
@@ -138,11 +148,13 @@ broadcast use {
         { self.elements.last() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec is_empty.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == (self@.len() == 0),
         { self.elements.is_empty() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec len.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn size(&self) -> (count: usize)
             ensures count == self@.len(),
         { self.elements.len() }

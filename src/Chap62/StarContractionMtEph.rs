@@ -93,6 +93,7 @@ pub mod StarContractionMtEph {
         /// Parallel star contraction higher-order function.
         /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — recursive: O(n + m) work per level, O(lg n) span per level × O(lg n) levels; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O(n lg n + m lg² n) expected, plus the costs of base and expand — does not match textbook: per round parallel_star_partition is O(n lg n + m lg m) work, O(n + m) span (sequential merges), and route_edges_parallel recurses sequentially with O(k) set unions, O(m lg m) span; APAS O((n + m) lg n), O(lg² n); does not match old analysis: O((n + m) lg n), O(lg² n) vs new; same causes
         fn star_contract_mt<V, R, F, G>(
             graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G,
             Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
@@ -125,6 +126,7 @@ pub mod StarContractionMtEph {
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: delegates to star_contract_mt, whose rounds have linear span and an extra lg factor of work; APAS O((n + m) lg n), O(lg² n); does not match old analysis: O((n + m) lg n), O(lg² n) vs new; same cause
         fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>
             requires
                 Self::spec_starcontractionmteph_wf(graph),
@@ -144,6 +146,7 @@ pub mod StarContractionMtEph {
     /// no edge to contract and is a base case.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — recursive: O(n + m) work per level, O(lg n) span per level × O(lg n) levels; Mt parallel.
     /// - Alg Analysis: Code review (Claude Opus 5.5): a round whose random partition removes no vertex adds Work O(n + m), Span O(n + m) (sequential edge scan and one-edge partition), the same order of work as the round itself; such a round still removes one vertex, so it can only shorten the round sequence, and the expected bounds above are unchanged.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O(n lg n + m lg² n) expected, plus the costs of base and expand — no textbook cost; does not match old analysis: O((n + m) lg n), O(lg² n) vs new; per round parallel_star_partition is O(n lg n + m lg m) work and O(n + m) span, build_quotient_graph_parallel is O(n + m lg m) work and span, over O(lg n) expected rounds
     fn star_contract_mt_rec<V, R, F, G>(
         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
@@ -255,6 +258,7 @@ pub mod StarContractionMtEph {
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n); parallel star_partition + quotient build
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(n lg n) — star_partition has O(n + lg m) span (loops 2, 3 parallel); quotient build O(lg m) via ParaPair.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O(n lg n + m lg² n) expected, plus the costs of base and expand — does not match textbook: per round parallel_star_partition is O(n lg n + m lg m) work, O(n + m) span (sequential merges), and route_edges_parallel recurses sequentially with O(k) set unions, O(m lg m) span; APAS O((n + m) lg n), O(lg² n); does not match old analysis: O((n + m) lg n), O(n lg n) vs new; the quotient build is sequential, not O(lg m)
     ///
     /// Arguments:
     /// - graph: The undirected graph to contract
@@ -311,6 +315,7 @@ pub mod StarContractionMtEph {
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + m lg m) expected, Span O(n + m lg m) expected — no textbook cost; does not match old analysis: O(m), O(lg m) vs new; route_edges_parallel has no fork and unions its halves, and the partition map and centers are cloned, O(n)
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
@@ -376,6 +381,7 @@ pub mod StarContractionMtEph {
     /// Find an edge whose endpoints differ, or report that every edge is a self-loop.
     ///
     /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(m), Span O(m) — sequential scan of the edge set.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m), Span O(m) — no textbook cost
     pub(crate) fn find_non_loop_edge<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
     ) -> (found: Option<(V, V)>)
@@ -416,6 +422,7 @@ pub mod StarContractionMtEph {
     /// u, and every other vertex is its own center. Removes exactly one vertex.
     ///
     /// - Alg Analysis: Code review (Claude Opus 5.5): Work O(n), Span O(n) — one sequential pass over the vertices.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — no textbook cost
     pub(crate) fn single_edge_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         u: &V,
@@ -498,6 +505,7 @@ pub mod StarContractionMtEph {
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k lg k) expected — no textbook cost; does not match old analysis: O(k), O(lg k) vs new; the two recursive calls run one after the other (no ParaPair) and each level merges them with SetStEph::union, O(k)
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         partition_map: Arc<HashMap<V, V>>,
@@ -618,6 +626,7 @@ pub mod StarContractionMtEph {
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n); delegates to star_contract_mt
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O(n lg n + m lg² n) expected — does not match textbook: delegates to star_contract_mt, whose rounds have linear span and an extra lg factor of work; APAS O((n + m) lg n), O(lg² n); does not match old analysis: O((n + m) lg n), O((n + m) lg n) vs new; extra lg factor from the sequential merges and unions
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

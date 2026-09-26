@@ -61,6 +61,7 @@ pub mod BellmanFordStEphF64 {
         /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) seq-based; n rounds, O(m) per round with array seqs
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) — does not match textbook: in_neighbors_weighed scans all m arcs for each of n vertices, so a round costs O(n m) not O(m); sequential loops, APAS span O(n lg n); does not match old analysis: O(nm), O(nm) vs new; per-vertex arc scan
         fn bellman_ford(graph: &WeightedDirGraphStEphF64<usize>, source: usize)
             -> (sssp: Result<SSSPResultStEphF64, BellmanFordError>)
             requires
@@ -77,6 +78,7 @@ pub mod BellmanFordStEphF64 {
 
     /// Reconstruct predecessor array from converged distances.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — no textbook cost
     fn reconstruct_predecessors(
         graph: &WeightedDirGraphStEphF64<usize>,
         distances: &Vec<WrappedF64>,
@@ -165,6 +167,7 @@ pub mod BellmanFordStEphF64 {
     /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
     /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) seq-based; n rounds, O(m) per round with array seqs
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) — does not match textbook: in_neighbors_weighed scans all m arcs for each of n vertices, so a round costs O(n m) not O(m); sequential loops, APAS span O(n lg n); does not match old analysis: O(nm), O(nm) vs new; per-vertex arc scan
     pub fn bellman_ford(graph: &WeightedDirGraphStEphF64<usize>, source: usize)
         -> (sssp: Result<SSSPResultStEphF64, BellmanFordError>)
         requires

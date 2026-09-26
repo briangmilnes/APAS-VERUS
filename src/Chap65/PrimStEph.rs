@@ -90,6 +90,7 @@ pub mod PrimStEph {
         /// Prim's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n), Span O(m log n) — priority queue with n extract-min + m decrease-key; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m + m³), Span O(n m + m³) — does not match textbook: BinaryHeapPQ delete_min is O(q²) and insert O(q) on a queue of up to 2m + 1 entries (no decrease-key), and ng and get_edge_label scan all edges, O(m) per call; APAS O(m lg n); does not match old analysis: O(m log n) vs new; same causes
         fn prim_mst<V: HashOrd + TotalOrder>(
             graph: &LabUnDirGraphStEph<V, u64>,
             start: V,
@@ -100,6 +101,7 @@ pub mod PrimStEph {
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over all MST edges; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|MST|), Span O(|MST|) — no textbook cost
         fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
             requires mst.spec_setsteph_wf(),
             ensures mst@.len() == 0 ==> total == 0;
@@ -248,6 +250,7 @@ pub mod PrimStEph {
 
     /// Module-level function to create a new PQEntry.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn pq_entry_new<V: HashOrd>(priority: u64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)
         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
@@ -273,6 +276,7 @@ pub mod PrimStEph {
     ///   set, so ng() and get_edge_label() each cost O(m) per call. Total neighbor/weight
     ///   work across all vertices is O(nm) = O(m^2) in a dense graph. With an adjacency-list
     ///   graph representation this would be O(m lg n) as textbook states.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m + m³), Span O(n m + m³) — does not match textbook: BinaryHeapPQ delete_min is O(q²) and insert O(q) on a queue of up to 2m + 1 entries (no decrease-key), and ng and get_edge_label scan all edges, O(m) per call; APAS O(m lg n); does not match old analysis: O(m² lg n) vs new; the persistent BinaryHeapPQ makes the heap work O(m³), not O(m lg n)
     #[verifier::exec_allows_no_decreases_clause]
     pub fn prim_mst<V: HashOrd + Display + TotalOrder>(
         graph: &LabUnDirGraphStEph<V, u64>,
@@ -461,6 +465,7 @@ pub mod PrimStEph {
     /// Compute total MST weight.
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|MST|), Span O(|MST|) — no textbook cost
     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
         requires mst_edges.spec_setsteph_wf(),
@@ -511,6 +516,7 @@ pub mod PrimStEph {
 
     impl<V: HashOrd> Ord for PQEntry<V> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn cmp(&self, other: &Self) -> Ordering {
             std::cmp::Ord::cmp(&self.priority, &other.priority)
                 .then_with(|| std::cmp::Ord::cmp(&self.vertex, &other.vertex))
@@ -520,6 +526,7 @@ pub mod PrimStEph {
 
     impl<V: HashOrd> PartialOrd for PQEntry<V> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(Ord::cmp(self, other)) }
     }
 

@@ -90,6 +90,7 @@ pub mod DijkstraStEphF64 {
         /// Dijkstra's single source shortest path algorithm for float weights.
         /// - Alg Analysis: APAS (Ch57 Alg 57.2): Work O(m lg n), Span O(m lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n); PQ insert/deleteMin O(lg n) per edge
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m + m³), Span O(n m + m³) — does not match textbook: BinaryHeapPQ delete_min O(q²) and insert O(q) on a queue of up to m+1 entries, out_neighbors_weighed scans all m arcs per visited vertex; does not match old analysis: O(m lg n) vs new; same causes
         fn dijkstra(graph: &WeightedDirGraphStEphF64<usize>, source: usize)
             -> (sssp: SSSPResultStEphF64)
             requires
@@ -106,6 +107,7 @@ pub mod DijkstraStEphF64 {
 
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     // veracity: no_requires
     fn pq_entry_new(dist: WrappedF64, vertex: usize) -> (entry: PQEntry)
         ensures entry.dist == dist, entry.vertex == vertex,
@@ -181,6 +183,7 @@ pub mod DijkstraStEphF64 {
     ///
     /// - Alg Analysis: APAS (Ch57 Alg 57.2): Work O(m lg n), Span O(m lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n); sequential PQ-based Dijkstra
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m + m³), Span O(n m + m³) — does not match textbook: BinaryHeapPQ delete_min O(q²) and insert O(q) on a queue of up to m+1 entries, out_neighbors_weighed scans all m arcs per visited vertex; does not match old analysis: O(m lg n) vs new; same causes
     #[verifier::exec_allows_no_decreases_clause]
     pub fn dijkstra(graph: &WeightedDirGraphStEphF64<usize>, source: usize) -> (sssp: SSSPResultStEphF64)
         requires

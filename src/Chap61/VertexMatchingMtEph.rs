@@ -58,6 +58,7 @@ pub mod VertexMatchingMtEph {
         /// Parallel vertex matching using randomized symmetry breaking.
         /// APAS: Work O(|E|), Span O(lg |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|) — parallel coin flip + parallel edge selection.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|²), Span O(|V| + |E|) — does not match textbook: sequential coin flips, each heads edge scans all |E| edges, and the graph clone and result merges are linear; APAS O(|E|), O(lg |V|); does not match old analysis: O(|E|), O(lg |V|) vs new; same causes
         fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<Edge<V>>
             requires Self::spec_vertexmatchingmteph_wf(graph);
     }
@@ -76,6 +77,7 @@ pub mod VertexMatchingMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|^2), Span Θ(|E|) — coin flip phase is sequential (RNG),
     ///   edge selection scans all edges per candidate via should_select_edge
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|²), Span O(|V| + |E|) — does not match textbook: sequential coin flips, each heads edge scans all |E| edges, and the graph clone and result merges are linear; APAS O(|E|), O(lg |V|); does not match old analysis: Θ(|E|²), Θ(|E|) vs new; select_edges_parallel clones the graph, O(|V| + |E|)
     ///
     /// Phase 1: Flip coins for all edges — sequential (RNG is inherently sequential)
     /// Phase 2: Select edges based on local maxima — parallel divide-and-conquer
@@ -113,6 +115,7 @@ pub mod VertexMatchingMtEph {
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(1) — each coin is independent
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(|E|) — RNG is sequential, no actual parallelism
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — does not match textbook: one seeded RNG drawn in a sequential loop; APAS Span O(1)
     fn flip_coins_parallel<V: StT + MtT + Hash + 'static>(
         edges: &ArraySeqStEphS<Edge<V>>,
         seed: u64,
@@ -146,6 +149,7 @@ pub mod VertexMatchingMtEph {
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(lg |V|) — each edge checks only incident edges
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|^2), Span Θ(lg |E| + |E|) — should_select_edge scans all |E| edges
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|²), Span O(|V| + |E|) — does not match textbook: each heads edge scans all |E| edges; APAS O(|E|), O(lg |V|); does not match old analysis: Θ(|E|²), Θ(lg |E| + |E|) vs new; the graph clone costs O(|V| + |E|) and the coin map and result set are built sequentially
     #[verifier::external_body]
     fn select_edges_parallel<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -179,6 +183,7 @@ pub mod VertexMatchingMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(k * |E|), Span Θ(lg k + |E|) — each base case calls should_select_edge which is Θ(|E|)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k |E| + k lg k), Span O(|E| + k) — no textbook cost
     #[verifier::external_body]
     fn select_edges_recursive<V: StT + MtT + Hash + 'static>(
         graph: Arc<UnDirGraphMtEph<V>>,
@@ -229,6 +234,7 @@ pub mod VertexMatchingMtEph {
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — checks only incident edges
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(|E|) — iterates all edges, not just incident ones
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|E|), Span O(|E|) — does not match textbook: iterates all edges of the graph, not only those incident on u and v; APAS O(deg(u) + deg(v))
     fn should_select_edge<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,
         edge: &Edge<V>,

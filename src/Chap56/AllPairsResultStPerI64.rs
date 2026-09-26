@@ -62,6 +62,7 @@ pub mod AllPairsResultStPerI64 {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — initializes n x n distance and predecessor matrices.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — no textbook cost; nested sequential push loops for two n × n matrices
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_n() == n,
@@ -80,6 +81,7 @@ pub mod AllPairsResultStPerI64 {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two array index lookups.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
             ensures
                 (u as int) >= self.spec_distances_len() ==> dist == UNREACHABLE,
@@ -88,6 +90,7 @@ pub mod AllPairsResultStPerI64 {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones row, updates cell, replaces row (persistent: returns new struct).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; clones row u (n entries), sets one cell, moves the outer Vec and stores the row back
         fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self)
             ensures
                 updated.spec_n() == self.spec_n(),
@@ -114,6 +117,7 @@ pub mod AllPairsResultStPerI64 {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two array index lookups.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
             ensures
                 (u as int) >= self.spec_predecessors_len() ==> pred is None,
@@ -123,6 +127,7 @@ pub mod AllPairsResultStPerI64 {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones row, updates cell, replaces row (persistent: returns new struct).
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; clones row u (n entries), sets one cell, moves the outer Vec and stores the row back
         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
             ensures
                 updated.spec_n() == self.spec_n(),
@@ -149,6 +154,7 @@ pub mod AllPairsResultStPerI64 {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — comparison with sentinel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool)
             ensures
                 (u as int) >= self.spec_distances_len() ==> !b,
@@ -158,6 +164,7 @@ pub mod AllPairsResultStPerI64 {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — predecessor chain traversal + reversal.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; walk of row u's predecessors capped at n steps, then a reversal
         fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
             ensures
                 (u as int) >= self.spec_predecessors_len() ==> path is None,
@@ -203,6 +210,7 @@ pub mod AllPairsResultStPerI64 {
         open spec fn spec_predecessor_at(&self, u: int, v: int) -> usize { self.predecessors.spec_index(u).spec_index(v) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — allocates n×n distance + predecessor matrices.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n^2), Span O(n^2) — no textbook cost; nested sequential push loops for two n × n matrices
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.distances.spec_len() == n as nat,
@@ -285,6 +293,7 @@ pub mod AllPairsResultStPerI64 {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
         {
             if u >= self.distances.length() {
@@ -298,6 +307,7 @@ pub mod AllPairsResultStPerI64 {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones row Vec, updates cell, constructs new struct.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; clones row u (n entries), sets one cell, moves the outer Vec and stores the row back
         fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self)
         {
             if u >= self.distances.seq.len() { return self; }
@@ -316,6 +326,7 @@ pub mod AllPairsResultStPerI64 {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
         {
             if u >= self.predecessors.length() {
@@ -330,6 +341,7 @@ pub mod AllPairsResultStPerI64 {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones row Vec, updates cell, constructs new struct.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; clones row u (n entries), sets one cell, moves the outer Vec and stores the row back
         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
         {
             if u >= self.predecessors.seq.len() { return self; }
@@ -348,12 +360,14 @@ pub mod AllPairsResultStPerI64 {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — comparison with sentinel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool)
         {
             self.get_distance(u, v) != UNREACHABLE
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — follows predecessor chain then reverses; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — no textbook cost; walk of row u's predecessors capped at |V| steps, then a reversal
         fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
         {
             if u >= self.predecessors.length() || v >= self.predecessors.length() {

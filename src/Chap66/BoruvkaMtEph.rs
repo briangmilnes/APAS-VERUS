@@ -79,6 +79,7 @@ pub mod BoruvkaMtEph {
         /// Find vertex bridges for parallel Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(lg |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |E|) — D&C fork-join over edges; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m lg m) expected, Span O(m) expected — does not match textbook: each level merges the right half's bridge map into the left one sequentially, O(k) per level; APAS O(m), O(lg m); does not match old analysis: O(|E|), O(lg |E|) vs new; sequential merges
         fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             edges: Arc<Vec<LabeledEdge<V>>>,
             start: usize,
@@ -94,6 +95,7 @@ pub mod BoruvkaMtEph {
         /// Parallel bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(lg |V|) — parallel coin flips + partition map; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n) expected — does not match textbook: the coin, filter, and remaining helpers merge their halves sequentially (O(k) per level), and the remaining set and partition copy are sequential loops; APAS O(n), O(lg n); does not match old analysis: O(|V|), O(lg |V|) vs new; same causes
         fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
             bridges: HashMap<V, (V, WrappedF64, usize)>,
@@ -109,6 +111,7 @@ pub mod BoruvkaMtEph {
         /// APAS: Work O(m log n), Span O(log² n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O((n + m) lg n) expected — does not match textbook: each round's helpers merge sequentially (O(n lg n + m lg m) work, O(n + m) span per round) over O(lg n) expected rounds; APAS O(m lg n), O(lg² n); does not match old analysis: O(m lg n), O(lg² n) vs new; same cause
         fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
             edges_vec: Vec<LabeledEdge<V>>,
@@ -127,6 +130,7 @@ pub mod BoruvkaMtEph {
         /// APAS: Work O(m log n), Span O(log² n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O((n + m) lg n) expected — does not match textbook: delegates to boruvka_mst_mt, whose rounds merge sequentially; APAS O(m lg n), O(lg² n); does not match old analysis: O(m lg n), O(lg² n) vs new; same cause
         fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -144,6 +148,7 @@ pub mod BoruvkaMtEph {
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; sequential despite Mt module.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m) expected, Span O(m) expected — no textbook cost
         fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
@@ -189,6 +194,7 @@ pub mod BoruvkaMtEph {
     // Hash-based coin flip: deterministic from (seed, round, vertex index).
     // Replaces sequential StdRng coin flips with a parallelizable hash function.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash computation.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
     #[verifier::external_body]
     fn hash_coin(seed: u64, round: usize, index: usize) -> bool {
         use std::hash::{Hash, Hasher};
@@ -204,6 +210,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(n), O(lg n) vs new; each level inserts the right half's map into the left one sequentially, O(k)
     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         seed: u64,
@@ -266,6 +273,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join filtering vertices; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(n), O(lg n) vs new; each level pushes the right half's Vec onto the left one sequentially, O(k)
     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
@@ -334,6 +342,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join extracting labels; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(n), O(lg n) vs new; each level pushes the right half's Vec onto the left one sequentially, O(k)
     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         keys: Arc<Vec<V>>,
         partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
@@ -402,6 +411,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join building partition map; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(n), O(lg n) vs new; each level inserts the right half's map into the left one sequentially, O(k)
     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         partition: Arc<HashMap<V, (V, WrappedF64, usize)>>,
@@ -474,6 +484,7 @@ pub mod BoruvkaMtEph {
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m lg m) expected, Span O(m) expected — does not match textbook: each level merges the right half's bridge map into the left one sequentially, O(k) per level; APAS O(m), O(lg m); does not match old analysis: O(m), O(log m) vs new; sequential merges
     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
@@ -581,6 +592,7 @@ pub mod BoruvkaMtEph {
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n lg n) expected, Span O(n) expected — does not match textbook: the coin, filter, and remaining helpers merge their halves sequentially (O(k) per level), and the remaining set and partition copy are sequential loops; APAS O(n), O(lg n); does not match old analysis: O(n), O(log n) vs new; same causes
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
         bridges: HashMap<V, (V, WrappedF64, usize)>,
@@ -639,6 +651,7 @@ pub mod BoruvkaMtEph {
     /// Parallel filter: find edges from Tail->Head.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: O(n), O(log n) vs new; each level inserts the right half's map into the left one sequentially, O(k)
     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         bridges: Arc<HashMap<V, (V, WrappedF64, usize)>>,
@@ -726,6 +739,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O((n + m) lg n) expected — does not match textbook: each round's helpers merge sequentially (O(n lg n + m lg m) work, O(n + m) span per round) over O(lg n) expected rounds; APAS O(m lg n), O(lg² n); does not match old analysis: O(m lg n), O(lg² n) vs new; same cause
     #[verifier::exec_allows_no_decreases_clause]
     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
@@ -833,6 +847,7 @@ pub mod BoruvkaMtEph {
     /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k), Span O(k), k = end - start — no textbook cost; does not match old analysis: O(m), O(log m) vs new; each level pushes the right half's Vec onto the left one sequentially, O(k)
     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         partition: Arc<HashMap<V, V>>,
@@ -923,6 +938,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n): O(lg n) rounds via bridge star partition, each round O(lg m) span via ParaPair! helpers
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O((n + m) lg² n) expected, Span O((n + m) lg n) expected — does not match textbook: copies the sets into Vecs sequentially, O(n + m), then delegates to boruvka_mst_mt, whose rounds merge sequentially; APAS O(m lg n), O(lg² n); does not match old analysis: O(m lg n), O(lg² n) vs new; same cause
     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,
@@ -969,6 +985,7 @@ pub mod BoruvkaMtEph {
     /// Compute MST weight from edge labels.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential scan of edges.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m) expected, Span O(m) expected — no textbook cost
     pub fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,

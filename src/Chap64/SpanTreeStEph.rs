@@ -68,6 +68,7 @@ pub mod SpanTreeStEph {
         /// Sequential spanning tree via star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m), and each expand scans all edges once per quotient-tree edge, O(n m) per round; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same causes
         fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (tree_edges: SetStEph<Edge<V>>)
             requires Self::spec_spantreesteph_wf(graph)
             ensures
@@ -78,6 +79,7 @@ pub mod SpanTreeStEph {
         /// Verify spanning tree properties.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — connectivity check + edge count; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|) expected, Span O(|V|) expected — no textbook cost; does not match old analysis: O(|V| + |E|) vs new; there is no connectivity check, only a size test and one membership test per tree edge (at most |V| - 1)
         fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> bool
             requires Self::spec_spantreesteph_wf(graph);
     }
@@ -90,6 +92,7 @@ pub mod SpanTreeStEph {
     /// - Alg Analysis: APAS (Ch64 Ex 64.2): Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m), and each expand scans all edges once per quotient-tree edge, O(n m) per round; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same causes
     pub fn spanning_tree_star_contraction<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (tree_edges: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
@@ -231,6 +234,7 @@ pub mod SpanTreeStEph {
     /// Verify that result is a valid spanning tree.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E_tree|), Span O(|V| + |E_tree|) — N/A, Verus-specific scaffolding
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|) expected, Span O(|V|) expected — no textbook cost
     pub fn verify_spanning_tree<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         tree_edges: &SetStEph<Edge<V>>,

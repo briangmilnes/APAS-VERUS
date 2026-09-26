@@ -209,6 +209,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((m+n) lg n), Span O((m+n) lg n) tree-based cost
         /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O(m + n), Span O(m + n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((m+n) lg n), Span O((m+n) lg n) tree-based; uses AVL set for visited, adj seq for graph
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E| + |V|^2 h), Span O(|V| + |E| + |V|^2 h) — does not match textbook: visited is an O(1) bool array, but each reached vertex is inserted into the AVLTreeSetStEph result, O(n h) per insert on the ParamBST (deep-copy expose, no rebalancing), h = its height ≤ |V|; CS 55.8 Work O(m + n) (arrays) or O((m + n) lg n) (trees); does not match old analysis: O((m+n) lg n) vs new
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)
             requires
                 source < graph@.len(),
@@ -230,6 +231,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// fully processed). Neighbor-closure and visited-reachable are guaranteed for all
     /// visited vertices NOT in gray.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — visits each vertex and edge once; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E| + |V|^2 h), Span O(|V| + |E| + |V|^2 h) — does not match textbook: O(1) visited checks per edge, but one AVLTreeSetStEph insert per reached vertex, O(n h) each on the ParamBST, h = its height ≤ |V|; Alg 55.7 / CS 55.8 Work O(m + n); does not match old analysis: O(|V|+|E|) vs new
     fn dfs_recursive(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -505,6 +507,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// Returns the set of all vertices reachable from s.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — initializes visited + delegates to dfs_recursive; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E| + |V|^2 h), Span O(|V| + |E| + |V|^2 h) — does not match textbook: O(|V|) tabulate then dfs_recursive, whose AVLTreeSetStEph inserts cost O(n h) each, h ≤ |V|; CS 55.8 Work O(m + n); does not match old analysis: O(|V|+|E|) vs new
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)
         {
             let n = graph.length();

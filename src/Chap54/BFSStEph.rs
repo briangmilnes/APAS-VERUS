@@ -60,6 +60,7 @@ pub mod BFSStEph {
         spec fn spec_order(&self) -> ArraySeqStEphS<usize>;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn top_down_order(&self) -> (order: &ArraySeqStEphS<usize>)
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
@@ -67,6 +68,7 @@ pub mod BFSStEph {
                     #[trigger] order.spec_index(i) == self.spec_order().spec_index(i);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; n = |order|, sequential tabulate
         fn bottom_up_order(&self) -> (order: ArraySeqStEphS<usize>)
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
@@ -85,12 +87,14 @@ pub mod BFSStEph {
 
         /// Vertices in BFS order (root first, then distance 1, 2, ...).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn top_down_order(&self) -> (order: &ArraySeqStEphS<usize>) {
             &self.order
         }
 
         /// Vertices in reverse BFS order (furthest from root first).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; n = |order|, sequential tabulate
         fn bottom_up_order(&self) -> (order: ArraySeqStEphS<usize>) {
             let n = self.order.length();
             ArraySeqStEphS::tabulate(
@@ -219,6 +223,7 @@ pub mod BFSStEph {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - Alg Analysis: APAS (Ch54 Alg 54.4): Work O(m lg n), Span O(d lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — ACCEPTED DIFFERENCE: impl uses sequential queue-based BFS (Alg 54.3), not parallel set-based (Alg 54.4)
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: sequential VecDeque BFS with an O(1)-set distance array (the §2.1 Alg 54.3 cost); Alg 54.4 Work O(|E| lg |V|), Span O(d lg^2 |V|)
         fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: ArraySeqStEphS<usize>)
             requires
                 source < graph.spec_len(),
@@ -237,6 +242,7 @@ pub mod BFSStEph {
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
         /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(n + m), Span O(d lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) work; sequential BFS tree with array seqs
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: sequential VecDeque BFS with O(1) parent set; Alg 54.6 Span O(d lg |V|)
         fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),
@@ -265,6 +271,7 @@ pub mod BFSStEph {
 
     /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(|V| + |E|), Span O(|V| + |E|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: sequential VecDeque BFS (the §2.1 Alg 54.3 cost) computing Alg 54.5 distances; the APAS line above cites Alg 54.6 with Span O(|V| + |E|), but Alg 54.6 is Span O(d lg |V|) and Alg 54.4/54.5 Span O(d lg^2 |V|)
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: ArraySeqStEphS<usize>)
     {
@@ -394,6 +401,7 @@ pub mod BFSStEph {
 
     /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — standard BFS with VecDeque frontier; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — does not match textbook: sequential VecDeque BFS with O(1) parent set; Alg 54.6 Span O(d lg |V|)
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
     {

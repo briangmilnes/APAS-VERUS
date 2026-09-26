@@ -61,11 +61,13 @@ pub mod BFSMtPer {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn top_down_order(&self) -> (order: &ArraySeqMtPerS<usize>) {
             &self.order
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; n = |order|, Chap18 ArraySeqMtPer tabulate is a sequential loop
         fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<usize>) {
             let n = self.order.length();
             ArraySeqMtPerS::tabulate(
@@ -269,6 +271,7 @@ pub mod BFSMtPer {
 
         /// Vertices in BFS order (root first, then distance 1, 2, ...).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost
         fn top_down_order(&self) -> (order: &ArraySeqMtPerS<usize>)
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
@@ -278,6 +281,7 @@ pub mod BFSMtPer {
 
         /// Vertices in reverse BFS order (furthest from root first).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n), Span O(n) — no textbook cost; n = |order|, Chap18 ArraySeqMtPer tabulate is a sequential loop
         fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<usize>)
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
@@ -291,6 +295,7 @@ pub mod BFSMtPer {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - Alg Analysis: APAS (Ch54 Alg 54.4): Work O(m lg n), Span O(d lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(d lg^2 n); parallel BFS with set union per round
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(σ (|V| + |E| + lg σ)), Span O(σ |V| + d (|V| + |E|) lg σ) — does not match textbook: σ = Σ over reachable v of the number of shortest s–v paths (up to 2^Θ(|V|)); the next frontier is not deduplicated, every D&C split copies the whole graph and distances with sequential tabulates, and each of the σ distance writes is a persistent O(|V|) ArraySeqMtPer update in a sequential loop; Alg 54.4 Work O(|E| lg |V|), Span O(d lg^2 |V|); does not match old analysis: O(m lg n), O(d lg^2 n) vs new
         fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: ArraySeqMtPerS<usize>)
             requires
                 source < graph.spec_len(),
@@ -309,6 +314,7 @@ pub mod BFSMtPer {
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
         /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(n + m), Span O(d lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(d lg n); parallel BFS tree with inject per round
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|)), Span O(|V|^2 + d (|V| + |E|) lg |V|) — does not match textbook: every D&C split copies the whole graph and parents with sequential tabulates, and each of the ≤ |V| parent writes is a persistent O(|V|) ArraySeqMtPer update in a sequential loop; Alg 54.6 Work O(|V| + |E|), Span O(d lg |V|); does not match old analysis: O(n+m), O(d lg n) vs new
         fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),
@@ -335,6 +341,7 @@ pub mod BFSMtPer {
 
     // Builds an owned copy of the distances array with proven spec equality.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — tabulate copies all elements.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V|), Span O(|V|) — no textbook cost; sequential Chap18 ArraySeqMtPer tabulate
     fn copy_distances(distances: &ArraySeqMtPerS<usize>) -> (copied: ArraySeqMtPerS<usize>)
         requires distances.spec_len() <= usize::MAX,
         ensures
@@ -354,6 +361,7 @@ pub mod BFSMtPer {
 
     // Builds an owned copy of the graph with proven spec equality.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — deep copies all adjacency lists.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — no textbook cost; nested sequential Chap18 ArraySeqMtPer tabulates
     fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> (copied: ArraySeqMtPerS<ArraySeqMtPerS<usize>>)
         requires graph.spec_len() <= usize::MAX,
         ensures
@@ -391,6 +399,7 @@ pub mod BFSMtPer {
     // Parallel frontier processing via fork-join divide-and-conquer.
     // Splits the frontier in half, processes each half in parallel via join().
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(frontier_edges), Span O(max_deg * lg |frontier|) — D&C fork-join over frontier; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|F| (|V| + |E|) + r lg |F|), Span O((|V| + |E|) lg |F| + r) — no textbook cost; does not match old analysis: O(frontier_edges), O(max_deg lg |F|) vs new; r = output length; each of the |F| − 1 internal D&C nodes calls copy_graph and copy_distances (O(|V| + |E|), sequential) before the join, and merges the halves with sequential push loops; |F| and r count duplicates
     fn process_frontier_parallel(
         graph: ArraySeqMtPerS<ArraySeqMtPerS<usize>>,
         distances: ArraySeqMtPerS<usize>,
@@ -564,6 +573,7 @@ pub mod BFSMtPer {
 
     // Parallel frontier processing for BFS tree: collects (neighbor, parent) pairs.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(frontier_edges), Span O(max_deg * lg |frontier|) — D&C fork-join over frontier; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|F| (|V| + |E|) + r lg |F|), Span O((|V| + |E|) lg |F| + r) — no textbook cost; does not match old analysis: O(frontier_edges), O(max_deg lg |F|) vs new; r = output length ≤ |E|; each of the |F| − 1 internal D&C nodes calls copy_graph and copy_distances (O(|V| + |E|), sequential) before the join, and merges the halves with a sequential push loop
     fn process_frontier_tree_parallel(
         graph: ArraySeqMtPerS<ArraySeqMtPerS<usize>>,
         parents: ArraySeqMtPerS<usize>,
@@ -702,6 +712,7 @@ pub mod BFSMtPer {
     impl BFSMtPerTrait for BFSMtPer {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(diam * lg |V|) — parallel BFS with D&C frontier processing; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(σ (|V| + |E| + lg σ)), Span O(σ |V| + d (|V| + |E|) lg σ) — does not match textbook: σ = Σ over reachable v of the number of shortest s–v paths (up to 2^Θ(|V|)); next_vertices is not deduplicated, so a vertex enters the next frontier once per shortest path; each round copies the graph and distances and runs process_frontier_parallel, and each of the σ distance writes is a persistent O(|V|) ArraySeqMtPer update; Alg 54.4 Work O(|E| lg |V|), Span O(d lg^2 |V|); does not match old analysis: O(|V|+|E|), O(diam lg |V|) vs new
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: ArraySeqMtPerS<usize>)
     {
@@ -851,6 +862,7 @@ pub mod BFSMtPer {
     // Veracity: NEEDED proof block (speed hint)
     /// Algorithm 54.6: BFS Tree with parallel frontier processing.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(diam * lg |V|) — parallel BFS tree with D&C frontier; Mt parallel.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| (|V| + |E|)), Span O(|V|^2 + d (|V| + |E|) lg |V|) — does not match textbook: next_layer is deduplicated (Σ |F| ≤ |V|), but each round copies the graph and parents, process_frontier_tree_parallel copies them again at each internal node, and each of the ≤ |V| parent writes is a persistent O(|V|) ArraySeqMtPer update in a sequential loop; Alg 54.6 Work O(|V| + |E|), Span O(d lg |V|); does not match old analysis: O(|V|+|E|), O(diam lg |V|) vs new
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: BFSTreeS)
     // Veracity: NEEDED proof block

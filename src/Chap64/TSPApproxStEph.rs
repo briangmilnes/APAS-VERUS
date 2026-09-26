@@ -63,6 +63,7 @@ pub mod TSPApproxStEph {
         /// Compute Euler tour of a tree.
         /// APAS: Work O(|V|), Span O(|V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — DFS traversal of tree; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — does not match textbook: each tree vertex calls ng (an O(m) scan of the graph's edges) and, per graph neighbor, scans the visited-edge Vec and the tree edges, O(n) each; APAS O(n); does not match old analysis: O(|V|) vs new; same cause
         fn euler_tour<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             start: &V,
@@ -76,11 +77,13 @@ pub mod TSPApproxStEph {
         /// Shortcut Euler tour to avoid revisiting vertices.
         /// APAS: Work O(|V|), Span O(|V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass removing duplicates; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — matches textbook
         fn shortcut_tour<V: HashOrd>(euler_tour: &[V]) -> Vec<V>;
 
         /// Compute total weight of a tour.
         /// APAS: Work O(|V|), Span O(|V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass summing edge weights; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — does not match textbook: each of the n tour steps calls get_edge_label, an O(m) scan of the labeled edges; APAS O(n); does not match old analysis: O(|V|) vs new; same cause
         fn tour_weight<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             tour: &[V],
@@ -92,6 +95,7 @@ pub mod TSPApproxStEph {
         /// 2-approximation algorithm for metric TSP.
         /// APAS: Work O(|V|² log |V|), Span O(|V|² log |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — euler tour + shortcut + weight; St sequential. MST cost dominates overall.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — does not match textbook: euler_tour and tour_weight each cost O(n m) because the graph's neighbor and edge-weight lookups scan all edges; APAS O(n + m); does not match old analysis: O(|V|) vs new; same cause
         fn approx_metric_tsp<V: HashOrd>(
             graph: &LabUnDirGraphStEph<V, WrappedF64>,
             spanning_tree: &SetStEph<LabEdge<V, WrappedF64>>,
@@ -109,6 +113,7 @@ pub mod TSPApproxStEph {
 
     /// Linear scan for edge pair in visited-edges vector.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan over vec; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|v|), Span O(|v|) — no textbook cost
     // veracity: no_requires
     fn vec_contains_pair<V: HashOrd>(v: &Vec<(V, V)>, key: &(V, V)) -> (found: bool)
         ensures true,
@@ -134,6 +139,7 @@ pub mod TSPApproxStEph {
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DFS is inherently sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — does not match textbook: each tree vertex calls ng (an O(m) scan of the graph's edges) and, per graph neighbor, scans the visited-edge Vec and the tree edges, O(n) each; APAS O(n); does not match old analysis: O(n) vs new; same cause
     ///
     /// Arguments:
     /// - graph: Undirected graph (should be a tree)
@@ -165,6 +171,7 @@ pub mod TSPApproxStEph {
     /// DFS helper for Euler tour with fuel-based termination.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — no textbook cost; does not match old analysis: O(n m_tree) vs new; each of the n calls also pays ng, an O(m) edge scan, and per graph neighbor a visited-edge Vec scan, O(n); summed over neighbors that is O(n m)
     fn euler_tour_dfs<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         current: &V,
@@ -257,6 +264,7 @@ pub mod TSPApproxStEph {
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n) expected, Span O(n) expected — matches textbook
     ///
     /// Arguments:
     /// - euler_tour: Euler tour with possible duplicate visits
@@ -306,6 +314,7 @@ pub mod TSPApproxStEph {
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — does not match textbook: each of the n tour steps calls get_edge_label, an O(m) scan of the labeled edges; APAS O(n); does not match old analysis: O(n) vs new; same cause
     pub fn tour_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         tour: &[V],
@@ -346,6 +355,7 @@ pub mod TSPApproxStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — delegates to ng().
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m), Span O(m) — no textbook cost
     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
         requires
             spec_labgraphview_wf(graph@),
@@ -356,6 +366,7 @@ pub mod TSPApproxStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — delegates to get_edge_label().
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m), Span O(m) — no textbook cost
     fn get_edge_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         u: &V,
@@ -387,6 +398,7 @@ pub mod TSPApproxStEph {
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n+m), Span O(n+m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n m), Span O(n m) — does not match textbook: euler_tour and tour_weight each cost O(n m) because the graph's neighbor and edge-weight lookups scan all edges; APAS O(n + m); does not match old analysis: O(n+m) vs new; same cause
     ///
     /// Arguments:
     /// - graph: Complete weighted undirected graph (metric: satisfies triangle inequality)

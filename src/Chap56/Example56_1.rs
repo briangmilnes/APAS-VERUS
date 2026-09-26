@@ -44,6 +44,7 @@ pub mod Example56_1 {
     impl Example56_1Trait for Example56_1S {
     /// Example demonstrating path weight computation with integer weights.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) — constant-sized example graph.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; fixed 4-vertex graph and one path_weight_int call on a 4-vertex path
     fn example_path_weight_int() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 5, 10, i64::MAX]),
@@ -61,6 +62,7 @@ pub mod Example56_1 {
 
     /// Example demonstrating path weight computation with different integer weights.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) — constant-sized example graph.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; fixed 4-vertex graph and one path_weight_int call on a 4-vertex path
     fn example_path_weight_i64() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 3, 5, i64::MAX]),
@@ -78,6 +80,7 @@ pub mod Example56_1 {
 
     /// Example with negative edge weights.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) — constant-sized example graph.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(1), Span O(1) — no textbook cost; fixed 3-vertex graph and one path_weight_int call on a 3-vertex path
     fn example_negative_weights() {
         let weights = ArraySeqStEphS::from_vec(vec![
             ArraySeqStEphS::from_vec(vec![0, 10, i64::MAX]),

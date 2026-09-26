@@ -71,24 +71,28 @@ pub mod ConnectivityStEph {
         /// Count connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m) each; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same cause
         fn count_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> usize
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find connected components using star contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star contraction; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m) each; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same cause
         fn connected_components<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m) each; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same cause
         fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> usize
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — star_contract with base/expand closures; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m) each; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same cause
         fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
     }
@@ -104,6 +108,7 @@ pub mod ConnectivityStEph {
     /// - Alg Analysis: APAS (Ch63 Ex 63.3): Work O((n+m) lg n), Span O((n+m) lg n) (edge-set representation)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star contraction
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m) each; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same cause
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -128,6 +133,7 @@ pub mod ConnectivityStEph {
     /// - Alg Analysis: APAS (Ch63 Ex 63.4): Work O((n+m) lg n), Span O((n+m) lg n) (edge-set representation)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star contraction
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m) each, plus an O(n) expand per round; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same cause
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -148,6 +154,7 @@ pub mod ConnectivityStEph {
     /// Filters out self-edges (where both endpoints map to same super-vertex).
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — single pass over edges
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(m) expected, Span O(m) expected — no textbook cost
     fn build_quotient_edges<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         partition_map: &HashMap<V, V>,
@@ -201,6 +208,7 @@ pub mod ConnectivityStEph {
     /// - Alg Analysis: APAS (Ch63 Alg 63.2): Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star_contract
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m) each; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same cause
     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
@@ -224,6 +232,7 @@ pub mod ConnectivityStEph {
     /// - Alg Analysis: APAS (Ch63 Alg 63.3): Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star_contract
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n² m), Span O(n² m) worst case — does not match textbook: star_contract's greedy sequential partition allows up to n rounds of O(n + c m) each, plus an O(n) expand per round; APAS O((n+m) lg n); does not match old analysis: O((n+m) lg n) vs new; same cause
     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMap<V, V>))
         requires
             spec_graphview_wf(graph@),

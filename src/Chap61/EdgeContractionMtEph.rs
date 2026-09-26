@@ -58,6 +58,7 @@ pub mod EdgeContractionMtEph {
         /// Parallel edge contraction algorithm.
         /// APAS: Work O(|E|), Span O(lg |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|) — parallel vertex-to-block mapping + edge rebuilding.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E| lg |E|) expected, Span O(|V| + |E|) expected — does not match textbook: block map and vertex set built sequentially, and build_edges_parallel merges hash sets by union, O(k) per level; APAS O(|V| + |E|), O(lg |V|); does not match old analysis: O(|V| + |E|), O(lg |V|) vs new; same causes
         fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
             graph: &UnDirGraphMtEph<V>,
             matching: &SetStEph<Edge<V>>,
@@ -67,6 +68,7 @@ pub mod EdgeContractionMtEph {
         /// Single round of parallel edge contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|) — parallel matching + contraction in one round.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|²), Span O(|V| + |E|) — does not match textbook: parallel_matching_mt is O(|E|²) work and O(|V| + |E|) span, edge_contract_mt O(|V| + |E| lg |E|) work; APAS O(|V| + |E|), O(lg |V|); does not match old analysis: O(|V| + |E|), O(lg |V|) vs new; same causes
         fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
@@ -87,6 +89,7 @@ pub mod EdgeContractionMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V| + |E|), Span Θ(|V| + |E|) — Phases 1-2 are sequential loops;
     ///   only Phase 3 (build_edges_parallel) is parallel
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E| lg |E|) expected, Span O(|V| + |E|) expected — does not match textbook: block map and vertex set built sequentially, and build_edges_parallel merges hash sets by union, O(k) per level; APAS O(|V| + |E|), O(lg |V|); does not match old analysis: Θ(|V| + |E|) work vs new; union merges add a lg |E| factor
     ///
     /// Phase 1: Build vertex-to-block mapping — sequential
     /// Phase 2: Build new vertex set — sequential
@@ -147,6 +150,7 @@ pub mod EdgeContractionMtEph {
     /// Build new edge set in parallel using divide-and-conquer
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(k lg k) expected, Span O(k) expected, k = end - start — no textbook cost; does not match old analysis: Θ(|E|), Θ(lg |E|) vs new; each level merges the two halves with SetStEph::union, a sequential O(k) copy
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         vertex_map: Arc<HashMap<V, V>>,
@@ -235,6 +239,7 @@ pub mod EdgeContractionMtEph {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|^2), Span Θ(|E|) — dominated by parallel_matching_mt's
     ///   should_select_edge scanning all edges
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|²), Span O(|V| + |E|) — does not match textbook: parallel_matching_mt is O(|E|²) work and O(|V| + |E|) span, edge_contract_mt O(|V| + |E| lg |E|) work; APAS O(|V| + |E|), O(lg |V|); does not match old analysis: Θ(|E|²), Θ(|E|) vs new; graph clone and sequential phases add O(|V|)
     ///
     /// Arguments:
     /// - graph: The undirected graph

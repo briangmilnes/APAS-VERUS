@@ -88,6 +88,7 @@ pub mod StarPartitionStEph {
         /// Sequential star partition using greedy selection.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — single pass over vertices + edges; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + c m), Span O(n + c m), c = number of centers ≤ n (O(n m) worst case) — does not match textbook: every new center scans the whole edge list for its neighbors, and the loop is sequential; APAS O(n + m), O(lg n); does not match old analysis: O(|V| + |E|) vs new; per-center edge scan
         fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMap<V, V>)
             requires Self::spec_starpartitionsteph_wf(graph);
     }
@@ -100,6 +101,7 @@ pub mod StarPartitionStEph {
     /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(n + m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(n + c m), Span O(n + c m), c = number of centers ≤ n (O(n m) worst case) — does not match textbook: every new center scans the whole edge list for its neighbors, and the loop is sequential; APAS line O(n + m); does not match old analysis: Θ(n + m) vs new; per-center edge scan
     pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (partition: (SetStEph<V>, HashMap<V, V>))
         requires
             spec_graphview_wf(graph@),

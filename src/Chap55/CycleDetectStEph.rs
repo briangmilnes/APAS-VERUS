@@ -278,6 +278,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O(|V| + |E|), Span O(|V| + |E|) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — matches textbook
         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (has_cycle: bool)
             requires
                 spec_toposortsteph_wf(graph),
@@ -293,6 +294,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Returns true if a cycle is found.
     /// Ghost parameters: dfs_path for cycle witness, ord/next_time for completeness ordering.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — visits each vertex/edge once; St sequential.
+    /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — no textbook cost; over all calls from has_cycle each vertex is expanded once (O(1) bool-array visited/ancestors) and each edge causes one O(1) call
     fn dfs_check_cycle(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -823,6 +825,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS from each unvisited vertex; St sequential.
+        /// - Alg Analysis: Code review (Claude Opus 5.5, 2026-09-26): Work O(|V| + |E|), Span O(|V| + |E|) — matches textbook
         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (has_cycle: bool)
         {
             let n = graph.length();
